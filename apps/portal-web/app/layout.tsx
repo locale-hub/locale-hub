@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import Navbar from '../components/navbar';
+import { Navbar } from '@locale-hub/design-system';
 import '../styles/globals.css'
 
 const loadThemeMode = () => {
