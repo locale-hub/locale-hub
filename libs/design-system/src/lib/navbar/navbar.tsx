@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { useState } from 'react';
 import MoonIcon from '@heroicons/react/24/outline/MoonIcon';
 import SunIcon from '@heroicons/react/24/outline/SunIcon';
-import Spacer from './spacer';
+
+import Spacer from '../spacer/spacer';
 
 export default function Navbar({
   theme,
@@ -36,8 +37,8 @@ export default function Navbar({
     </div>
     <Spacer />
     <div className="w-4/12 flex justify-end items-center">
-        <Link href="/login" className='px-4'>Login</Link>
-        <span className='hover:cursor-pointer' onClick={onThemeClicked}>
+      <Link href="/login" className='px-4'>Login</Link>
+      <span className='hover:cursor-pointer' onClick={onThemeClicked}>
           <MoonIcon className='hidden dark:inline h-6 w-6' />
           <SunIcon className='dark:hidden h-6 w-6' />
         </span>
