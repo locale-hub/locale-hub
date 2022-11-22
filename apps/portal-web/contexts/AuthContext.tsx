@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState } from 'react';
 const AuthContext = createContext({
   loggedIn: false,
   user: null,
+  register: () => {},
   login: () => {},
   logout: () => {}
 });
@@ -16,6 +17,10 @@ export const AuthContextProvider = ({
   const [user, setUser] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
 
+  const register = () => {
+    setUser({ name: 'John Doe', email: 'some@email.con' });
+    setLoggedIn(true);
+  }
   const login = () => {
     setUser({ name: 'John Doe', email: 'some@email.con' });
     setLoggedIn(true);
@@ -24,7 +29,7 @@ export const AuthContextProvider = ({
     setUser(null);
     setLoggedIn(false);
   }
-  const value = { loggedIn, user, login, logout };
+  const value = { loggedIn, user, register, login, logout };
 
   return <AuthContext.Provider value={value}>
     {children}

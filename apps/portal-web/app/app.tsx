@@ -9,7 +9,7 @@ import { useAuth } from '../contexts/AuthContext';
 
 
 const visitorNavigation = <>
-  <Link href="/auth" className='px-4'>Sign in</Link>
+  <Link href="/auth" className='px-4'>Dashboard</Link>
 </>;
 const authenticatedNavigation = (onLogout: () => void) => <>
   <Link href="/" className='px-4'>Dashboard</Link>

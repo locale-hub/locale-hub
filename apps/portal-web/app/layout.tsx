@@ -39,7 +39,7 @@ export default function RootLayout({
   },[]);
 
   return <html lang="en">
-    <body className='bg-white dark:bg-zinc-800 text-black dark:text-white'>
+    <body className='bg-gray-100 dark:bg-dark text-black dark:text-white'>
       <AuthContextProvider>
         { domLoaded &&
           <App onThemeChange={theme => setTheme(theme)}>
