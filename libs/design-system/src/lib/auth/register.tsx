@@ -13,7 +13,7 @@ export default function RegisterPage({
           Email address
         </label>
         <input id="name" type="text" name="name" placeholder="Name" required
-          className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+          className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-primary-500 focus:outline-none focus:ring-primary-500 sm:text-sm"
         />
       </div>
       <div>
@@ -21,7 +21,7 @@ export default function RegisterPage({
           Email address
         </label>
         <input id="email-address" type="email" name="email" placeholder="Email address" autoComplete="email" required
-          className="relative block w-full appearance-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+          className="relative block w-full appearance-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-primary-500 focus:outline-none focus:ring-primary-500 sm:text-sm"
         />
       </div>
       <div>
@@ -29,7 +29,7 @@ export default function RegisterPage({
           Password
         </label>
         <input id="password" type="password" name="password" placeholder="Password" autoComplete="current-password" required
-          className="relative block w-full appearance-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+          className="relative block w-full appearance-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-primary-500 focus:outline-none focus:ring-primary-500 sm:text-sm"
         />
       </div>
       <div>
@@ -38,7 +38,7 @@ export default function RegisterPage({
         </label>
         <input
           id="password-confirm" type="password" name="password-confirm" placeholder="Confirm password" autoComplete="current-password" required
-          className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+          className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-primary-500 focus:outline-none focus:ring-primary-500 sm:text-sm"
         />
       </div>
     </div>
