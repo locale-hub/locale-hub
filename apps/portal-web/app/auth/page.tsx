@@ -1,11 +1,13 @@
 'use client';
+
 import Image from 'next/image';
 import { LockClosedIcon } from '@heroicons/react/24/solid';
-import { Spacer } from '@locale-hub/design-system';
-import { useAuth } from '../../contexts/AuthContext';
 import { redirect } from 'next/navigation';
 
-export default function AppPage() {
+import { Spacer } from '@locale-hub/design-system';
+import { useAuth } from '../../contexts/AuthContext';
+
+export default function LoginPage() {
   const { login, loggedIn } = useAuth();
 
   const doLogin = () => {
@@ -13,7 +15,7 @@ export default function AppPage() {
   };
 
   if (loggedIn) {
-    redirect('/')
+    redirect('/');
   }
 
   return <>
@@ -64,20 +66,20 @@ export default function AppPage() {
           <div>
             <button
               onClick={doLogin}
-              className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              className="group relative flex w-full justify-center rounded-md py-2 px-4 font-medium bg-primary text-white"
             >
-                <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                  <LockClosedIcon className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" aria-hidden="true" />
-                </span>
+              <span className="absolute inset-y-0 left-0 flex items-center pl-3">
+                <LockClosedIcon className="h-5 w-5" aria-hidden="true" />
+              </span>
               Sign in
             </button>
 
             <div className="flex text-sm font-medium mt-4">
-              <a href="#" className="text-indigo-600 hover:text-indigo-500">
-                Create account
+              <a href="#" className="text-primary dark:text-primary">
+                No account? Signup!
               </a>
               <Spacer />
-              <a href="#" className="text-indigo-600 hover:text-indigo-500">
+              <a href="#" className="text-warn">
                 Forgot your password?
               </a>
             </div>

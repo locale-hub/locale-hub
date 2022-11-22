@@ -4,6 +4,7 @@ import SunIcon from '@heroicons/react/24/outline/SunIcon';
 
 import Spacer from '../spacer/spacer';
 import React from 'react';
+import Link from 'next/link';
 
 type Theme = 'dark' | 'light';
 
@@ -25,12 +26,13 @@ export default function Navbar({
     }
   }
 
-
   return <nav className="sticky top-0 flex px-10 py-4 h-16 border-b border-1 border-black/10 dark:border-white/40">
     <div className="w-4/12 flex items-center">
-      <Image src="/logo-white.svg" alt="Locale Hub logo" width="40" height="40" className='hidden dark:inline' />
-      <Image src="/logo.svg" alt="Locale Hub logo" width="40" height="40" className='dark:hidden' />
-      <h1 className="text-2xl font-semibold px-2">Locale Hub</h1>
+      <Link href='/'>
+        <Image src="/logo-white.svg" alt="Locale Hub logo" width="40" height="40" className='hidden dark:inline' />
+        <Image src="/logo.svg" alt="Locale Hub logo" width="40" height="40" className='inline dark:hidden' />
+        <h1 className="inline-block align-middle text-2xl font-semibold px-2">Locale Hub</h1>
+      </Link>
     </div>
     <Spacer />
     <div className="w-4/12 flex justify-end items-center">
