@@ -6,13 +6,16 @@ import Link from 'next/link';
 import { Navbar } from '@locale-hub/design-system';
 import '../styles/globals.css'
 import { useAuth } from '../contexts/AuthContext';
+import { routes } from '../constants/routes';
 
 
 const visitorNavigation = <>
-  <Link href="/auth" className='px-4'>Dashboard</Link>
+  <Link href={routes.root} className='px-4'>Dashboard</Link>
 </>;
+
 const authenticatedNavigation = (onLogout: () => void) => <>
-  <Link href="/" className='px-4'>Dashboard</Link>
+  <Link href={routes.root} className='px-4'>Organizations</Link>
+  <Link href={routes.root} className='px-4'>Projects</Link>
   <span onClick={onLogout} className='hover:cursor-pointer px-4'>Logout</span>
 </>;
 

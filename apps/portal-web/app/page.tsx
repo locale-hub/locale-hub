@@ -3,12 +3,13 @@
 import { redirect } from 'next/navigation';
 
 import { useAuth } from '../contexts/AuthContext';
+import { routes } from '../constants/routes';
 
 export default function Page() {
   const { loggedIn } = useAuth();
 
   if (false === loggedIn) {
-    redirect('/auth');
+    redirect(routes.auth);
   }
 
   return (
