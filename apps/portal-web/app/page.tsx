@@ -10,13 +10,9 @@ export default function Page() {
 
   if (false === loggedIn) {
     redirect(routes.auth);
+    return null;
   }
 
-  return (
-    <>
-      <h1 className={"text-green-500 dark:text-red-600"}>
-        Welcome to Next.js!
-      </h1>
-    </>
-  )
+  redirect(routes.dashboard);
+  return null;
 }
