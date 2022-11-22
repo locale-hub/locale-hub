@@ -1,92 +1,50 @@
 'use client';
 
-import Image from 'next/image';
-import { LockClosedIcon } from '@heroicons/react/24/solid';
 import { redirect } from 'next/navigation';
 
-import { Spacer } from '@locale-hub/design-system';
 import { useAuth } from '../../contexts/AuthContext';
+import { useState } from 'react';
+import { Auth } from '@locale-hub/design-system';
+import Image from 'next/image';
 
-export default function LoginPage() {
-  const { login, loggedIn } = useAuth();
-
-  const doLogin = () => {
-    login();
-  };
+export default function AuthPage() {
+  const { register, login, loggedIn } = useAuth();
+  const [isLogin, setIsLogin ] = useState(true);
 
   if (loggedIn) {
     redirect('/');
   }
 
-  return <>
-    <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8">
-        <div className='text-center'>
-          <Image src="/logo-white.svg" alt="Locale Hub logo" width="128" height="128" className='hidden dark:inline mx-auto h-16 w-auto' />
-          <Image src="/logo.svg" alt="Locale Hub logo" width="128" height="128" className='dark:hidden mx-auto h-16 w-auto' />
+  return <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="w-full max-w-md space-y-8">
 
-          <h2 className="mt-6 text-center text-3xl font-bold">
-            Sign in to your account
-          </h2>
-        </div>
-        <div className="mt-8 space-y-6">
+      <div className='text-center'>
+        <Image src="/logo-white.svg" alt="Locale Hub logo" width="128" height="128" className='hidden dark:inline mx-auto h-16 w-auto' />
+        <Image src="/logo.svg" alt="Locale Hub logo" width="128" height="128" className='dark:hidden mx-auto h-16 w-auto' />
 
-          <input type="hidden" name="remember" defaultValue="true" />
-          <div className="-space-y-px rounded-md shadow-sm">
-            <div>
-              <label htmlFor="email-address" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="email-address"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="Email address"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                placeholder="Password"
-              />
-            </div>
-          </div>
-
-          <div>
-            <button
-              onClick={doLogin}
-              className="group relative flex w-full justify-center rounded-md py-2 px-4 font-medium bg-primary text-white"
-            >
-              <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                <LockClosedIcon className="h-5 w-5" aria-hidden="true" />
-              </span>
-              Sign in
-            </button>
-
-            <div className="flex text-sm font-medium mt-4">
-              <a href="#" className="text-primary dark:text-primary">
-                No account? Signup!
-              </a>
-              <Spacer />
-              <a href="#" className="text-warn">
-                Forgot your password?
-              </a>
-            </div>
-          </div>
-        </div>
+        <h2 className="mt-6 text-center text-3xl font-bold">
+          {isLogin ? 'Sign in to your account' : 'Register your account'}
+        </h2>
       </div>
-    </div>
 
-  </>;
+      <div className="flex text-sm font-medium mt-4 justify-center">
+        {isLogin &&
+          <button onClick={() => setIsLogin(false)} className="text-primary dark:text-primary">
+            No account yet? Signup!
+          </button>
+        }
+        {false === isLogin &&
+        <button onClick={() => setIsLogin(true)} className="text-primary dark:text-primary">
+          Already have an account? Sign in!
+        </button>
+        }
+      </div>
+
+
+      {isLogin
+        ? <Auth.Login login={login} />
+        : <Auth.Register register={register} />
+      }
+    </div>
+  </div>;
 }
