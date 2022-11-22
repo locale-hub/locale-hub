@@ -42,7 +42,7 @@ export default function AuthPage() {
 
 
       {isLogin
-        ? <Auth.Login login={login} />
+        ? <Auth.Login login={login} passwordResetPath='/auth/password-reset' />
         : <Auth.Register register={register} />
       }
     </div>

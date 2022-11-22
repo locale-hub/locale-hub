@@ -2,11 +2,14 @@
 import { LockClosedIcon } from '@heroicons/react/24/solid';
 
 import { Spacer } from '@locale-hub/design-system';
+import Link from 'next/link';
 
 export default function LoginPage({
-  login
+  login,
+  passwordResetPath
 }: {
-  login: () => void
+  login: () => void,
+  passwordResetPath: string
 }) {
   return <div className="mt-8 space-y-6">
     <div className="-space-y-px rounded-md shadow-sm">
@@ -15,7 +18,7 @@ export default function LoginPage({
           Email address
         </label>
         <input id="email-address" type="email" name="email" placeholder="Email address" autoComplete="email" required
-          className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+          className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-primary-500 focus:outline-none focus:ring-primary-500 sm:text-sm"
         />
       </div>
       <div>
@@ -23,7 +26,7 @@ export default function LoginPage({
           Password
         </label>
         <input id="password" type="password" name="password" placeholder="Password" autoComplete="current-password" required
-          className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+          className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-primary-500 focus:outline-none focus:ring-primary-500 sm:text-sm"
         />
       </div>
     </div>
@@ -40,9 +43,9 @@ export default function LoginPage({
       </button>
       <div className="flex text-sm font-medium mt-4">
         <Spacer />
-        <a href="#" className="text-warn">
+        <Link href={passwordResetPath} className="text-warn">
           Forgot your password?
-        </a>
+        </Link>
       </div>
     </div>
   </div>;
