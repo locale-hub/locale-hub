@@ -1,24 +1,25 @@
 import Image from 'next/image';
-import Link from 'next/link';
-import { useState } from 'react';
 import MoonIcon from '@heroicons/react/24/outline/MoonIcon';
 import SunIcon from '@heroicons/react/24/outline/SunIcon';
 
 import Spacer from '../spacer/spacer';
+import React from 'react';
+
+type Theme = 'dark' | 'light';
 
 export default function Navbar({
+  navigation,
   theme,
   onThemeChange
 }: {
-  theme: 'dark' | 'light',
-  onThemeChange?: (theme: 'dark' | 'light') => void
+  theme: Theme,
+  onThemeChange?: (theme: Theme) => void,
+  navigation?: React.ReactNode
 }) {
-  const [currentTheme, setCurrentTheme] = useState(theme);
+  let currentTheme: Theme = theme;
 
   const onThemeClicked = () => {
-    const darkRequested = 'light' === currentTheme;
-    setCurrentTheme(darkRequested ? 'dark' : 'light')
-
+    currentTheme = 'light' === currentTheme ? 'dark' : 'light';
     if (undefined !== onThemeChange) {
       onThemeChange(currentTheme);
     }
@@ -32,13 +33,9 @@ export default function Navbar({
       <h1 className="text-2xl font-semibold px-2">Locale Hub</h1>
     </div>
     <Spacer />
-    <div className="w-4/12 flex justify-center items-center">
-      <Link href="/" className='px-4'>Homepage</Link>
-    </div>
-    <Spacer />
     <div className="w-4/12 flex justify-end items-center">
-      <Link href="/login" className='px-4'>Login</Link>
-      <span className='hover:cursor-pointer' onClick={onThemeClicked}>
+      {navigation}
+      <span className='hover:cursor-pointer pl-4' onClick={onThemeClicked}>
           <MoonIcon className='hidden dark:inline h-6 w-6' />
           <SunIcon className='dark:hidden h-6 w-6' />
         </span>
