@@ -8,14 +8,20 @@ export class Http {
 
   constructor(
     private baseUrl: string
-  ) {}
+  ) {
+  }
 
-  private headers = () => ({
-    Accept: 'application/json',
-    'Access-Control-Allow-Origin': this.baseUrl,
-    Authorization: this.authorization,
-    'Content-Type': 'application/json'
-  });
+  private headers = () => {
+    if ('' === this.authorization) {
+      this.setToken(localStorage.getItem('token') ?? '');
+    }
+    return {
+      Accept: 'application/json',
+      'Access-Control-Allow-Origin': this.baseUrl,
+      Authorization: this.authorization,
+      'Content-Type': 'application/json'
+    };
+  }
 
   setToken(token: string) {
     this.authorization = token;
