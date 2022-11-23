@@ -1,5 +1,6 @@
-import { ArrowLeftIcon, ChevronLeftIcon, EnvelopeIcon } from '@heroicons/react/24/solid';
+import { ChevronLeftIcon, EnvelopeIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
+import { routes } from '../../../constants/routes';
 
 export default function PasswordResetPage() {
 
@@ -28,7 +29,7 @@ export default function PasswordResetPage() {
 
         <div className='flex flex-1'>
           <div className='text-sm font-medium my-auto'>
-            <Link href='/auth' className="text-warn">
+            <Link href={routes.auth} className="text-warn">
               <ChevronLeftIcon className="h-5 w-5 inline-block mr-1 align-top" aria-hidden="true" />
               Go back to login
             </Link>

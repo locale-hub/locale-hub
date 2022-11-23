@@ -6,13 +6,14 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useState } from 'react';
 import { Auth } from '@locale-hub/design-system';
 import Image from 'next/image';
+import { routes } from '../../constants/routes';
 
 export default function AuthPage() {
   const { register, login, loggedIn } = useAuth();
   const [isLogin, setIsLogin ] = useState(true);
 
   if (loggedIn) {
-    redirect('/');
+    redirect(routes.root);
   }
 
   return <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -42,7 +43,7 @@ export default function AuthPage() {
 
 
       {isLogin
-        ? <Auth.Login login={login} passwordResetPath='/auth/password-reset' />
+        ? <Auth.Login login={login} passwordResetPath={routes['auth.password-reset']} />
         : <Auth.Register register={register} />
       }
     </div>
