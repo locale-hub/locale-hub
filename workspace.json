@@ -2,6 +2,8 @@
   "$schema": "./node_modules/nx/schemas/workspace-schema.json",
   "version": 2,
   "projects": {
+    "api-connector": "libs/api-connector",
+    "data": "libs/data",
     "design-system": "libs/design-system",
     "portal-api": "apps/portal-api",
     "portal-web": "apps/portal-web",
