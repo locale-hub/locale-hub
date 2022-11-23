@@ -3,17 +3,15 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 import { ApiConnector } from '@locale-hub/api-connector';
-import { User } from '@locale-hub/data';
 import { redirect } from 'next/navigation';
 import { routes } from '../constants/routes';
-import decode from 'jwt-decode';
 
 const AuthContext = createContext({
   loggedIn: false,
   user: null,
   login: (_email: string, _password: string) => {},
   logout: () => {},
-  register: () => {}
+  register: (_name: string, _email: string, _password: string) => {}
 });
 
 export const AuthContextProvider = ({
@@ -25,22 +23,24 @@ export const AuthContextProvider = ({
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const previousUser = null !== token
-      ? (decode(token) as any).user as User
-      : null;
-
+    const previousUser = ApiConnector.auth.getUser();
     setUser(previousUser);
     setLoggedIn(null !== previousUser);
   }, []);
 
-  const register = () => {
-    setUser({ name: 'John Doe', email: 'some@email.con' });
+  const register = async (name: string, email: string, password: string) => {
+    const user = await ApiConnector.auth.register(name, email, password);
+    if ('error' in user) {
+      // TODO: display error
+      console.error('Failed to register', user);
+      return;
+    }
+    setUser(user);
     setLoggedIn(true);
   }
 
   const login = async (email: string, password: string) => {
-    const user = await ApiConnector.login(email, password);
+    const user = await ApiConnector.auth.login(email, password);
     if ('error' in user) {
       // TODO: display error
       console.error('Failed to sign in', user);
@@ -50,11 +50,12 @@ export const AuthContextProvider = ({
     setLoggedIn(true);
   }
 
-  const logout = () => {
-    localStorage.removeItem('token');
+  const logout = async () => {
+    await ApiConnector.auth.logout();
     setUser(null);
     setLoggedIn(false);
-    redirect(routes.auth);
+    // TODO: improve error handling
+    try { useEffect(() => redirect(routes.auth), []) } catch (e) {}
   }
 
   const value = { loggedIn, user, register, login, logout };
