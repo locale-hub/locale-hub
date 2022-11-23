@@ -1,8 +1,9 @@
-
+'use client';
 import decode from 'jwt-decode';
 
-import { ApiErrorResponse, TokenResponse, User } from '@locale-hub/data';
+import { ApiErrorResponse, Project, ProjectsListResponse, TokenResponse, User } from '@locale-hub/data';
 import { Http } from './http';
+import { MeDashboardResponse } from '../../../data/src/lib/responses/me-dashboard.response';
 
 // TODO: replace with config based value
 const http = new Http('http://localhost:3000/v1');
@@ -27,6 +28,7 @@ export const ApiConnector = {
       }
 
       const token = res.token;
+      http.setToken(token);
       localStorage.setItem('token', token);
       return (decode(token) as any).user as User;
     },
@@ -42,6 +44,7 @@ export const ApiConnector = {
       }
 
       const token = res.token;
+      http.setToken(token);
       localStorage.setItem('token', token);
       return (decode(token) as any).user as User;
     },
@@ -56,6 +59,7 @@ export const ApiConnector = {
       }
 
       const token = res.token;
+      http.setToken(token);
       localStorage.setItem('token', token);
       return (decode(token) as any).user as User;
     },
@@ -80,8 +84,26 @@ export const ApiConnector = {
       }
 
       const token = res.token;
+      http.setToken(token);
       localStorage.setItem('token', token);
       return (decode(token) as any).user as User;
+    },
+  },
+
+  me: {
+    dashboard: async (): Promise<MeDashboardResponse | ApiErrorResponse> => {
+      return await http.get<MeDashboardResponse>('/me/dashboard');
+    },
+  },
+
+  projects: {
+    list: async (): Promise<Project[] | ApiErrorResponse> => {
+      const res = await http.get<ProjectsListResponse>('/projects');
+      if ('error' in res) {
+        return res as ApiErrorResponse;
+      }
+
+      return res.projects;
     },
   }
 
