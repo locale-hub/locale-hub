@@ -2,51 +2,87 @@
 import decode from 'jwt-decode';
 
 import { ApiErrorResponse, TokenResponse, User } from '@locale-hub/data';
+import { Http } from './http';
 
-const baseUrl = 'http://localhost:3000/v1';
-let apiToken: string;
-
-const headers = () => ({
-  Accept: 'application/json',
-  'Access-Control-Allow-Origin': baseUrl,
-  Authorization: apiToken,
-  'Content-Type': 'application/json'
-});
-
-function apiCall<TBody>(method: string, url: string, body: TBody): Promise<Response> {
-  return fetch(
-    url,
-    {
-      method: method,
-      headers: headers(),
-      body: JSON.stringify(body),
-    }
-  )
-}
-
+// TODO: replace with config based value
+const http = new Http('http://localhost:3000/v1');
 
 export const ApiConnector = {
 
-  login: async (email: string, password: string) => {
-    try {
-      const res = await apiCall(
-        'POST',
-        `${baseUrl}/auth/login`,
-        {
-          primaryEmail: email,
-          password
-        }
+  auth: {
+    getUser: (): User | null => {
+      const token = localStorage.getItem('token');
+      return null !== token
+        ? (decode(token) as any).user as User
+        : null;
+    },
+
+    login: async (primaryEmail: string, password: string): Promise<User | ApiErrorResponse> => {
+      const res = await http.post<any, TokenResponse>(
+        '/auth/login',
+        { primaryEmail, password }
       );
-      const body = await res.json();
-      if (undefined !== body?.error) {
-        return body as ApiErrorResponse;
+      if ('error' in res) {
+        return res as ApiErrorResponse;
       }
-      apiToken = (body as TokenResponse).token;
-      localStorage.setItem('token', apiToken);
-      return (decode(apiToken) as any).user as User;
-    } catch (err) {
-      return err;
-    }
+
+      const token = res.token;
+      localStorage.setItem('token', token);
+      return (decode(token) as any).user as User;
+    },
+
+    logout: async (): Promise<void> => {
+      localStorage.removeItem('token');
+    },
+
+    refreshToken: async (): Promise<User | ApiErrorResponse> => {
+      const res = await http.post<any, TokenResponse>('/auth/refresh-token');
+      if ('error' in res) {
+        return res as ApiErrorResponse;
+      }
+
+      const token = res.token;
+      localStorage.setItem('token', token);
+      return (decode(token) as any).user as User;
+    },
+
+    register: async (name: string, primaryEmail: string, password: string): Promise<User | ApiErrorResponse> => {
+      const res = await http.post<any, TokenResponse>(
+        '/auth/register',
+        { user: { name, primaryEmail, password } }
+      );
+      if ('error' in res) {
+        return res as ApiErrorResponse;
+      }
+
+      const token = res.token;
+      localStorage.setItem('token', token);
+      return (decode(token) as any).user as User;
+    },
+
+    resetPassword: async (primaryEmail: string): Promise<void | ApiErrorResponse> => {
+      const res = await http.post<any, any>(
+        '/auth/password-reset',
+        { primaryEmail }
+      );
+      if ('error' in res) {
+        return res as ApiErrorResponse;
+      }
+    },
+
+    resetPasswordApply: async (resetToken: string, primaryEmail: string, password: string): Promise<User | ApiErrorResponse> => {
+      const res = await http.post<any, TokenResponse>(
+        '/auth//apply',
+        { primaryEmail, resetToken, password }
+      );
+      if ('error' in res) {
+        return res as ApiErrorResponse;
+      }
+
+      const token = res.token;
+      localStorage.setItem('token', token);
+      return (decode(token) as any).user as User;
+    },
   }
 
 };

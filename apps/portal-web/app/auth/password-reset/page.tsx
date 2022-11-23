@@ -1,8 +1,21 @@
+'use client';
+
 import { ChevronLeftIcon, EnvelopeIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
+import { useState } from 'react';
+
 import { routes } from '../../../constants/routes';
+import { ApiConnector } from '@locale-hub/api-connector';
 
 export default function PasswordResetPage() {
+  const [email, setEmail] = useState('');
+
+  const doPasswordReset = async () => {
+    // TODO: form validation
+    await ApiConnector.auth.resetPassword(email);
+    // TODO: display success modal
+  }
+
   return <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div className="w-full max-w-4xl space-y-8 text-center">
 
@@ -23,6 +36,8 @@ export default function PasswordResetPage() {
           </label>
           <input id="email-address" type="email" name="email" placeholder="Email address" autoComplete="email" required
              className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-primary focus:outline-none focus:ring-primary sm:text-sm"
+             value={email}
+             onChange={e => { setEmail(e.currentTarget.value); }}
           />
         </div>
 
@@ -33,7 +48,9 @@ export default function PasswordResetPage() {
               Go back to login
             </Link>
           </div>
-          <button className="my-auto ml-auto mr-0 justify-end relative w-4/12 justify-center rounded-md py-2 px-4 font-medium bg-primary text-white">
+          <button className="my-auto ml-auto mr-0 justify-end relative w-4/12 justify-center rounded-md py-2 px-4 font-medium bg-primary text-white"
+              onClick={doPasswordReset}
+          >
             <span className="absolute inset-y-0 left-0 flex items-center pl-3">
               <EnvelopeIcon className="h-5 w-5" aria-hidden="true" />
             </span>

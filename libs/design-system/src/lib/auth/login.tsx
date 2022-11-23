@@ -16,7 +16,10 @@ export default function LoginPage({
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const doLogin = () => login(email, password);
+  const doLogin = () => {
+    // TODO: form validation
+    login(email, password);
+  }
 
   return <div className="mt-8 space-y-6">
     <div className="-space-y-px rounded-md shadow-sm">
