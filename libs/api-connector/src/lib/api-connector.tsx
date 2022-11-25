@@ -105,6 +105,9 @@ export const ApiConnector = {
 
       return res.projects;
     },
+    delete: async (projectId: string): Promise<null | ApiErrorResponse> => {
+      return await http.delete<unknown, null | ApiErrorResponse>(`/projects/${projectId}`);
+    },
   }
 
 };
