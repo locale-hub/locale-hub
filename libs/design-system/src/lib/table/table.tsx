@@ -5,7 +5,7 @@ export default function Table({
   entries
 }: {
   className: string,
-  heads: { key: string, label: string, width?: string }[],
+  heads: { key: string, label: string, className?: string }[],
   entries: { [_: string]: any }[]
 }) {
   return <div className={`${className} rounded-md relative mt-8`}>
@@ -13,7 +13,7 @@ export default function Table({
       <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
       <tr>
         { heads.map((head, idx) =>
-          <th scope="col" key={idx} className={`py-3 px-6 ${head.width}`}>{head.label}</th>)
+          <th scope="col" key={idx} className={`py-3 px-6 ${head.className}`}>{head.label}</th>)
         }
       </tr>
       </thead>
