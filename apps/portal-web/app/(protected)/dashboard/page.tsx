@@ -8,6 +8,7 @@ import { DateFormat, Menu, Table } from '@locale-hub/design-system';
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { routes } from '../../../constants/routes';
+import ProgressBar from '../../../../../libs/design-system/src/lib/progress-bar/progress-bar';
 
 export default function DashboardPage() {
   const [data, setData] = useState<MeDashboardResponse>(null);
@@ -22,8 +23,7 @@ export default function DashboardPage() {
     })
   }, []);
 
-  // TODO: links to org and project
-  // TODO: Progress
+  // TODO: Actions modals
   // TODO: Theming
 
   const projectName = (project: Project) => {
@@ -35,20 +35,17 @@ export default function DashboardPage() {
     </>;
   }
   const projectProgress = (projectId: string) => {
-    const progress = data.progress.find(project => project.projectId === projectId).progress;
-    return <>
-      <span>{`${progress}%`}</span>
-      <span>---</span>
-    </>;
+    const progress = 100 * data.progress.find(project => project.projectId === projectId).progress;
+    return <ProgressBar fill={progress} />;
   }
 
   return <Table
       className='w-7/12 mx-auto mt-12'
       heads={[
-        { key: 'name', label: 'Project Name', width: 'w-7/12' },
-        { key: 'status', label: 'Status', width: 'w-2/12' },
-        { key: 'createdAt', label: 'Creation Date', width: 'w-2/12' },
-        { key: 'actions', label: '', width: 'w-1/12' }
+        { key: 'name', label: 'Project Name', className: 'w-7/12' },
+        { key: 'status', label: 'Status', className: 'w-2/12' },
+        { key: 'createdAt', label: 'Creation Date', className: 'w-2/12' },
+        { key: 'actions', label: 'Actions', className: 'w-1/12' }
       ]}
       entries={data?.projects.map(project => ({
         name: projectName(project),
