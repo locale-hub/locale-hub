@@ -1,13 +1,14 @@
-import { Menu } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import { Menu } from '@headlessui/react';
 import React, { Children } from 'react';
 
 export default function MenuComponent({
   button,
-  children
+  children,
+  onClick
 }: {
   button: React.ReactNode,
-  children?: React.ReactNode
+  children?: React.ReactNode,
+  onClick: () => void
 }) {
   return (
     <div className="text-right">
@@ -18,7 +19,9 @@ export default function MenuComponent({
 
         <Menu.Items className="absolute z-10 text-black right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           { children && Children.toArray(children).map((child, idx) => <Menu.Item key={idx}>
-            <div className='group flex w-full items-center rounded-md px-2 py-2 text-sm'>{child}</div></Menu.Item>) }
+              <div onClick={onClick} className={`group flex w-full items-center rounded-md px-2 py-2 text-sm hover:cursor-pointer hover:bg-black hover:bg-opacity-10`}>{child}</div>
+            </Menu.Item>
+          )}
         </Menu.Items>
       </Menu>
     </div>

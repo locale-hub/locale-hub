@@ -1,11 +1,6 @@
 const { createGlobPatternsForDependencies } = require('@nrwl/react/tailwind');
 const { join } = require('path');
 
-const safeList = [
-  // generate width from 0% to 100%
-  ...[...Array(101).keys()].map(id => `w-[${id}%]`)
-];
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -16,7 +11,6 @@ module.exports = {
     ...createGlobPatternsForDependencies(__dirname),
   ],
   darkMode: 'class',
-  safelist: safeList,
   theme: {
     extend: {
       colors: {
