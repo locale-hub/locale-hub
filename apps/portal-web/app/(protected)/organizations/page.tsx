@@ -21,15 +21,17 @@ export default function OrganizationsPage() {
     })
   }, []);
 
-  return <Table
-    className='w-6/12 mx-auto mt-12'
-    heads={[
-      { key: 'name', label: 'Project Name', className: 'w-3/4' },
-      { key: 'createdAt', label: 'Creation Date', className: 'w-1/4' },
-    ]}
-    entries={data?.organizations.map(organization => ({
-      name: <Link className='text-primary' href={`${routes.organizations}/${organization.id}`}>{organization.name}</Link>,
-      createdAt: <DateFormat date={organization.createdAt} />
-    })) ?? []}
-  />;
+  return <div className='px-10 py-10'>
+    <Table
+      className='w-6/12 mx-auto mt-12'
+      heads={[
+        { key: 'name', label: 'Project Name', className: 'w-3/4' },
+        { key: 'createdAt', label: 'Creation Date', className: 'w-1/4' },
+      ]}
+      entries={data?.organizations.map(organization => ({
+        name: <Link className='text-primary' href={routes.organizations.projects(organization.id)}>{organization.name}</Link>,
+        createdAt: <DateFormat date={organization.createdAt} />
+      })) ?? []}
+    />
+  </div>;
 }

@@ -15,8 +15,8 @@ const visitorNavigation = <>
 </>;
 
 const authenticatedNavigation = (user: any, onLogout: () => void) => <>
-  <Link href={routes.organizations} className='px-4'>Organizations</Link>
-  <Link href={routes.projects} className='px-4'>Projects</Link>
+  <Link href={routes.organizations.root} className='px-4'>Organizations</Link>
+  <Link href={routes.projects.root} className='px-4'>Projects</Link>
   <Spacer />
   <DocumentTextIcon className='mx-2 h-6 w-6 hover:cursor-pointer' />
   <BellAlertIcon className='mx-2 h-6 w-6 hover:cursor-pointer' />
@@ -42,7 +42,7 @@ export default function App({
         onThemeChange={onThemeChange}
         navigation={loggedIn ? authenticatedNavigation(user, logout) : visitorNavigation}
       />
-      <main className='px-10 py-10'>
+      <main className='height-full'>
         {children}
       </main>
   </>;

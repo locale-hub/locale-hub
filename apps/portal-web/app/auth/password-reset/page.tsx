@@ -16,7 +16,7 @@ export default function PasswordResetPage() {
     // TODO: display success modal
   }
 
-  return <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  return <div className="flex min-h-full items-center justify-center px-10 py-10 sm:px-6 lg:px-8">
     <div className="w-full max-w-4xl space-y-8 text-center">
 
       <h2 className="mt-6 text-3xl font-bold">

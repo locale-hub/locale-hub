@@ -69,7 +69,7 @@ export default function ProjectsPage() {
     setDeleteModal(true);
   };
 
-  return <>
+  return <div className='px-10 py-10'>
     <Modal isOpen={deleteModal} title={title} content={content} actions={actions} onClose={() => setDeleteModal(false)} />
     <Table
       className='w-7/12 mx-auto mt-12'
@@ -91,5 +91,5 @@ export default function ProjectsPage() {
         </Menu>
       })) ?? []}
     />
-  </>;
+  </div>;
 }

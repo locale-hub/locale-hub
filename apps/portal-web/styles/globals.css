@@ -5,3 +5,7 @@
 html {
   font-family: Roboto, sans-serif;
 }
+
+.height-full {
+  min-height: calc(100vh - 64px);
+}
