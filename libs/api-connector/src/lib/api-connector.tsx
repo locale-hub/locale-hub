@@ -1,11 +1,18 @@
 'use client';
 import decode from 'jwt-decode';
 
-import { ApiErrorResponse, Project, ProjectsListResponse, TokenResponse, User } from '@locale-hub/data';
+import {
+  ApiErrorResponse,
+  MeDashboardResponse,
+  OrganizationsUsersGetResponse,
+  OrganizationsProjectsGetResponse,
+  Project,
+  ProjectsListResponse,
+  TokenResponse,
+  User
+} from '@locale-hub/data';
 import { Http } from './http';
-import { MeDashboardResponse } from '../../../data/src/lib/responses/me-dashboard.response';
 import { ProjectsGetResponse } from '../../../data/src/lib/responses/projects-get.response';
-import { OrganizationsProjectsGetResponse } from '../../../data/src/lib/responses/organizations-projects-get.response';
 
 // TODO: replace with config based value
 const http = new Http('http://localhost:3000/v1');
@@ -102,6 +109,9 @@ export const ApiConnector = {
     projects: async (organizationId: string): Promise<OrganizationsProjectsGetResponse | ApiErrorResponse> => {
       return await http.get<OrganizationsProjectsGetResponse>(`/organizations/${organizationId}/projects`);
     },
+    users: async (organizationId: string): Promise<OrganizationsUsersGetResponse | ApiErrorResponse> => {
+      return await http.get<OrganizationsUsersGetResponse>(`/organizations/${organizationId}/users`);
+    }
   },
 
   projects: {
