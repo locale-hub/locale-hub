@@ -9,11 +9,12 @@ export default function Button({
 }: {
   children?: React.ReactNode,
   onClick: () => void
-  type?: 'default' | 'cancel' | 'confirm'
+  type?: 'action' | 'default' | 'cancel' | 'confirm'
 }) {
   type ??= 'default';
 
   const colors = {
+    action: 'text-white bg-primary hover:bg-opacity-80',
     default: 'text-white bg-slate-500 hover:bg-opacity-80',
     cancel: 'text-white bg-warn hover:bg-opacity-80',
     confirm: 'text-white bg-primary hover:bg-opacity-80'
