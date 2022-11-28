@@ -13,5 +13,6 @@ export {UserGroupEntry} from './lib/models/user-group-entry.model';
 
 export {ApiErrorResponse} from './lib/responses/api-error.response';
 export {MeDashboardResponse} from './lib/responses/me-dashboard.response';
+export {OrganizationsProjectsGetResponse} from './lib/responses/organizations-projects-get.response';
 export {ProjectsListResponse} from './lib/responses/projects-list.response';
 export {TokenResponse} from './lib/responses/token.response';

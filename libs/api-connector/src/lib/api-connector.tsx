@@ -5,6 +5,7 @@ import { ApiErrorResponse, Project, ProjectsListResponse, TokenResponse, User } 
 import { Http } from './http';
 import { MeDashboardResponse } from '../../../data/src/lib/responses/me-dashboard.response';
 import { ProjectsGetResponse } from '../../../data/src/lib/responses/projects-get.response';
+import { OrganizationsProjectsGetResponse } from '../../../data/src/lib/responses/organizations-projects-get.response';
 
 // TODO: replace with config based value
 const http = new Http('http://localhost:3000/v1');
@@ -94,6 +95,12 @@ export const ApiConnector = {
   me: {
     dashboard: async (): Promise<MeDashboardResponse | ApiErrorResponse> => {
       return await http.get<MeDashboardResponse>('/me/dashboard');
+    },
+  },
+
+  organizations: {
+    projects: async (organizationId: string): Promise<OrganizationsProjectsGetResponse | ApiErrorResponse> => {
+      return await http.get<OrganizationsProjectsGetResponse>(`/organizations/${organizationId}/projects`);
     },
   },
 
