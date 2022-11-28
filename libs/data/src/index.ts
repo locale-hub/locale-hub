@@ -16,4 +16,5 @@ export {MeDashboardResponse} from './lib/responses/me-dashboard.response';
 export {OrganizationsProjectsGetResponse} from './lib/responses/organizations-projects-get.response';
 export {OrganizationsUsersGetResponse} from './lib/responses/organizations-users-get.response';
 export {ProjectsListResponse} from './lib/responses/projects-list.response';
+export {ProjectsUsersGetResponse} from './lib/responses/projects-users-get.response';
 export {TokenResponse} from './lib/responses/token.response';
