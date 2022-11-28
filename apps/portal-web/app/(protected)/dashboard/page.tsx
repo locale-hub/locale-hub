@@ -27,9 +27,9 @@ export default function DashboardPage() {
   const projectName = (project: Project) => {
     const organizationName = data.organizations.find(org => org.id === project.organizationId).name;
     return <>
-      <Link className='text-primary' href={`${routes.organizations}/${project.organizationId}`}>{organizationName}</Link>
+      <Link className='text-primary' href={routes.organizations.projects(project.organizationId)}>{organizationName}</Link>
       <span className='px-1'>/</span>
-      <Link className='text-primary' href={`${routes.projects}/${project.id}`}>{project.name}</Link>
+      <Link className='text-primary' href={routes.projects.overview(project.id)}>{project.name}</Link>
     </>;
   }
   const projectProgress = (projectId: string) => {

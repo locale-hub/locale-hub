@@ -18,7 +18,7 @@ export default function Table({
       </tr>
       </thead>
       <tbody>
-      { entries.map((entry, idx) => <tr key={idx} className="bg-white border-b border-slate-400/50 dark:bg-gray-800 dark:border-gray-700">
+      { entries.map((entry, idx) => <tr key={idx} className="bg-white border-b border-slate-400/50 dark:bg-zinc-800 dark:border-gray-700">
           {
             heads.map((head, idx2) =>
             <th  key={idx2} scope="row" className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">

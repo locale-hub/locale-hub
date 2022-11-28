@@ -1,6 +1,7 @@
 
 import Auth from './lib/auth';
 import Button from './lib/button/button';
+import Card from './lib/card/card';
 import DateFormat from './lib/date-format/date-format';
 import Menu from './lib/menu/menu';
 import Modal from './lib/modal/modal';
@@ -14,6 +15,7 @@ import UserIcon from './lib/user-icon/user-icon';
 export {
   Auth,
   Button,
+  Card,
   DateFormat,
   Menu,
   Modal,

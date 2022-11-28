@@ -4,6 +4,7 @@ import decode from 'jwt-decode';
 import { ApiErrorResponse, Project, ProjectsListResponse, TokenResponse, User } from '@locale-hub/data';
 import { Http } from './http';
 import { MeDashboardResponse } from '../../../data/src/lib/responses/me-dashboard.response';
+import { ProjectsGetResponse } from '../../../data/src/lib/responses/projects-get.response';
 
 // TODO: replace with config based value
 const http = new Http('http://localhost:3000/v1');
@@ -104,6 +105,9 @@ export const ApiConnector = {
       }
 
       return res.projects;
+    },
+    get: async (projectId: string): Promise<ProjectsGetResponse | ApiErrorResponse> => {
+      return await http.get<ProjectsGetResponse>(`/projects/${projectId}`);
     },
     delete: async (projectId: string): Promise<null | ApiErrorResponse> => {
       return await http.delete<unknown, null | ApiErrorResponse>(`/projects/${projectId}`);
