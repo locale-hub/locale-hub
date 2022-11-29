@@ -28,7 +28,7 @@ export default function OrganizationLayout({
         { name: 'Settings', link: routes.organizations.settings(organizationId), icon: <AdjustmentsHorizontalIcon className='w-6 h-6' /> },
       ]} />
     </div>
-    <div className='w-10/12 px-10 py-10'>
+    <div className='w-10/12 px-10 py-10 overflow-y-scroll'>
       {children}
     </div>
   </div>;
