@@ -4,14 +4,17 @@ import React from 'react';
 
 export default function Button({
   children,
+  disabled,
   onClick,
   type
 }: {
   children?: React.ReactNode,
+  disabled?: boolean,
   onClick: () => void
   type?: 'action' | 'default' | 'cancel' | 'confirm'
 }) {
   type ??= 'default';
+  disabled ??= false;
 
   const colors = {
     action: 'text-white bg-primary hover:bg-opacity-80',
@@ -25,6 +28,7 @@ export default function Button({
       ${colors[type]}
     `}
     onClick={onClick}
+    disabled={disabled}
   >
     {children}
   </button>
