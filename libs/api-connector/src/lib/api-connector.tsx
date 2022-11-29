@@ -9,7 +9,7 @@ import {
   Project,
   ProjectsListResponse,
   TokenResponse,
-  User, ProjectsUsersGetResponse, OrganizationsGetResponse
+  User, ProjectsUsersGetResponse, OrganizationsGetResponse, Organization
 } from '@locale-hub/data';
 import { Http } from './http';
 import { ProjectsGetResponse } from '../../../data/src/lib/responses/projects-get.response';
@@ -114,6 +114,15 @@ export const ApiConnector = {
     },
     users: async (organizationId: string): Promise<OrganizationsUsersGetResponse | ApiErrorResponse> => {
       return await http.get<OrganizationsUsersGetResponse>(`/organizations/${organizationId}/users`);
+    },
+    update: async (organization: Organization): Promise<void | ApiErrorResponse> => {
+      return await http.put<Organization, void | ApiErrorResponse>(
+        `/organizations/${organization.id}`,
+        organization
+      );
+    },
+    delete: async (organizationId: string): Promise<void | ApiErrorResponse> => {
+      return await http.delete<void, void | ApiErrorResponse>(`/organizations/${organizationId}`);
     }
   },
 

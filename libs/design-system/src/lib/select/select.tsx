@@ -15,12 +15,12 @@ export default function Select({
   onSelect,
   values
 }: {
-  defaultSelected: string,
+  defaultSelected: SelectEntry,
   label: string,
   onSelect: (value: SelectEntry) => void,
   values: SelectEntry[]
 }) {
-  const [selected, setSelected] = useState<SelectEntry | null>(values.find(e => e.id === defaultSelected) ?? null);
+  const [selected, setSelected] = useState<SelectEntry>();
 
   const onChange = (value: SelectEntry) => {
     setSelected(value);
@@ -37,8 +37,8 @@ export default function Select({
           bg-gray-50 border border-gray-300 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
           py-2 pl-3 pr-10 h-10 text-left">
           <span className="flex items-center">
-            { selected && selected.image && <img src={selected.image} alt="" className="h-6 w-6 flex-shrink-0 rounded-full" /> }
-            { selected && <span className="ml-3 block truncate">{selected.value}</span> }
+            { defaultSelected?.image || selected?.image && <img src={defaultSelected?.image ?? selected.image} alt="" className="h-6 w-6 flex-shrink-0 rounded-full" /> }
+            <span className="ml-3 block truncate">{defaultSelected?.value ?? selected?.value}</span>
           </span>
           <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
             <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
