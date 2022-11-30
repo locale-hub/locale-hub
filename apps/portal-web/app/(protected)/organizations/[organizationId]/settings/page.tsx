@@ -38,6 +38,7 @@ export default function OrganizationsSettingsPage({
   const updateOrganization = () => {
     // TODO: form validation
     org.name = name;
+    org.owner = owner;
     // TODO: Toast
     ApiConnector.organizations.update(org);
   }

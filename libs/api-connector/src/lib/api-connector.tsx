@@ -138,6 +138,12 @@ export const ApiConnector = {
     get: async (projectId: string): Promise<ProjectsGetResponse | ApiErrorResponse> => {
       return await http.get<ProjectsGetResponse>(`/projects/${projectId}`);
     },
+    update: async (project: Project): Promise<void | ApiErrorResponse> => {
+      return await http.put<Project, void | ApiErrorResponse>(
+        `/organizations/${project.id}`,
+        project
+      );
+    },
     delete: async (projectId: string): Promise<null | ApiErrorResponse> => {
       return await http.delete<unknown, null | ApiErrorResponse>(`/projects/${projectId}`);
     },
