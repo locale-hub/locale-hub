@@ -17,7 +17,10 @@ export const routes = {
   projects: {
     root: '/projects',
     applications: (projectId: string) => `/projects/${projectId}/applications`,
-    commits: (projectId: string) => `/projects/${projectId}/commits`,
+    commits: {
+      list: (projectId: string) => `/projects/${projectId}/commits`,
+      get: (projectId: string, commitId: string) => `/projects/${projectId}/commits/${commitId}`,
+    },
     overview: (projectId: string) => `/projects/${projectId}`,
     settings: (projectId: string) => `/projects/${projectId}/settings`,
     transfers: (projectId: string) => `/projects/${projectId}/transfers`,

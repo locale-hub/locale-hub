@@ -6,7 +6,7 @@ import { Button, Menu, Table } from '@locale-hub/design-system';
 import { OrganizationsUsersGetResponse, ProjectsUsersGetResponse } from '@locale-hub/data';
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 
-export default function OrganizationUsersPage({
+export default function ProjectUsersPage({
   params
 }: {
   params: { projectId: string }

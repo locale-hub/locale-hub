@@ -7,7 +7,7 @@ import { ApiConnector } from '@locale-hub/api-connector';
 import { locales } from '../../../../../constants/locales';
 
 
-export default function OrganizationsSettingsPage({
+export default function ProjectSettingsPage({
   params
 }: {
   params: { projectId: string }
