@@ -18,6 +18,7 @@ import {
 } from '@locale-hub/data';
 import { Http } from './http';
 import { ProjectsGetResponse } from '../../../data/src/lib/responses/projects-get.response';
+import { FileFormat } from '../../../data/src/lib/enums/file-format.enum';
 
 // TODO: replace with config based value
 const http = new Http('http://localhost:3000/v1');
@@ -198,6 +199,11 @@ export const ApiConnector = {
           }
         );
       }
+    },
+    bundles: {
+      get: async (projectId: string, format: FileFormat): Promise<Blob | ApiErrorResponse> => {
+        return await http.getBlob(`/projects/${projectId}/bundles?format=${format}`);
+      },
     },
     commits: {
       list: async (projectId: string): Promise<CommitsListResponse | ApiErrorResponse> => {

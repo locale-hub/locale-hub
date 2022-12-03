@@ -76,5 +76,23 @@ export class Http {
   }
 
 
+  async getBlob (path: string): Promise<Blob | ApiErrorResponse> {
+    try {
+      const init: RequestInit = {
+        method: 'GET',
+        headers: this.headers()
+      };
+
+      const res = await fetch(`${this.baseUrl}${path}`, init);
+      return await res.blob();
+    } catch (err: any) {
+      return { error: {
+          statusCode: 500,
+          code: ErrorCode.unknownError,
+          message: 'Unexpected error',
+          errors: [ `${err}` ]
+        }};
+    }
+  }
 
 }
