@@ -3,12 +3,17 @@ import React, { Children } from 'react';
 import { Menu } from '@headlessui/react'
 
 export default function UserIcon({
+  children,
+  className,
   name,
-  children
+  size
 }: {
-  name: string,
   children?: React.ReactNode
+  className?: string,
+  name: string,
+  size?: 'small' | 'large'
 }) {
+  size ??= 'small';
   const initials = name
     .trim()
     .split(/[ ,]+/) // split on whitespace
@@ -16,12 +21,16 @@ export default function UserIcon({
     .slice(0, 2)
     .join('');
 
-  return <Menu as="div" className="relative ml-3">
+  const iconSize = 'large' === size
+    ? 'h-48 w-48 text-8xl'
+    : 'h-8 w-8';
+
+  return <Menu as="div" className={`relative ${className}`}>
     <div>
-      <Menu.Button className="flex max-w-xs items-center rounded-full bg-primary text-sm">
+      <Menu.Button className="flex max-w-xs m-auto items-center rounded-full bg-primary text-sm">
         <span className="sr-only">Open user menu</span>
-        <div className="h-8 w-8 rounded-full pt-[6px]">
-          {initials}
+        <div className={`${iconSize} rounded-full] grid grid-cols-1 place-content-center`}>
+          <div className='inline-block align-middle'>{initials}</div>
         </div>
       </Menu.Button>
     </div>

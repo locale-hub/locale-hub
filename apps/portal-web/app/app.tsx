@@ -21,8 +21,8 @@ const authenticatedNavigation = (user: any, onLogout: () => void) => <>
   <DocumentTextIcon className='mx-2 h-6 w-6 hover:cursor-pointer' />
   <BellAlertIcon className='mx-2 h-6 w-6 hover:cursor-pointer' />
   <PlusIcon className='mx-2 h-6 w-6 hover:cursor-pointer' />
-  <UserIcon name={user.name}>
-    <a className='bg-gray-100 block px-4 py-2 text-black hover:cursor-pointer hover:bg-slate-200'>Profile</a>
+  <UserIcon name={user.name} className='ml-3'>
+    <Link href={routes.profiles.me} className='bg-gray-100 block px-4 py-2 text-black hover:cursor-pointer hover:bg-slate-200'>Profile</Link>
     <a onClick={onLogout} className='bg-gray-100 block px-4 py-2 text-warn hover:cursor-pointer hover:bg-slate-200'>Logout</a>
   </UserIcon>
 </>;

@@ -25,7 +25,7 @@ export default function Navbar({
     }
   }
 
-  return <nav className="sticky top-0 flex px-10 py-4 h-16 bg-gray-100 dark:bg-dark border-b border-1 border-black/10 dark:border-white/40">
+  return <nav className="sticky top-0 flex px-10 py-4 h-16 z-50 bg-gray-100 dark:bg-dark border-b border-1 border-black/10 dark:border-white/40">
     <div className="w-5/12 flex items-center">
       <Link href='/'>
         <Image src="/logo-white.svg" alt="Locale Hub logo" width="40" height="40" className='hidden dark:inline' />
