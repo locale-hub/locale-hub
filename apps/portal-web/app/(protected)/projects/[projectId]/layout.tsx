@@ -28,7 +28,7 @@ export default function ProjectLayout({
         { name: 'Translations', link: routes.projects.translations(projectId), icon: <LanguageIcon className='w-6 h-6' /> },
         { name: 'Import/Export', link: routes.projects.transfers(projectId), icon: <ArrowsUpDownIcon className='w-6 h-6' /> },
         { name: 'Users', link: routes.projects.users(projectId), icon: <UsersIcon className='w-6 h-6' /> },
-        { name: 'Commits', link: routes.projects.commits(projectId), icon: <ArrowUpTrayIcon className='w-6 h-6' /> },
+        { name: 'Commits', link: routes.projects.commits.list(projectId), icon: <ArrowUpTrayIcon className='w-6 h-6' /> },
         { name: 'Apps', link: routes.projects.applications(projectId), icon: <DevicePhoneMobileIcon className='w-6 h-6' /> },
         { name: 'Settings', link: routes.projects.settings(projectId), icon: <AdjustmentsHorizontalIcon className='w-6 h-6' /> },
       ]} />
