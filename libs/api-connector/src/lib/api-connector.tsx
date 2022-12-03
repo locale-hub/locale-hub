@@ -85,7 +85,7 @@ export const ApiConnector = {
 
     resetPasswordApply: async (resetToken: string, primaryEmail: string, password: string): Promise<User | ApiErrorResponse> => {
       const res = await http.post<any, TokenResponse>(
-        '/auth//apply',
+        '/auth/apply',
         { primaryEmail, resetToken, password }
       );
       if ('error' in res) {
@@ -103,6 +103,28 @@ export const ApiConnector = {
     dashboard: async (): Promise<MeDashboardResponse | ApiErrorResponse> => {
       return await http.get<MeDashboardResponse>('/me/dashboard');
     },
+    update:  async (user: User): Promise<User | ApiErrorResponse> => {
+      const res = await http.put<any, TokenResponse>('/me', { user });
+      if ('error' in res) {
+        return res as ApiErrorResponse;
+      }
+
+      const token = res.token;
+      http.setToken(token);
+      localStorage.setItem('token', token);
+      return (decode(token) as any).user as User;
+    },
+    self: async (): Promise<User> => {
+      const token = localStorage.getItem('token')!;
+      return (decode(token) as any).user as User;
+    },
+    updatePassword: async (oldPassword: string, newPassword: string): Promise<null | ApiErrorResponse> => {
+      const res = await http.put<any, any>('/me/password', { old: oldPassword, new: newPassword });
+      if ('error' in res) {
+        return res as ApiErrorResponse;
+      }
+      return null;
+    }
   },
 
   organizations: {

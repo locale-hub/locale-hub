@@ -4,6 +4,9 @@ export const routes = {
   auth: '/auth',
   'auth.password-reset': '/auth/password-reset',
   dashboard: '/dashboard',
+  profiles: {
+    me: '/profiles/me',
+  },
   organizations: {
     root: '/organizations',
     projects: (organizationId: string) => `/organizations/${organizationId}/projects`,

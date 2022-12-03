@@ -15,7 +15,7 @@ export default function InputField({
   onValue: (value: string) => void,
   placeholder?: string,
   required?: boolean,
-  type: 'text' | 'password'
+  type: 'email' | 'password' | 'text'
 }) {
   required ??= false;
   const id = Math.random().toString(36).slice(2, 7);
