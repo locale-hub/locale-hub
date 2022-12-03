@@ -14,7 +14,7 @@ import {
   OrganizationsGetResponse,
   Organization,
   OrganizationsUsageGetResponse,
-  CommitsListResponse, Commit
+  CommitsListResponse, Commit, AppsListResponse, App, AppsPostResponse
 } from '@locale-hub/data';
 import { Http } from './http';
 import { ProjectsGetResponse } from '../../../data/src/lib/responses/projects-get.response';
@@ -181,6 +181,24 @@ export const ApiConnector = {
       return await http.get<ProjectsUsersGetResponse>(`/projects/${projectId}/users`);
     },
 
+    applications: {
+      list: async (projectId: string): Promise<AppsListResponse | ApiErrorResponse> => {
+        return await http.get<AppsListResponse>(`/projects/${projectId}/apps`);
+      },
+      delete: async (projectId: string, appId: string): Promise<null | ApiErrorResponse> => {
+        return await http.delete<unknown, null | ApiErrorResponse>(`/projects/${projectId}/apps/${appId}`);
+      },
+      create: async (projectId: string, name: string, identifier: string) => {
+        return await http.post<any, AppsPostResponse | ApiErrorResponse>(
+          `/organizations/${projectId}/apps`,
+          {
+            name,
+            type: 'other',
+            identifier
+          }
+        );
+      }
+    },
     commits: {
       list: async (projectId: string): Promise<CommitsListResponse | ApiErrorResponse> => {
         return await http.get<CommitsListResponse>(`/projects/${projectId}/commits`);

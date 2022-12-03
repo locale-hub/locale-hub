@@ -3,6 +3,7 @@ export {EmailStatus} from './lib/enums/email-status.enum';
 export {ErrorCode} from './lib/enums/error-code.enum';
 export {UserRoles} from './lib/enums/user-roles.enum';
 
+export {App} from './lib/models/app.model';
 export {ApiError} from './lib/models/api-error.model';
 export {ChangeList} from './lib/models/change-list.model';
 export {Commit} from './lib/models/commit.model';
@@ -15,6 +16,8 @@ export {User} from './lib/models/user.model';
 export {UserGroupEntry} from './lib/models/user-group-entry.model';
 
 export {ApiErrorResponse} from './lib/responses/api-error.response';
+export {AppsListResponse} from './lib/responses/apps-list.response';
+export {AppsPostResponse} from './lib/responses/apps-post.response';
 export {CommitsListResponse} from './lib/responses/commits-list.response';
 export {MeDashboardResponse} from './lib/responses/me-dashboard.response';
 export {OrganizationsGetResponse} from './lib/responses/organizations-get.response';
