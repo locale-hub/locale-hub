@@ -4,7 +4,7 @@ export default function Table({
   heads,
   entries
 }: {
-  className: string,
+  className?: string,
   heads: { key: string, label: string, className?: string }[],
   entries: { [_: string]: any }[]
 }) {

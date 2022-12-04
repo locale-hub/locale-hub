@@ -3,8 +3,7 @@
 import React from 'react';
 import { Button } from '@locale-hub/design-system';
 import { ApiConnector } from '@locale-hub/api-connector';
-import { FileFormat } from '../../../../../../../libs/data/src/lib/enums/file-format.enum';
-import Link from 'next/link';
+import { FileFormat } from '@locale-hub/data';
 
 
 export default function ProjectTransfersPage({
