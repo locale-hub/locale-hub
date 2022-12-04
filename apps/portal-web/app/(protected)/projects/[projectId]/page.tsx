@@ -44,7 +44,7 @@ export default function ProjectOverviewPage({
 
   return <div>
     <h1 className='text-2xl font-bold'>{data.project.name}'s overview</h1>
-    <div className='flex'>
+    <div className='flex items-stretch'>
       { data.deployedCommit && <div className='m-4 w-3/12 h-full'>
         <Card title='Deployed commit' className='w-full'>
           {data.deployedCommit.title}

@@ -19,6 +19,7 @@ import {
 import { Http } from './http';
 import { ProjectsGetResponse } from '../../../data/src/lib/responses/projects-get.response';
 import { FileFormat } from '../../../data/src/lib/enums/file-format.enum';
+import { ManifestsGetResponse } from '../../../data/src/lib/responses/manifests-get.response';
 
 // TODO: replace with config based value
 const http = new Http('http://localhost:3000/v1');
@@ -215,6 +216,11 @@ export const ApiConnector = {
           { deployed: true }
         );
       }
+    },
+    manifests: {
+      get: async (projectId: string): Promise<ManifestsGetResponse | ApiErrorResponse> => {
+        return await http.get(`/projects/${projectId}/manifests`);
+      },
     }
   }
 
