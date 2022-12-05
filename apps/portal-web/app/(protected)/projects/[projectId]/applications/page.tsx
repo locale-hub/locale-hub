@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { Button, InputField, Modal, Spacer } from '@locale-hub/design-system';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Button, InputField, Modal, ModalCreateApp, Spacer } from '@locale-hub/design-system';
 import { ApiConnector } from '@locale-hub/api-connector';
 import { App } from '@locale-hub/data';
 import { DocumentDuplicateIcon, TrashIcon } from '@heroicons/react/24/outline';
@@ -12,7 +12,6 @@ export default function ProjectApplicationsPage({
   params: { projectId: string }
 }) {
   const [apps, setApps] = useState<App[]>();
-  const [newApp, setNewApp] = useState<{ name: string, identifier: string }>({ name: '', identifier: '' })
 
   useEffect(() => {
     ApiConnector.projects.applications.list(params.projectId).then(data => {
@@ -24,9 +23,12 @@ export default function ProjectApplicationsPage({
     });
   }, []);
 
-  const createApp = async () => {
-    setAppModal(false);
-    ApiConnector.projects.applications.create(params.projectId, newApp.name, newApp.identifier).then((data) => {
+  const createApp = async (app?: App) => {
+    setCreateModal(false);
+    if (undefined === app || null === app) {
+      return;
+    }
+    ApiConnector.projects.applications.create(params.projectId, app.name, app.identifier).then((data) => {
       if ('error' in data) {
         // TODO Toast
         return;
@@ -44,26 +46,12 @@ export default function ProjectApplicationsPage({
     });
   }
 
+  const [createModal, setCreateModal] = useState(false);
   const [appModal, setAppModal] = useState(false);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState<React.ReactNode>(null);
   const [actions, setActions] = useState<React.ReactNode>(null);
-  const openNewModal = () => {
-    // TODO: set not applying as expected
-    const setNewAppName = (value: string) => setNewApp({ ...newApp, name: value });
-    const setNewAppId = (value: string) => setNewApp({ ...newApp, identifier: value });
 
-    setTitle('Create a new app');
-    setContent(<div className='w-96'>
-      <InputField name={'name'} label={'Name'} onValue={setNewAppName} type={'text'} value={newApp.name} placeholder='Name' />
-      <InputField name={'identifier'} label={'Identifier'} onValue={setNewAppId} type={'text'} value={newApp.identifier} placeholder='Identifier' />
-    </div>);
-    setActions(<>
-      <Button type='cancel' onClick={() => setAppModal(false)}>Cancel</Button>
-      <Button type='confirm' onClick={createApp}>Create</Button>
-    </>);
-    setAppModal(true);
-  };
   const openDeleteModal = (appId: string) => {
     setTitle('Are you sure?');
     setContent(<>
@@ -80,6 +68,7 @@ export default function ProjectApplicationsPage({
   };
 
   return <div className='px-10 py-10 m-auto w-3/4 center'>
+    <ModalCreateApp isOpen={createModal} onClose={createApp} />
     <Modal isOpen={appModal} title={title} content={content} actions={actions} onClose={() => setAppModal(false)} />
 
     <div className='flex mt-32'>
@@ -97,7 +86,7 @@ export default function ProjectApplicationsPage({
       </div>
       <Spacer />
       <span className='ml-2 mt-2'>
-        <Button type='confirm' onClick={openNewModal}>New App</Button>
+        <Button type='confirm' onClick={() => setCreateModal(true)}>New App</Button>
       </span>
     </div>
 

@@ -6,6 +6,7 @@ import DateFormat from './lib/date-format/date-format';
 import InputField from './lib/input-field/input-field';
 import Menu from './lib/menu/menu';
 import Modal from './lib/modal/modal';
+import ModalCreateApp from './lib/modal/modal-create-app';
 import Navbar from './lib/navbar/navbar';
 import ProgressBar from './lib/progress-bar/progress-bar';
 import Select from './lib/select/select';
@@ -22,6 +23,7 @@ export {
   InputField,
   Menu,
   Modal,
+  ModalCreateApp,
   Navbar,
   ProgressBar,
   Select,

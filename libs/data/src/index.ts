@@ -29,6 +29,7 @@ export {OrganizationsGetResponse} from './lib/responses/organizations-get.respon
 export {OrganizationsProjectsGetResponse} from './lib/responses/organizations-projects-get.response';
 export {OrganizationsUsageGetResponse} from './lib/responses/organizations-usage-get.response';
 export {OrganizationsUsersGetResponse} from './lib/responses/organizations-users-get.response';
+export {ProjectsGetResponse} from './lib/responses/projects-get.response';
 export {ProjectsListResponse} from './lib/responses/projects-list.response';
 export {ProjectsUsersGetResponse} from './lib/responses/projects-users-get.response';
 export {TokenResponse} from './lib/responses/token.response';

@@ -14,12 +14,14 @@ import {
   OrganizationsGetResponse,
   Organization,
   OrganizationsUsageGetResponse,
-  CommitsListResponse, Commit, AppsListResponse, App, AppsPostResponse
+  CommitsListResponse,
+  AppsListResponse,
+  AppsPostResponse,
+  FileFormat,
+  ManifestsGetResponse,
+  ProjectsGetResponse
 } from '@locale-hub/data';
 import { Http } from './http';
-import { ProjectsGetResponse } from '../../../data/src/lib/responses/projects-get.response';
-import { FileFormat } from '../../../data/src/lib/enums/file-format.enum';
-import { ManifestsGetResponse } from '../../../data/src/lib/responses/manifests-get.response';
 
 // TODO: replace with config based value
 const http = new Http('http://localhost:3000/v1');
@@ -192,7 +194,7 @@ export const ApiConnector = {
       },
       create: async (projectId: string, name: string, identifier: string) => {
         return await http.post<any, AppsPostResponse | ApiErrorResponse>(
-          `/organizations/${projectId}/apps`,
+          `/projects/${projectId}/apps`,
           {
             name,
             type: 'other',
