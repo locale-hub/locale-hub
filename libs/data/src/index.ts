@@ -10,6 +10,7 @@ export {ApiError} from './lib/models/api-error.model';
 export {ChangeList} from './lib/models/change-list.model';
 export {Commit} from './lib/models/commit.model';
 export {Email} from './lib/models/email.model';
+export {Manifest} from './lib/models/manifest.model';
 export {ManifestEntry} from './lib/models/manifest-entry.model';
 export {ManifestWithStatus} from './lib/models/manifest-with-status.model';
 export {Organization} from './lib/models/organization.model';

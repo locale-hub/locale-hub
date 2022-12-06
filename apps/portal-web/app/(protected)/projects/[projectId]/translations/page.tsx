@@ -1,13 +1,14 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, InputField, Modal, Select, Spacer, Table } from '@locale-hub/design-system';
-import { ManifestWithStatus, Project, User } from '@locale-hub/data';
+import { ManifestEntry, ManifestWithStatus, Project, User } from '@locale-hub/data';
 import { ApiConnector } from '@locale-hub/api-connector';
 import { locales } from '../../../../../constants/locales';
 import Link from 'next/link';
 import { routes } from '../../../../../constants/routes';
 import { CloudArrowUpIcon, CodeBracketIcon } from '@heroicons/react/24/outline';
+import TranslationModal from './translation-modal';
 
 
 export default function ProjectTranslationsPage({
@@ -15,8 +16,13 @@ export default function ProjectTranslationsPage({
 }: {
   params: { projectId: string }
 }) {
+  let originalManifests: ManifestWithStatus;
+
   const [selectedLocale, setSelectedLocale] = useState<string>();
   const [manifests, setManifests] = useState<ManifestWithStatus>();
+  const [entry, setEntry] = useState<{ locale: string, key: string, value: string }>();
+  const [isOpen, setIsOpen] = useState(false);
+  const [changesMade, setChangesMade] = useState(false);
 
   useEffect(() => {
     ApiConnector.projects.manifests.get(params.projectId).then((data) => {
@@ -24,17 +30,36 @@ export default function ProjectTranslationsPage({
         // TODO: Toast
         return;
       }
+      // stringify/parse operation is to force creation of a new Object.
+      originalManifests = JSON.parse(JSON.stringify(data.manifest));
+
       setManifests(data.manifest);
       setSelectedLocale(data.manifest.locales[0]);
     });
   }, []);
 
   const openEditor = (key: string) => {
+    setEntry({
+      locale: selectedLocale,
+      key: key,
+      value: manifests.manifest[selectedLocale][key]
+    });
+    setIsOpen(true);
+  };
 
+  const entryUpdate = (entry: { locale: string, key: string, value: string }) => {
+    setIsOpen(false);
+    if (undefined === entry || null === entry) {
+      return;
+    }
+    setChangesMade(changesMade || manifests.manifest[entry.locale][entry.key] !== entry.value);
+    manifests.manifest[entry.locale][entry.key] = entry.value;
+    setManifests(manifests);
   };
 
   return <>
     <div className='flex'>
+      <TranslationModal isOpen={isOpen} entry={entry} onClose={entryUpdate} />
       <div className="inline-flex rounded-md border border-slate-400/50 overflow-hidden" role="group">
         { manifests && manifests.locales.map(locale =>
           <button onClick={() => setSelectedLocale(locale)} key={locale}
@@ -51,7 +76,9 @@ export default function ProjectTranslationsPage({
       <div className='grid grid-cols-3 gap-4'>
         <Button onClick={() => {}}>Add Locale</Button>
         <Button type='action' onClick={() => {}}>Add Translation key</Button>
-        <Button type='cancel' onClick={() => {}}>Commit</Button>
+        <Button type='cancel' disabled={false === changesMade}
+                onClick={() => {}}
+        >Commit</Button>
       </div>
     </div>
     { manifests && <>
