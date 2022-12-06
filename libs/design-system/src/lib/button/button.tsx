@@ -1,7 +1,5 @@
 import React from 'react';
 
-
-
 export default function Button({
   children,
   disabled,
@@ -10,7 +8,7 @@ export default function Button({
 }: {
   children?: React.ReactNode,
   disabled?: boolean,
-  onClick: () => void
+  onClick: React.MouseEventHandler<HTMLButtonElement>
   type?: 'action' | 'default' | 'cancel' | 'confirm'
 }) {
   type ??= 'default';
