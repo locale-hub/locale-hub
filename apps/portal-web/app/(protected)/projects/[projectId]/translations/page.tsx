@@ -11,6 +11,7 @@ import { CloudArrowUpIcon, CodeBracketIcon } from '@heroicons/react/24/outline';
 import TranslationModal from './translation-modal';
 import AddLocaleModal from './add-locale-modal';
 import AddKeyModal from './add-key-modal';
+import CommitModal from './commit-modal';
 
 
 export default function ProjectTranslationsPage({
@@ -28,6 +29,7 @@ export default function ProjectTranslationsPage({
   const [openTranslationModal, setOpenTranslationModal] = useState(false);
   const [openAddLocaleModal, setOpenAddLocaleModal] = useState(false);
   const [openAddKeyModal, setOpenAddKeyModal] = useState(false);
+  const [openCommitModal, setOpenCommitModal] = useState(false);
 
   useEffect(() => {
     ApiConnector.projects.manifests.get(params.projectId).then((data) => {
@@ -102,10 +104,20 @@ export default function ProjectTranslationsPage({
     });
   }
 
+  const onNewCommit = (title: string, description: string) => {
+    setOpenCommitModal(false);
+    if (undefined === title || undefined === description) {
+      return;
+    }
+    // TODO: Toast
+    ApiConnector.projects.commits.post(params.projectId, manifests, title, description);
+  }
+
   return <>
     <div className='flex'>
       <AddLocaleModal isOpen={openAddLocaleModal} onClose={onNewLocale} />
       <AddKeyModal isOpen={openAddKeyModal} onClose={onNewKey} />
+      <CommitModal isOpen={openCommitModal} onClose={onNewCommit} />
       <TranslationModal isOpen={openTranslationModal} entry={entry} onClose={entryUpdate} />
       <div className="inline-flex rounded-md border border-slate-400/50 overflow-hidden" role="group">
         { manifests && manifests.locales.map(locale =>
@@ -124,7 +136,7 @@ export default function ProjectTranslationsPage({
         <Button onClick={() => setOpenAddLocaleModal(true)}>Add Locale</Button>
         <Button type='action' onClick={() => setOpenAddKeyModal(true)}>Add Translation key</Button>
         <Button type='cancel' disabled={false === changesMade}
-                onClick={() => {}}
+                onClick={() => setOpenCommitModal(true)}
         >Commit</Button>
       </div>
     </div>

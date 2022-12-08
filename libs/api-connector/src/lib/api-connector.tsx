@@ -19,7 +19,7 @@ import {
   AppsPostResponse,
   FileFormat,
   ManifestsGetResponse,
-  ProjectsGetResponse
+  ProjectsGetResponse, ManifestWithStatus, Manifest
 } from '@locale-hub/data';
 import { Http } from './http';
 
@@ -216,6 +216,12 @@ export const ApiConnector = {
         return await http.put<{ deployed: boolean }, void | ApiErrorResponse>(
           `/projects/${projectId}/commits/${commitId}`,
           { deployed: true }
+        );
+      },
+      post: async (projectId: string, manifest: ManifestWithStatus, title: string, description: string): Promise<void | ApiErrorResponse> => {
+        return await http.post<{ title: string, description: string, changeList: ManifestWithStatus }, void | ApiErrorResponse>(
+          `/projects/${projectId}/commits`,
+          { title, description, changeList: manifest }
         );
       }
     },
