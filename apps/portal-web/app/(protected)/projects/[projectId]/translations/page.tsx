@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { routes } from '../../../../../constants/routes';
 import { CloudArrowUpIcon, CodeBracketIcon } from '@heroicons/react/24/outline';
 import TranslationModal from './translation-modal';
+import AddLocaleModal from './add-locale-modal';
 
 
 export default function ProjectTranslationsPage({
@@ -18,11 +19,13 @@ export default function ProjectTranslationsPage({
 }) {
   let originalManifests: ManifestWithStatus;
 
-  const [selectedLocale, setSelectedLocale] = useState<string>();
   const [manifests, setManifests] = useState<ManifestWithStatus>();
+  const [selectedLocale, setSelectedLocale] = useState<string>();
   const [entry, setEntry] = useState<{ locale: string, key: string, value: string }>();
-  const [isOpen, setIsOpen] = useState(false);
   const [changesMade, setChangesMade] = useState(false);
+
+  const [openTranslationModal, setOpenTranslationModal] = useState(false);
+  const [openAddLocaleModal, setOpenAddLocaleModal] = useState(false);
 
   useEffect(() => {
     ApiConnector.projects.manifests.get(params.projectId).then((data) => {
@@ -44,11 +47,11 @@ export default function ProjectTranslationsPage({
       key: key,
       value: manifests.manifest[selectedLocale][key]
     });
-    setIsOpen(true);
+    setOpenTranslationModal(true);
   };
 
   const entryUpdate = (entry: { locale: string, key: string, value: string }) => {
-    setIsOpen(false);
+    setOpenTranslationModal(false);
     if (undefined === entry || null === entry) {
       return;
     }
@@ -57,9 +60,33 @@ export default function ProjectTranslationsPage({
     setManifests(manifests);
   };
 
+  const onNewLocale = (locale: string) => {
+    setOpenAddLocaleModal(false);
+    if (manifests.locales.includes(locale)) {
+      return;
+    }
+    setManifests({
+      locales: [...manifests.locales, locale],
+      keys: manifests.keys,
+      manifest: {
+        ...manifests.manifest,
+        [locale]: { // generate empty locale values with all required keys
+          ...(() => {
+            const obj = {};
+            for (const key of manifests.keys) {
+              obj[key] = '';
+            }
+            return obj;
+          })()
+        }
+      }
+    });
+  }
+
   return <>
     <div className='flex'>
-      <TranslationModal isOpen={isOpen} entry={entry} onClose={entryUpdate} />
+      <AddLocaleModal isOpen={openAddLocaleModal} onClose={onNewLocale} />
+      <TranslationModal isOpen={openTranslationModal} entry={entry} onClose={entryUpdate} />
       <div className="inline-flex rounded-md border border-slate-400/50 overflow-hidden" role="group">
         { manifests && manifests.locales.map(locale =>
           <button onClick={() => setSelectedLocale(locale)} key={locale}
@@ -74,7 +101,7 @@ export default function ProjectTranslationsPage({
       </div>
       <Spacer />
       <div className='grid grid-cols-3 gap-4'>
-        <Button onClick={() => {}}>Add Locale</Button>
+        <Button onClick={() => setOpenAddLocaleModal(true)}>Add Locale</Button>
         <Button type='action' onClick={() => {}}>Add Translation key</Button>
         <Button type='cancel' disabled={false === changesMade}
                 onClick={() => {}}
