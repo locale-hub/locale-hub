@@ -10,6 +10,7 @@ import { routes } from '../../../../../constants/routes';
 import { CloudArrowUpIcon, CodeBracketIcon } from '@heroicons/react/24/outline';
 import TranslationModal from './translation-modal';
 import AddLocaleModal from './add-locale-modal';
+import AddKeyModal from './add-key-modal';
 
 
 export default function ProjectTranslationsPage({
@@ -26,6 +27,7 @@ export default function ProjectTranslationsPage({
 
   const [openTranslationModal, setOpenTranslationModal] = useState(false);
   const [openAddLocaleModal, setOpenAddLocaleModal] = useState(false);
+  const [openAddKeyModal, setOpenAddKeyModal] = useState(false);
 
   useEffect(() => {
     ApiConnector.projects.manifests.get(params.projectId).then((data) => {
@@ -62,7 +64,7 @@ export default function ProjectTranslationsPage({
 
   const onNewLocale = (locale: string) => {
     setOpenAddLocaleModal(false);
-    if (manifests.locales.includes(locale)) {
+    if (undefined === locale || manifests.locales.includes(locale)) {
       return;
     }
     setManifests({
@@ -83,9 +85,27 @@ export default function ProjectTranslationsPage({
     });
   }
 
+  const onNewKey = (key: string) => {
+    setOpenAddKeyModal(false);
+    if (undefined === key || manifests.keys.includes(key)) {
+      return;
+    }
+    const tmp = manifests.manifest;
+    for (const locale of manifests.locales) {
+      tmp[locale][key] = '';
+    }
+
+    setManifests({
+      locales: manifests.locales,
+      keys: [...manifests.keys, key],
+      manifest: tmp
+    });
+  }
+
   return <>
     <div className='flex'>
       <AddLocaleModal isOpen={openAddLocaleModal} onClose={onNewLocale} />
+      <AddKeyModal isOpen={openAddKeyModal} onClose={onNewKey} />
       <TranslationModal isOpen={openTranslationModal} entry={entry} onClose={entryUpdate} />
       <div className="inline-flex rounded-md border border-slate-400/50 overflow-hidden" role="group">
         { manifests && manifests.locales.map(locale =>
@@ -102,7 +122,7 @@ export default function ProjectTranslationsPage({
       <Spacer />
       <div className='grid grid-cols-3 gap-4'>
         <Button onClick={() => setOpenAddLocaleModal(true)}>Add Locale</Button>
-        <Button type='action' onClick={() => {}}>Add Translation key</Button>
+        <Button type='action' onClick={() => setOpenAddKeyModal(true)}>Add Translation key</Button>
         <Button type='cancel' disabled={false === changesMade}
                 onClick={() => {}}
         >Commit</Button>
