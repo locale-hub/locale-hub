@@ -1,5 +1,8 @@
 import { ApiErrorResponse } from '@locale-hub/data';
-import { ErrorCode } from '../../../data/src/lib/enums/error-code.enum';
+import { redirect } from 'next/navigation';
+
+import { ErrorCode } from '@locale-hub/data';
+import { routes } from '../../../../apps/portal-web/constants/routes';
 
 
 export class Http {
@@ -27,8 +30,6 @@ export class Http {
     this.authorization = token;
   }
 
-
-
   private async apiCall<TBody, TResponse>(method: string, url: string, body?: TBody): Promise<TResponse | ApiErrorResponse> {
     try {
       const init: RequestInit = {
@@ -40,6 +41,16 @@ export class Http {
       }
 
       const res = await fetch(`${this.baseUrl}${url}`, init);
+
+      if (401 === res.status) {
+        redirect(routes.auth);
+        return { error: {
+          statusCode: 401,
+          code: ErrorCode.userAccessUnauthorized,
+          message: 'Unauthorized, please login again'
+        }};
+      }
+
       const json = await res.json();
 
       return (undefined !== json?.error)
@@ -47,11 +58,11 @@ export class Http {
         : json as TResponse;
     } catch (err: any) {
       return { error: {
-          statusCode: 500,
-          code: ErrorCode.unknownError,
-          message: 'Unexpected error',
-          errors: [ `${err}` ]
-        }};
+        statusCode: 500,
+        code: ErrorCode.unknownError,
+        message: 'Unexpected error',
+        errors: [ `${err}` ]
+      }};
     }
   }
 

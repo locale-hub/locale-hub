@@ -5,6 +5,8 @@ import { Button, InputField, Modal, Select } from '@locale-hub/design-system';
 import { Project, User } from '@locale-hub/data';
 import { ApiConnector } from '@locale-hub/api-connector';
 import { locales } from '../../../../../constants/locales';
+import { redirect } from 'next/navigation';
+import { routes } from '../../../../../constants/routes';
 
 
 export default function ProjectSettingsPage({
@@ -47,8 +49,14 @@ export default function ProjectSettingsPage({
   }
 
   function deleteProject() {
-    // TODO: Toast
-    ApiConnector.projects.delete(project.id);
+    setDeleteModal(false);
+    ApiConnector.projects.delete(project.id).then((data) => {
+      if ('error' in data) {
+        // TODO: Toast
+        return;
+      }
+      redirect(routes.projects.root);
+    });
   }
 
   const [deleteModal, setDeleteModal] = useState(false);
