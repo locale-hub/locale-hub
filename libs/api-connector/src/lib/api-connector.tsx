@@ -19,7 +19,7 @@ import {
   AppsPostResponse,
   FileFormat,
   ManifestsGetResponse,
-  ProjectsGetResponse, ManifestWithStatus, Manifest
+  ProjectsGetResponse, ManifestWithStatus, Manifest, MeNotificationsResponse
 } from '@locale-hub/data';
 import { Http } from './http';
 
@@ -133,6 +133,15 @@ export const ApiConnector = {
         return res as ApiErrorResponse;
       }
       return null;
+    }
+  },
+
+  notifications: {
+    list: async (): Promise<MeNotificationsResponse | ApiErrorResponse> => {
+      return await http.get<MeNotificationsResponse>('/notifications');
+    },
+    discard: async (notificationId: string): Promise<null | ApiErrorResponse> => {
+      return await http.delete<void, null | ApiErrorResponse>(`/notifications/${notificationId}`);
     }
   },
 
