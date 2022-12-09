@@ -19,6 +19,7 @@ export const AuthContextProvider = ({
 }: {
   children: React.ReactNode
 }) => {
+  let refreshInterval;
   const [user, setUser] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -27,6 +28,18 @@ export const AuthContextProvider = ({
     setUser(previousUser);
     setLoggedIn(null !== previousUser);
   }, []);
+
+  useEffect(() => {
+    if (loggedIn) {
+      refreshInterval = setInterval(() => {
+        ApiConnector.auth.refreshToken();
+        // TODO: delay in config
+      }, 13 * 60 * 1000);
+    }
+    else {
+      clearInterval(refreshInterval)
+    }
+  }, [loggedIn]);
 
   const register = async (name: string, email: string, password: string) => {
     const user = await ApiConnector.auth.register(name, email, password);
