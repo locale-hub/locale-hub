@@ -19,7 +19,12 @@ import {
   AppsPostResponse,
   FileFormat,
   ManifestsGetResponse,
-  ProjectsGetResponse, ManifestWithStatus, Manifest, MeNotificationsResponse
+  ProjectsGetResponse,
+  ManifestWithStatus,
+  Manifest,
+  MeNotificationsResponse,
+  OrganizationsListResponse,
+  ProjectsPostResponse, OrganizationsPostResponse
 } from '@locale-hub/data';
 import { Http } from './http';
 
@@ -146,6 +151,9 @@ export const ApiConnector = {
   },
 
   organizations: {
+    list: async (): Promise<OrganizationsListResponse | ApiErrorResponse> => {
+      return await http.get<OrganizationsListResponse>('/organizations');
+    },
     get: async (organizationId: string): Promise<OrganizationsGetResponse | ApiErrorResponse> => {
       return await http.get<OrganizationsGetResponse>(`/organizations/${organizationId}`);
     },
@@ -166,7 +174,15 @@ export const ApiConnector = {
     },
     delete: async (organizationId: string): Promise<void | ApiErrorResponse> => {
       return await http.delete<void, void | ApiErrorResponse>(`/organizations/${organizationId}`);
-    }
+    },
+    post: async (name: string): Promise<OrganizationsPostResponse | ApiErrorResponse> => {
+      return await http.post<any, OrganizationsPostResponse | ApiErrorResponse>(
+        '/organizations',
+        {
+          organization: { name }
+        }
+      );
+    },
   },
 
   projects: {
@@ -180,6 +196,16 @@ export const ApiConnector = {
     },
     get: async (projectId: string): Promise<ProjectsGetResponse | ApiErrorResponse> => {
       return await http.get<ProjectsGetResponse>(`/projects/${projectId}`);
+    },
+    post: async (organizationId: string, name: string, defaultLocale: string): Promise<ProjectsPostResponse | ApiErrorResponse> => {
+      return await http.post<any, ProjectsPostResponse | ApiErrorResponse>(
+        '/projects',
+        {
+          organizationId,
+          name,
+          defaultLocale
+        }
+      );
     },
     update: async (project: Project): Promise<void | ApiErrorResponse> => {
       return await http.put<Project, void | ApiErrorResponse>(
@@ -238,7 +264,7 @@ export const ApiConnector = {
       get: async (projectId: string): Promise<ManifestsGetResponse | ApiErrorResponse> => {
         return await http.get(`/projects/${projectId}/manifests`);
       },
-    }
+    },
   }
 
 };
