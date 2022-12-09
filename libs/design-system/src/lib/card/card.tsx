@@ -20,7 +20,7 @@ export default function Card({
           { title }
         </h5>
       }
-      {children && <div className="mb-3 font-normal text-gray-700 dark:text-gray-400 mt-2">
+      { children && <div className="font-normal text-gray-700 dark:text-gray-400 mt-2">
           {children}
         </div>
       }

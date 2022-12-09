@@ -8,13 +8,13 @@ import Link from 'next/link';
 type Theme = 'dark' | 'light';
 
 export default function Navbar({
-  navigation,
+  children,
   theme,
   onThemeChange
 }: {
   theme: Theme,
   onThemeChange?: (theme: Theme) => void,
-  navigation?: React.ReactNode
+  children?: React.ReactNode
 }) {
   let currentTheme: Theme = theme;
 
@@ -34,7 +34,7 @@ export default function Navbar({
       </Link>
     </div>
     <div className="w-7/12 flex justify-end items-center">
-      {navigation}
+      {children}
       <span className='hover:cursor-pointer pl-4' onClick={onThemeClicked}>
           <MoonIcon className='hidden dark:inline h-6 w-6' />
           <SunIcon className='dark:hidden h-6 w-6' />
