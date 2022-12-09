@@ -26,7 +26,6 @@ const setTheme = (theme: 'dark' | 'light') => {
   }
 };
 
-
 export default function RootLayout({
   children,
 }: {
