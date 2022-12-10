@@ -4,7 +4,7 @@ import { ChevronLeftIcon, EnvelopeIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import { useState } from 'react';
 
-import { routes } from '../../../constants/routes';
+import { routes } from '../../../../constants/routes';
 import { ApiConnector } from '@locale-hub/api-connector';
 
 export default function PasswordResetPage() {
