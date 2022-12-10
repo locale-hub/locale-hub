@@ -25,6 +25,7 @@ export {UserGroupEntry} from './lib/models/user-group-entry.model';
 export {ApiErrorResponse} from './lib/responses/api-error.response';
 export {AppsListResponse} from './lib/responses/apps-list.response';
 export {AppsPostResponse} from './lib/responses/apps-post.response';
+export {CommitsGetResponse} from './lib/responses/commits-get.response';
 export {CommitsListResponse} from './lib/responses/commits-list.response';
 export {ManifestsGetResponse} from './lib/responses/manifests-get.response';
 export {MeDashboardResponse} from './lib/responses/me-dashboard.response';

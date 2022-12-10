@@ -24,7 +24,7 @@ import {
   Manifest,
   MeNotificationsResponse,
   OrganizationsListResponse,
-  ProjectsPostResponse, OrganizationsPostResponse
+  ProjectsPostResponse, OrganizationsPostResponse, CommitsGetResponse
 } from '@locale-hub/data';
 import { Http } from './http';
 
@@ -258,6 +258,9 @@ export const ApiConnector = {
           `/projects/${projectId}/commits`,
           { title, description, changeList: manifest }
         );
+      },
+      get: async (projectId: string, commitId: string): Promise<CommitsGetResponse | ApiErrorResponse> => {
+        return await http.get<CommitsGetResponse>(`/projects/${projectId}/commits/${commitId}`);
       }
     },
     manifests: {

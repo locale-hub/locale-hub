@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { ApiConnector } from '@locale-hub/api-connector';
-import { ProjectsGetResponse } from '../../../../../../libs/data/src/lib/responses/projects-get.response';
+import { ProjectsGetResponse } from '@locale-hub/data';
 import { Card, ProgressBar } from '@locale-hub/design-system';
 import Link from 'next/link';
 import { routes } from '../../../../constants/routes';

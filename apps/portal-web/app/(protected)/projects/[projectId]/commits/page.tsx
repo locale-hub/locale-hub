@@ -22,7 +22,8 @@ export default function ProjectCommitsPage({
         // TODO Toast
         return;
       }
-      setCommits(data.commits);
+      // Showing latest first
+      setCommits(data.commits.reverse());
     });
     ApiConnector.projects.users(params.projectId).then(data => {
       if ('error' in data) {
