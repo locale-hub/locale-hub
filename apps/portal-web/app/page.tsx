@@ -9,7 +9,7 @@ export default function Page() {
   const { loggedIn } = useAuth();
 
   if (false === loggedIn) {
-    redirect(routes.auth);
+    redirect(routes.auth.root);
     return null;
   }
 

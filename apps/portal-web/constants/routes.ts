@@ -1,8 +1,11 @@
 
 export const routes = {
   root: '/',
-  auth: '/auth',
-  'auth.password-reset': '/auth/password-reset',
+  auth: {
+    root: '/auth',
+    passwordReset: '/auth/password-reset',
+    passwordResetApply: (token: string) => `/auth/password-reset/${token}`
+  },
   dashboard: '/dashboard',
   profiles: {
     me: '/profiles/me',

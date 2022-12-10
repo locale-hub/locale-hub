@@ -13,7 +13,7 @@ export default function ProtectedLayout({
   const { loggedIn } = useAuth();
 
   if (false === loggedIn) {
-    redirect(routes.auth);
+    redirect(routes.auth.root);
   }
 
   return loggedIn ? children : null;

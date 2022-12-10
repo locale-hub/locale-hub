@@ -43,7 +43,7 @@ export default function AuthPage() {
 
 
       {isLogin
-        ? <Auth.Login login={login} passwordResetPath={routes['auth.password-reset']} />
+        ? <Auth.Login login={login} passwordResetPath={routes.auth.passwordReset} />
         : <Auth.Register register={register} />
       }
     </div>

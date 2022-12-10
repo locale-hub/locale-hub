@@ -43,7 +43,7 @@ export class Http {
       const res = await fetch(`${this.baseUrl}${url}`, init);
 
       if (401 === res.status) {
-        redirect(routes.auth);
+        redirect(routes.auth.root);
         return { error: {
           statusCode: 401,
           code: ErrorCode.userAccessUnauthorized,
