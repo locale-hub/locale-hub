@@ -111,6 +111,20 @@ export const ApiConnector = {
       localStorage.setItem('token', token);
       return (decode(token) as any).user as User;
     },
+    validateEmail: async (token: string): Promise<User | ApiErrorResponse> => {
+      const res = await http.post<any, TokenResponse>(
+        '/me/validate-email',
+        { token }
+      );
+      if ('error' in res) {
+        return res as ApiErrorResponse;
+      }
+
+      const resToken = res.token;
+      http.setToken(resToken);
+      localStorage.setItem('token', resToken);
+      return (decode(resToken) as any).user as User;
+    }
   },
 
   me: {
