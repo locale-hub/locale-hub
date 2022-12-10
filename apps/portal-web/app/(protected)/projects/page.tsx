@@ -38,17 +38,16 @@ export default function ProjectsPage() {
   }
 
   const deleteProject = (projectId: string) => {
-    useEffect(() => {
-      ApiConnector.projects.delete(projectId).then(res => {
-        if ('error' in res) {
-          // TODO Toast
-          return;
-        }
+    setDeleteModal(false);
+    ApiConnector.projects.delete(projectId).then(res => {
+      if ('error' in res) {
         // TODO Toast
-        data.projects = data.projects.filter(p => p.id !== projectId);
-        setData(data);
-      })
-    }, []);
+        return;
+      }
+      // TODO Toast
+      data.projects = data.projects.filter(p => p.id !== projectId);
+      setData(data);
+    })
   };
 
   const [title, setTitle] = useState('');

@@ -8,8 +8,8 @@ export default function Table({
   heads: { key: string, label: string, className?: string }[],
   entries: { [_: string]: any }[]
 }) {
-  return <div className={`${className} rounded-md  border border-slate-400/50 relative mt-8`}>
-    <table className="w-full text-sm text-left overflow-hidden rounded-lg text-gray-500 dark:text-gray-400">
+  return <div className={`${className} rounded-md border border-slate-400/50 relative mt-8`}>
+    <table className="w-full text-sm text-left rounded-lg text-gray-500 dark:text-gray-400">
       <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
       <tr>
         { heads.map((head, idx) =>
