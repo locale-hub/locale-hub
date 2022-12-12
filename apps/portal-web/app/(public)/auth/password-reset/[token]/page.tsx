@@ -7,6 +7,13 @@ import { routes } from '../../../../../constants/routes';
 import { ApiConnector } from '@locale-hub/api-connector';
 import { Button, InputField } from '@locale-hub/design-system';
 import toast from 'react-hot-toast';
+import Joi from 'joi';
+
+const schema = Joi.object({
+  email: Joi.string().email({ tlds: {allow: false} }).required(),
+  password: Joi.string().min(8).required(),
+  passwordConfirm: Joi.string().min(8).valid(Joi.ref('password')).required(),
+}).required();
 
 export default function PasswordResetApplyPage({
   params
@@ -17,8 +24,9 @@ export default function PasswordResetApplyPage({
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
 
+  const formInvalid = () => 'error' in schema.validate({ email, password, passwordConfirm });
+
   const doPasswordReset = () => {
-    // TODO: form validation
     ApiConnector.auth.resetPasswordApply(params.token, email, password).then((data) => {
       if ('error' in data) {
         toast.error('Failed to request password reset');
@@ -43,7 +51,7 @@ export default function PasswordResetApplyPage({
     </div>
 
     <div className='w-full mt-8 flex justify-end'>
-      <Button onClick={doPasswordReset} type='action'>
+      <Button onClick={doPasswordReset} disabled={formInvalid()} type='action'>
         Reset Password
       </Button>
     </div>

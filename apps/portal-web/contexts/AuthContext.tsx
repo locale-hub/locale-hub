@@ -68,7 +68,6 @@ export const AuthContextProvider = ({
     await ApiConnector.auth.logout();
     setUser(null);
     setLoggedIn(false);
-    // TODO: improve error handling
     try { redirect(routes.auth.root) }
     catch (e) { document.location.href = '/'; }
   }
