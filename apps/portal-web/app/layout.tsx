@@ -56,6 +56,9 @@ export default function RootLayout({
           </App>
         }
       </AuthContextProvider>
+    <div className='fixed bottom-2 right-4 text-slate-600 dark:text-slate-400'>
+      version: { environment.version }
+    </div>
     </body>
   </html>;
 }
