@@ -7,6 +7,7 @@ import { EmailStatus, User } from '@locale-hub/data';
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 import InviteUserModal from './invite-user-modal';
 import DeleteUserModal from '../../../../../components/delete-user-modal';
+import toast from 'react-hot-toast';
 
 export default function OrganizationUsersPage({
   params
@@ -21,7 +22,7 @@ export default function OrganizationUsersPage({
   useEffect(() => {
     ApiConnector.organizations.users.list(params.organizationId).then(data => {
       if ('error' in data) {
-        // TODO Toast
+        toast.error('Failed to retrieve users');
         return;
       }
       setUsers(data.users);
@@ -35,9 +36,10 @@ export default function OrganizationUsersPage({
     }
     ApiConnector.organizations.users.invite(params.organizationId, name, email).then((data) => {
       if ('error' in data) {
-        // TODO: Toast
+        toast.error('Failed to invite user');
         return;
       }
+      toast.success('Success! We sent an invitation to the user');
       setUsers([
         ...users,
         { id: email, name, primaryEmail: email, organizationId: params.organizationId,
@@ -58,11 +60,12 @@ export default function OrganizationUsersPage({
     }
     ApiConnector.organizations.users.delete(params.organizationId, selectedUser.id).then((data) => {
       if ('error' in data) {
-        // TODO: Toast
+        toast.error('Failed to delete user');
         return;
       }
       setUsers(users.filter(u => u.id !== selectedUser.id));
       setSelectedUser(null);
+      toast.success('User deleted!');
     })
   }
 

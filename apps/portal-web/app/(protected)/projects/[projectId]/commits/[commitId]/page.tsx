@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { ApiConnector } from '@locale-hub/api-connector';
 import { Commit } from '@locale-hub/data';
 import { DateFormat, Table } from '@locale-hub/design-system';
+import toast from 'react-hot-toast';
 
 export default function ProjectCommitDetailsPage({
   params
@@ -15,7 +16,7 @@ export default function ProjectCommitDetailsPage({
   useEffect(() => {
     ApiConnector.projects.commits.get(params.projectId, params.commitId).then(data => {
       if ('error' in data) {
-        // TODO Toast
+        toast.error('Failed to retrieve commit');
         return;
       }
       setCommit(data.commit);

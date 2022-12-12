@@ -8,6 +8,7 @@ import TranslationModal from './translation-modal';
 import AddLocaleModal from './add-locale-modal';
 import AddKeyModal from './add-key-modal';
 import CommitModal from './commit-modal';
+import toast from 'react-hot-toast';
 
 
 export default function ProjectTranslationsPage({
@@ -28,7 +29,7 @@ export default function ProjectTranslationsPage({
   useEffect(() => {
     ApiConnector.projects.manifests.get(params.projectId).then((data) => {
       if ('error' in data) {
-        // TODO: Toast
+        toast.error('Failed to retrieve translations');
         return;
       }
       setManifests(data.manifest);
@@ -100,8 +101,13 @@ export default function ProjectTranslationsPage({
     if (undefined === title || undefined === description) {
       return;
     }
-    // TODO: Toast
-    ApiConnector.projects.commits.post(params.projectId, manifests, title, description);
+    ApiConnector.projects.commits.post(params.projectId, manifests, title, description).then((data) => {
+      if ('error' in data) {
+        toast.error('Failed to commit changes');
+        return;
+      }
+      toast.success('Changes commited');
+    });
   }
 
   return <>

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { Toaster } from 'react-hot-toast';
 
 import '../styles/globals.css'
 import App from './app';
@@ -46,6 +47,7 @@ export default function RootLayout({
 
   return <html lang="en">
     <body className='bg-gray-100 w-full min-h-full dark:bg-dark text-black dark:text-white'>
+      <Toaster position="bottom-right" reverseOrder={false} />
       <AuthContextProvider>
         { domLoaded &&
           <App onThemeChange={theme => setTheme(theme)}>

@@ -6,6 +6,7 @@ import { ProjectsGetResponse } from '@locale-hub/data';
 import { Card, ProgressBar } from '@locale-hub/design-system';
 import Link from 'next/link';
 import { routes } from '../../../../constants/routes';
+import toast from 'react-hot-toast';
 
 type Action = {
   img: string,
@@ -23,7 +24,7 @@ export default function ProjectOverviewPage({
   useEffect(() => {
     ApiConnector.projects.get(params.projectId).then((res) => {
       if ('error' in res) {
-        // TODO: Toast
+        toast.error('Failed to retrieve project');
         return;
       }
       setData(res);

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { routes } from '../../../../../constants/routes';
 import { DateFormat, ProgressBar, Table } from '@locale-hub/design-system';
 import { OrganizationsProjectsGetResponse } from '@locale-hub/data';
+import toast from 'react-hot-toast';
 
 export default function OrganizationProjectsPage({
   params
@@ -17,7 +18,7 @@ export default function OrganizationProjectsPage({
   useEffect(() => {
     ApiConnector.organizations.projects(params.organizationId).then(data => {
       if ('error' in data) {
-        // TODO Toast
+        toast.error('Failed to retrieve projects');
         return;
       }
       setData(data);

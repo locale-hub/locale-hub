@@ -8,6 +8,7 @@ import { Button, DateFormat, Menu, Modal, ProgressBar, Table } from '@locale-hub
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { routes } from '../../../constants/routes';
+import toast from 'react-hot-toast';
 
 export default function DashboardPage() {
   const [data, setData] = useState<MeDashboardResponse>(null);
@@ -16,7 +17,7 @@ export default function DashboardPage() {
   useEffect(() => {
     ApiConnector.me.dashboard().then(data => {
       if ('error' in data) {
-        // TODO Toast
+        toast.error('Failed to retrieve dashboard');
         return;
       }
       setData(data);
@@ -40,10 +41,10 @@ export default function DashboardPage() {
     setDeleteModal(false);
     ApiConnector.projects.delete(projectId).then(res => {
       if ('error' in res) {
-        // TODO Toast
+        toast.error('Failed to delete project');
         return;
       }
-      // TODO Toast
+      toast.success('Project deleted!');
       data.projects = data.projects.filter(p => p.id !== projectId);
       setData(data);
     })

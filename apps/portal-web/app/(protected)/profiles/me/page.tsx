@@ -6,6 +6,7 @@ import { TrashIcon } from '@heroicons/react/24/outline';
 import { Button, InputField, Select, Spacer, UserIcon } from '@locale-hub/design-system';
 import { ApiConnector } from '@locale-hub/api-connector';
 import { User } from '@locale-hub/data';
+import toast from 'react-hot-toast';
 
 export default function Page() {
   const [passwords, setPasswords] = useState<{ old: string, new: string, new2: string }>({ old: '', new: '', new2: '' });
@@ -22,12 +23,22 @@ export default function Page() {
   const setPasswordsNew2 = (value: string) => setPasswords({ ...passwords, new2: value });
 
   const updateProfile = () => {
-    // TODO: Toast
-    ApiConnector.me.update(user);
+    ApiConnector.me.update(user).then((data) => {
+      if ('error' in data) {
+        toast.error('Failed to update profile');
+        return;
+      }
+      toast.success('Profile updated!');
+    });
   };
   const updatePassword = () => {
-    // TODO: Toast
-    ApiConnector.me.updatePassword(passwords.old, passwords.new);
+    ApiConnector.me.updatePassword(passwords.old, passwords.new).then((data) => {
+      if ('error' in data) {
+        toast.error('Failed to update password');
+        return;
+      }
+      toast.success('Profile password!');
+    });
   };
 
   return <div className='w-6/12 m-auto mt-32'>

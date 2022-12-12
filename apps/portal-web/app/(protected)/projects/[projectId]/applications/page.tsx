@@ -5,6 +5,7 @@ import { Button, Modal, ModalCreateApp, Spacer } from '@locale-hub/design-system
 import { ApiConnector } from '@locale-hub/api-connector';
 import { App } from '@locale-hub/data';
 import { DocumentDuplicateIcon, TrashIcon } from '@heroicons/react/24/outline';
+import toast from 'react-hot-toast';
 
 export default function ProjectApplicationsPage({
   params
@@ -16,7 +17,7 @@ export default function ProjectApplicationsPage({
   useEffect(() => {
     ApiConnector.projects.applications.list(params.projectId).then(data => {
       if ('error' in data) {
-        // TODO Toast
+        toast.error('Failed to retrieve applications');
         return;
       }
       setApps(data.applications);
@@ -30,13 +31,14 @@ export default function ProjectApplicationsPage({
     }
     ApiConnector.projects.applications.create(params.projectId, app.name, app.identifier).then((data) => {
       if ('error' in data) {
-        // TODO Toast
+        toast.error('Failed to create application');
         return;
       }
       setApps([
         ...apps,
         data.application
       ]);
+      toast.error('Application created!');
     });
   }
   const deleteApp = async (appId: string) => {

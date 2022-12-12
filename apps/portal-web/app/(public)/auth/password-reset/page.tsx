@@ -6,6 +6,7 @@ import { useState } from 'react';
 
 import { routes } from '../../../../constants/routes';
 import { ApiConnector } from '@locale-hub/api-connector';
+import toast from 'react-hot-toast';
 
 export default function PasswordResetPage() {
   const [email, setEmail] = useState('');
@@ -13,7 +14,7 @@ export default function PasswordResetPage() {
   const doPasswordReset = async () => {
     // TODO: form validation
     await ApiConnector.auth.resetPassword(email);
-    // TODO: display success modal
+    toast.success('An email has been sent with a reset link');
   }
 
   return <div className="flex min-h-full items-center justify-center px-10 py-10 sm:px-6 lg:px-8">
@@ -43,7 +44,7 @@ export default function PasswordResetPage() {
 
         <div className='flex flex-1'>
           <div className='text-sm font-medium my-auto'>
-            <Link href={routes.auth} className="text-warn">
+            <Link href={routes.auth.root} className="text-warn">
               <ChevronLeftIcon className="h-5 w-5 inline-block mr-1 align-top" aria-hidden="true" />
               Go back to login
             </Link>

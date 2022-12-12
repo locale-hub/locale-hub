@@ -4,6 +4,7 @@ import React from 'react';
 import { Button } from '@locale-hub/design-system';
 import { ApiConnector } from '@locale-hub/api-connector';
 import { FileFormat } from '@locale-hub/data';
+import toast from 'react-hot-toast';
 
 
 export default function ProjectTransfersPage({
@@ -15,15 +16,14 @@ export default function ProjectTransfersPage({
   const download = (format: FileFormat) => {
     ApiConnector.projects.bundles.get(params.projectId, format).then((data) => {
       if ('error' in data) {
-        // TODO: Toast
+        toast.error('Failed to download bundle');
         return;
       }
       const blob = new Blob([data], {type: 'application/zip'});
       const url = window.URL.createObjectURL(blob);
       const pwa = window.open(url);
       if (!pwa || pwa.closed || typeof pwa.closed === 'undefined') {
-        // TODO: no alert
-        return alert('Please disable your Pop-up blocker and try again.');
+        toast.error('Please disable your Pop-up blocker and try again.');
       }
     });
   };

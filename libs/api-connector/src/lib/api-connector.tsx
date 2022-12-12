@@ -177,8 +177,8 @@ export const ApiConnector = {
     projects: async (organizationId: string): Promise<OrganizationsProjectsGetResponse | ApiErrorResponse> => {
       return await http.get<OrganizationsProjectsGetResponse>(`/organizations/${organizationId}/projects`);
     },
-    update: async (organization: Organization): Promise<void | ApiErrorResponse> => {
-      return await http.put<Organization, void | ApiErrorResponse>(
+    update: async (organization: Organization): Promise<null | ApiErrorResponse> => {
+      return await http.put<Organization, null | ApiErrorResponse>(
         `/organizations/${organization.id}`,
         organization
       );
@@ -186,8 +186,8 @@ export const ApiConnector = {
     usage: async (organizationId: string): Promise<OrganizationsUsageGetResponse | ApiErrorResponse> => {
       return await http.get<OrganizationsUsageGetResponse>(`/organizations/${organizationId}/usage`);
     },
-    delete: async (organizationId: string): Promise<void | ApiErrorResponse> => {
-      return await http.delete<void, void | ApiErrorResponse>(`/organizations/${organizationId}`);
+    delete: async (organizationId: string): Promise<null | ApiErrorResponse> => {
+      return await http.delete<void, null | ApiErrorResponse>(`/organizations/${organizationId}`);
     },
     post: async (name: string): Promise<OrganizationsPostResponse | ApiErrorResponse> => {
       return await http.post<any, OrganizationsPostResponse | ApiErrorResponse>(
@@ -297,8 +297,8 @@ export const ApiConnector = {
           { deployed: true }
         );
       },
-      post: async (projectId: string, manifest: ManifestWithStatus, title: string, description: string): Promise<void | ApiErrorResponse> => {
-        return await http.post<{ title: string, description: string, changeList: ManifestWithStatus }, void | ApiErrorResponse>(
+      post: async (projectId: string, manifest: ManifestWithStatus, title: string, description: string): Promise<null | ApiErrorResponse> => {
+        return await http.post<{ title: string, description: string, changeList: ManifestWithStatus }, null | ApiErrorResponse>(
           `/projects/${projectId}/commits`,
           { title, description, changeList: manifest }
         );

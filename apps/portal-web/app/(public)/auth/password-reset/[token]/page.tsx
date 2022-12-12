@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation';
 import { routes } from '../../../../../constants/routes';
 import { ApiConnector } from '@locale-hub/api-connector';
 import { Button, InputField } from '@locale-hub/design-system';
+import toast from 'react-hot-toast';
 
 export default function PasswordResetApplyPage({
   params
@@ -20,7 +21,7 @@ export default function PasswordResetApplyPage({
     // TODO: form validation
     ApiConnector.auth.resetPasswordApply(params.token, email, password).then((data) => {
       if ('error' in data) {
-        // TODO: Toast
+        toast.error('Failed to request password reset');
         return;
       }
       redirect(routes.root);

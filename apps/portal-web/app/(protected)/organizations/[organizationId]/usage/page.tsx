@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { ApiConnector } from '@locale-hub/api-connector';
 import { OrganizationApiUsage, OrganizationStorageUsage } from '@locale-hub/data';
 import { ProgressBar, Spacer } from '@locale-hub/design-system';
+import toast from 'react-hot-toast';
 
 export default function OrganizationUsagePage({
   params
@@ -16,7 +17,7 @@ export default function OrganizationUsagePage({
   useEffect(() => {
     ApiConnector.organizations.usage(params.organizationId).then(data => {
       if ('error' in data) {
-        // TODO Toast
+        toast.error('Failed to retrieve usage');
         return;
       }
       setStorage(data.usage.storage);

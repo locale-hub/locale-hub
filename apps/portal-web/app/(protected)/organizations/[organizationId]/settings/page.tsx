@@ -4,6 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { Button, InputField, Modal, Select } from '@locale-hub/design-system';
 import { Organization,  User } from '@locale-hub/data';
 import { ApiConnector } from '@locale-hub/api-connector';
+import toast from 'react-hot-toast';
+import { redirect } from 'next/navigation';
+import { routes } from '../../../../../constants/routes';
 
 
 export default function OrganizationsSettingsPage({
@@ -19,7 +22,7 @@ export default function OrganizationsSettingsPage({
   useEffect(() => {
     ApiConnector.organizations.get(params.organizationId).then(data => {
       if ('error' in data) {
-        // TODO Toast
+        toast.error('Failed to retrieve settings');
         return;
       }
       setName(data.organization.name);
@@ -28,7 +31,7 @@ export default function OrganizationsSettingsPage({
     });
     ApiConnector.organizations.users.list(params.organizationId).then(data => {
       if ('error' in data) {
-        // TODO Toast
+        toast.error('Failed to settings');
         return;
       }
       setUsers(data.users);
@@ -39,13 +42,24 @@ export default function OrganizationsSettingsPage({
     // TODO: form validation
     org.name = name;
     org.owner = owner;
-    // TODO: Toast
-    ApiConnector.organizations.update(org);
+    ApiConnector.organizations.update(org).then((data) => {
+      if ('error' in data) {
+        toast.error('Failed to update organization');
+        return;
+      }
+      toast.success('Organization updated!');
+    });
   }
 
   function deleteOrg() {
-    // TODO: Toast
-    ApiConnector.organizations.delete(org.id);
+    ApiConnector.organizations.delete(org.id).then((data) => {
+      if ('error' in data) {
+        toast.error('Failed to delete organization');
+        return;
+      }
+      toast.success('Organization deleted!');
+      redirect(routes.organizations.root);
+    });
   }
 
   const [deleteModal, setDeleteModal] = useState(false);

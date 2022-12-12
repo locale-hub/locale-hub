@@ -7,6 +7,7 @@ import { MeDashboardResponse, } from '@locale-hub/data';
 import { DateFormat, Table } from '@locale-hub/design-system';
 import { routes } from '../../../constants/routes';
 import Link from 'next/link';
+import toast from 'react-hot-toast';
 
 export default function OrganizationsPage() {
   const [data, setData] = useState<MeDashboardResponse>(null);
@@ -14,7 +15,7 @@ export default function OrganizationsPage() {
   useEffect(() => {
     ApiConnector.me.dashboard().then(data => {
       if ('error' in data) {
-        // TODO Toast
+        toast.error('Failed to retrieve dashboard');
         return;
       }
       setData(data);

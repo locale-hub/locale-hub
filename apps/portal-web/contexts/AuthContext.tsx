@@ -5,6 +5,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { ApiConnector } from '@locale-hub/api-connector';
 import { redirect } from 'next/navigation';
 import { routes } from '../constants/routes';
+import toast from 'react-hot-toast';
 
 const AuthContext = createContext({
   loggedIn: false,
@@ -44,7 +45,7 @@ export const AuthContextProvider = ({
   const register = async (name: string, email: string, password: string) => {
     const user = await ApiConnector.auth.register(name, email, password);
     if ('error' in user) {
-      // TODO: display error
+      toast.error('Failed to register');
       console.error('Failed to register', user);
       return;
     }
@@ -55,7 +56,7 @@ export const AuthContextProvider = ({
   const login = async (email: string, password: string) => {
     const user = await ApiConnector.auth.login(email, password);
     if ('error' in user) {
-      // TODO: display error
+      toast.error('Failed to sign in');
       console.error('Failed to sign in', user);
       return;
     }

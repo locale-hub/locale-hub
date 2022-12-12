@@ -13,6 +13,8 @@ import NotificationCard from './notification-card';
 import { Menu } from '@headlessui/react';
 import AddProjectModal from './add-project-modal';
 import AddOrganizationModal from './add-organization-modal';
+import toast from 'react-hot-toast';
+import { redirect } from 'next/navigation';
 
 export default function NavigationAuthenticated() {
   const { user, logout } = useAuth();
@@ -56,10 +58,11 @@ export default function NavigationAuthenticated() {
     }
     ApiConnector.projects.post(orgId, projectName, 'en').then(data => {
       if ('error' in data) {
-        // TODO: Toast
+        toast.error('Failed to create project');
         return;
       }
-      // TODO: Toast
+      toast.success(`'${data.project.name}' was created successfully`);
+      redirect(routes.projects.overview(data.project.id));
     });
   }
   const onOrganizationAdd = (orgName: string) => {
@@ -69,10 +72,11 @@ export default function NavigationAuthenticated() {
     }
     ApiConnector.organizations.post(orgName).then(data => {
       if ('error' in data) {
-        // TODO: Toast
+        toast.error('Failed to create organization');
         return;
       }
-      // TODO: Toast
+      toast.success(`'${data.organization.name}' was created successfully`);
+      redirect(routes.organizations.projects(data.organization.id));
     });
   }
 

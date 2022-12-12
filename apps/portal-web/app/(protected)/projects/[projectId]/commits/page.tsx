@@ -7,6 +7,7 @@ import { Commit, User } from '@locale-hub/data';
 import { CloudArrowUpIcon, CodeBracketIcon, DocumentDuplicateIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { routes } from '../../../../../constants/routes';
+import toast from 'react-hot-toast';
 
 export default function ProjectCommitsPage({
   params
@@ -19,7 +20,7 @@ export default function ProjectCommitsPage({
   useEffect(() => {
     ApiConnector.projects.commits.list(params.projectId).then(data => {
       if ('error' in data) {
-        // TODO Toast
+        toast.error('Failed to retrieve commits');
         return;
       }
       // Showing latest first
@@ -27,7 +28,7 @@ export default function ProjectCommitsPage({
     });
     ApiConnector.projects.users.list(params.projectId).then(data => {
       if ('error' in data) {
-        // TODO Toast
+        toast.error('Failed to commits');
         return;
       }
       setUsers(data.users);

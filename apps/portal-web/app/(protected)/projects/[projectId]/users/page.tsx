@@ -7,6 +7,7 @@ import { User } from '@locale-hub/data';
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 import DeleteUserModal from '../../../../../components/delete-user-modal';
 import AddUserModal from './add-user-modal';
+import toast from 'react-hot-toast';
 
 export default function ProjectUsersPage({
   params
@@ -22,7 +23,7 @@ export default function ProjectUsersPage({
   useEffect(() => {
     ApiConnector.projects.users.list(params.projectId).then(data => {
       if ('error' in data) {
-        // TODO Toast
+        toast.error('Failed to retrieve users');
         return;
       }
       setUsers(data.users);
@@ -43,13 +44,14 @@ export default function ProjectUsersPage({
     }
     ApiConnector.projects.users.add(params.projectId, userId).then((data) => {
       if ('error' in data) {
-        // TODO: Toast
+        toast.error('Failed to add user');
         return;
       }
       setUsers([
         ...users,
         organizationUsers.find((u) => u.id === userId)
       ]);
+      toast.success('User added!');
     });
   };
 
@@ -65,7 +67,7 @@ export default function ProjectUsersPage({
     }
     ApiConnector.projects.users.delete(params.projectId, selectedUser.id).then((data) => {
       if ('error' in data) {
-        // TODO: Toast
+        toast.error('Failed to delete user');
         return;
       }
       setUsers(users.filter(u => u.id !== selectedUser.id));
