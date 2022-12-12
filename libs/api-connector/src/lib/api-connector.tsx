@@ -27,7 +27,6 @@ import {
 } from '@locale-hub/data';
 import { Http } from './http';
 
-// TODO: replace with config based value
 let http: Http;
 
 export const ApiConnector = {

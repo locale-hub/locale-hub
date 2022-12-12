@@ -6,6 +6,7 @@ import { ApiConnector } from '@locale-hub/api-connector';
 import { redirect } from 'next/navigation';
 import { routes } from '../constants/routes';
 import toast from 'react-hot-toast';
+import { environment } from '../environment';
 
 const AuthContext = createContext({
   loggedIn: false,
@@ -34,8 +35,7 @@ export const AuthContextProvider = ({
     if (loggedIn) {
       refreshInterval = setInterval(() => {
         ApiConnector.auth.refreshToken();
-        // TODO: delay in config
-      }, 13 * 60 * 1000);
+      }, environment.portal.web.refreshTokenInterval);
     }
     else {
       clearInterval(refreshInterval)

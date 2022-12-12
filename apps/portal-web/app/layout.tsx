@@ -8,6 +8,7 @@ import App from './app';
 import { AuthContextProvider } from '../contexts/AuthContext';
 import { ApiConnector } from '@locale-hub/api-connector';
 import { routes } from '../constants/routes';
+import { environment } from '../environment';
 
 const loadThemeMode = () => {
   // https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually
@@ -35,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   ApiConnector.initApi(
-    'http://localhost:3000/v1',
+    environment.portal.api.uri,
     routes.auth.root
   );
 

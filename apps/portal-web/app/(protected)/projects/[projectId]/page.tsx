@@ -7,6 +7,7 @@ import { Card, ProgressBar } from '@locale-hub/design-system';
 import Link from 'next/link';
 import { routes } from '../../../../constants/routes';
 import toast from 'react-hot-toast';
+import { environment } from '../../../../environment';
 
 type Action = {
   img: string,
@@ -39,8 +40,7 @@ export default function ProjectOverviewPage({
     { title: 'Translate', img: '/images/shared_goals.svg', url: routes.projects.translations(params.projectId) },
     { title: 'App management', img: '/images/progressive_app.svg', url: routes.projects.applications(params.projectId) },
     { title: 'Team management', img: '/images/selecting_team.svg', url: routes.projects.users(params.projectId) },
-    // TODO: Url should be in config
-    { title: 'Integrations', img: '/images/programmer.svg', url: 'https://doc.locale-hub.com/sdk/overview' },
+    { title: 'Integrations', img: '/images/programmer.svg', url: environment.documentation.sdk },
   ];
 
   return <div>
