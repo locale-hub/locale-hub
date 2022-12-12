@@ -27,14 +27,14 @@ export default function NavigationAuthenticated() {
   useEffect(() => {
     ApiConnector.notifications.list().then(data => {
       if ('error' in data) {
-        // TODO: Toast
+        toast.error('Failed to retrieve notifications');
         return;
       }
       setNotifications(data.notifications);
     });
     ApiConnector.organizations.list().then(data => {
       if ('error' in data) {
-        // TODO: Toast
+        toast.error('Failed to retrieve organizations');
         return;
       }
       setOrganizations(data.organizations);
@@ -44,7 +44,7 @@ export default function NavigationAuthenticated() {
   const onArchive = (notificationId: string) => {
     ApiConnector.notifications.discard(notificationId).then(data => {
       if ('error' in data) {
-        // TODO: Toast
+        toast.error('Failed to archive notification');
         return;
       }
       setNotifications(notifications.filter(n => n.id !== notificationId));

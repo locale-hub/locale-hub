@@ -7,7 +7,13 @@ import { ApiConnector } from '@locale-hub/api-connector';
 import { locales } from '../../../../../constants/locales';
 import { redirect } from 'next/navigation';
 import { routes } from '../../../../../constants/routes';
+import toast from 'react-hot-toast';
+import Joi from 'joi';
 
+const schema = Joi.object({
+  name: Joi.string().min(4).required(),
+  defaultLocale: Joi.string().required(),
+}).required();
 
 export default function ProjectSettingsPage({
   params
@@ -23,7 +29,7 @@ export default function ProjectSettingsPage({
   useEffect(() => {
     ApiConnector.projects.get(params.projectId).then(data => {
       if ('error' in data) {
-        // TODO Toast
+        toast.error('Failed to retrieve settings');
         return;
       }
       setName(data.project.name);
@@ -32,29 +38,36 @@ export default function ProjectSettingsPage({
     });
     ApiConnector.projects.users.list(params.projectId).then(data => {
       if ('error' in data) {
-        // TODO Toast
+        toast.error('Failed to retrieve settings');
         return;
       }
       setUsers(data.users);
     });
   }, [params.projectId]);
 
+  const formInvalid = () => 'error' in schema.validate({ name, defaultLocale: locale });
+
   const updateProject = () => {
-    // TODO: form validation
     project.name = name;
     project.defaultLocale = locale;
     project.userId = owner;
-    // TODO: Toast
-    ApiConnector.projects.update(project);
+    ApiConnector.projects.update(project).then((data) => {
+      if ('error' in data) {
+        toast.error('Failed to update project');
+        return;
+      }
+      toast.error('Project updated!');
+    });
   }
 
   function deleteProject() {
     setDeleteModal(false);
     ApiConnector.projects.delete(project.id).then((data) => {
       if ('error' in data) {
-        // TODO: Toast
+        toast.error('Failed to delete project');
         return;
       }
+      toast.success('Project deleted!');
       redirect(routes.projects.root);
     });
   }
@@ -115,7 +128,7 @@ export default function ProjectSettingsPage({
       </div>
 
       <div className='flex justify-end mt-8'>
-        <Button type='action' onClick={updateProject}>Save</Button>
+        <Button type='action' onClick={updateProject} disabled={formInvalid()}>Save</Button>
       </div>
     </div>
 

@@ -7,7 +7,11 @@ import { ApiConnector } from '@locale-hub/api-connector';
 import toast from 'react-hot-toast';
 import { redirect } from 'next/navigation';
 import { routes } from '../../../../../constants/routes';
+import Joi from 'joi';
 
+const schema = Joi.object({
+  name: Joi.string().min(4).required(),
+}).required();
 
 export default function OrganizationsSettingsPage({
   params
@@ -38,8 +42,9 @@ export default function OrganizationsSettingsPage({
     });
   }, [params.organizationId]);
 
+  const formInvalid = () => 'error' in schema.validate({ name });
+
   const updateOrganization = () => {
-    // TODO: form validation
     org.name = name;
     org.owner = owner;
     ApiConnector.organizations.update(org).then((data) => {
@@ -97,7 +102,7 @@ export default function OrganizationsSettingsPage({
       </div>
 
       <div className='flex justify-end mt-8'>
-        <Button type='action' onClick={updateOrganization}>Save</Button>
+        <Button type='action' onClick={updateOrganization} disabled={formInvalid()}>Save</Button>
       </div>
     </div>
 

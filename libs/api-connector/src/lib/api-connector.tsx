@@ -237,8 +237,8 @@ export const ApiConnector = {
         }
       );
     },
-    update: async (project: Project): Promise<void | ApiErrorResponse> => {
-      return await http.put<Project, void | ApiErrorResponse>(
+    update: async (project: Project): Promise<null | ApiErrorResponse> => {
+      return await http.put<Project, null | ApiErrorResponse>(
         `/organizations/${project.id}`,
         project
       );

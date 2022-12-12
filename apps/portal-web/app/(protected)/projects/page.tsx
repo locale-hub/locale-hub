@@ -41,10 +41,10 @@ export default function ProjectsPage() {
     setDeleteModal(false);
     ApiConnector.projects.delete(projectId).then(res => {
       if ('error' in res) {
-        // TODO Toast
+        toast.error('Failed to delete project');
         return;
       }
-      // TODO Toast
+      toast.success('Project deleted!');
       data.projects = data.projects.filter(p => p.id !== projectId);
       setData(data);
     })
