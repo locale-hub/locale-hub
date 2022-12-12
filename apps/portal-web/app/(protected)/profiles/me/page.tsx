@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { InformationCircleIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { TrashIcon } from '@heroicons/react/24/outline';
 
 import { Button, InputField, Select, Spacer, UserIcon } from '@locale-hub/design-system';
 import { ApiConnector } from '@locale-hub/api-connector';
@@ -64,7 +64,7 @@ export default function Page() {
       </div>
       <div className='p-8 mb-8 rounded-md border border-slate-400/50'>
         <p className='text-lg font-bold mb-8'>Emails</p>
-        { user.emails.map(entry => <div className='flex'>
+        { user.emails.map(entry => <div className='flex' key={entry.email}>
           <span>{entry.email}</span>
           { user.primaryEmail === entry.email && <>
             <span className='px-2'>—</span>

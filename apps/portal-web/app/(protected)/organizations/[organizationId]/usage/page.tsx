@@ -11,7 +11,7 @@ export default function OrganizationUsagePage({
   params: { organizationId: string }
 }) {
   const [storage, setStorage] = useState<OrganizationStorageUsage>();
-  const [apiUsage, setApiUsage] = useState<OrganizationApiUsage>();
+  const [_apiUsage, setApiUsage] = useState<OrganizationApiUsage>();
 
   useEffect(() => {
     ApiConnector.organizations.usage(params.organizationId).then(data => {
@@ -23,7 +23,7 @@ export default function OrganizationUsagePage({
       setApiUsage(data.usage.api);
       console.log(data.usage.storage);
     });
-  }, []);
+  }, [params.organizationId]);
 
   return <div className='px-10 py-10'>
     <div className='p-10 mt-16 w-3/4 m-auto rounded-md border border-slate-400/50'>
@@ -52,7 +52,7 @@ export default function OrganizationUsagePage({
         <div className='pt-8'>
           { storage && storage.projects.map((project, idx) => <div key={idx}>
             <p className='flex'>
-              <span>{project.name}'s storage usage</span>
+              <span>{project.name}&apos;s storage usage</span>
               <Spacer />
               <span>
                 <span className='text-gray-400'>

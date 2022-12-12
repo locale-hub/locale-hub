@@ -2,15 +2,14 @@ import { ApiErrorResponse } from '@locale-hub/data';
 import { redirect } from 'next/navigation';
 
 import { ErrorCode } from '@locale-hub/data';
-import { routes } from '../../../../apps/portal-web/constants/routes';
-
 
 export class Http {
 
   private authorization = '';
 
   constructor(
-    private baseUrl: string
+    private baseUrl: string,
+    private authUrl: string
   ) {
   }
 
@@ -43,7 +42,7 @@ export class Http {
       const res = await fetch(`${this.baseUrl}${url}`, init);
 
       if (401 === res.status) {
-        redirect(routes.auth.root);
+        redirect(this.authUrl);
         return { error: {
           statusCode: 401,
           code: ErrorCode.userAccessUnauthorized,

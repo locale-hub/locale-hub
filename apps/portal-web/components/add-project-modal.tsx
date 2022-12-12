@@ -1,7 +1,6 @@
 import { Dialog } from '@headlessui/react';
 import React, { useState } from 'react';
 import { Button, InputField, Select } from '@locale-hub/design-system';
-import { locales } from '../constants/locales';
 import { Organization } from '@locale-hub/data';
 
 export default function AddProjectModal({

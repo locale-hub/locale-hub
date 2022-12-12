@@ -5,6 +5,8 @@ import React, { useEffect, useState } from 'react';
 import '../styles/globals.css'
 import App from './app';
 import { AuthContextProvider } from '../contexts/AuthContext';
+import { ApiConnector } from '@locale-hub/api-connector';
+import { routes } from '../constants/routes';
 
 const loadThemeMode = () => {
   // https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually
@@ -31,6 +33,11 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  ApiConnector.initApi(
+    'http://localhost:3000/v1',
+    routes.auth.root
+  );
+
   const [domLoaded, setDomLoaded] = useState(false);
   useEffect(function() {
     loadThemeMode();

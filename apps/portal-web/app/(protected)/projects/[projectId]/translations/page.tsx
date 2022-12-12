@@ -1,13 +1,9 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import { Button, InputField, Modal, Select, Spacer, Table } from '@locale-hub/design-system';
-import { ManifestEntry, ManifestWithStatus, Project, User } from '@locale-hub/data';
+import React, { useEffect, useState } from 'react';
+import { Button, Spacer, Table } from '@locale-hub/design-system';
+import { ManifestWithStatus } from '@locale-hub/data';
 import { ApiConnector } from '@locale-hub/api-connector';
-import { locales } from '../../../../../constants/locales';
-import Link from 'next/link';
-import { routes } from '../../../../../constants/routes';
-import { CloudArrowUpIcon, CodeBracketIcon } from '@heroicons/react/24/outline';
 import TranslationModal from './translation-modal';
 import AddLocaleModal from './add-locale-modal';
 import AddKeyModal from './add-key-modal';
@@ -19,8 +15,6 @@ export default function ProjectTranslationsPage({
 }: {
   params: { projectId: string }
 }) {
-  let originalManifests: ManifestWithStatus;
-
   const [manifests, setManifests] = useState<ManifestWithStatus>();
   const [selectedLocale, setSelectedLocale] = useState<string>();
   const [entry, setEntry] = useState<{ locale: string, key: string, value: string }>();
@@ -37,13 +31,10 @@ export default function ProjectTranslationsPage({
         // TODO: Toast
         return;
       }
-      // stringify/parse operation is to force creation of a new Object.
-      originalManifests = JSON.parse(JSON.stringify(data.manifest));
-
       setManifests(data.manifest);
       setSelectedLocale(data.manifest.locales[0]);
     });
-  }, []);
+  }, [params.projectId]);
 
   const openEditor = (key: string) => {
     setEntry({

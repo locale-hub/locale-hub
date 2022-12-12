@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Button, InputField, Modal, Select } from '@locale-hub/design-system';
-import { Organization, Project, User } from '@locale-hub/data';
+import { Organization,  User } from '@locale-hub/data';
 import { ApiConnector } from '@locale-hub/api-connector';
 
 
@@ -26,14 +26,14 @@ export default function OrganizationsSettingsPage({
       setOwner(data.organization.owner);
       setOrg(data.organization);
     });
-    ApiConnector.organizations.users(params.organizationId).then(data => {
+    ApiConnector.organizations.users.list(params.organizationId).then(data => {
       if ('error' in data) {
         // TODO Toast
         return;
       }
       setUsers(data.users);
     });
-  }, []);
+  }, [params.organizationId]);
 
   const updateOrganization = () => {
     // TODO: form validation

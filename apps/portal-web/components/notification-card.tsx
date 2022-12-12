@@ -18,7 +18,7 @@ export default function NotificationCard({
     <span dangerouslySetInnerHTML={{ __html: notification.text }} />
     <div className='mt-3 flex justify-end'>
       { notification.link && <Link href={notification.link}>
-          <Button onClick={() => {}}>
+          <Button>
             <DocumentMagnifyingGlassIcon className='h-5 w-5' />
           </Button>
         </Link>

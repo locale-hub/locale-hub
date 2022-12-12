@@ -4,11 +4,10 @@ import React, { useEffect, useState } from 'react';
 
 import { ApiConnector } from '@locale-hub/api-connector';
 import { MeDashboardResponse, Project } from '@locale-hub/data';
-import { Button, DateFormat, Menu, Modal, Table } from '@locale-hub/design-system';
+import { Button, DateFormat, Menu, Modal, ProgressBar, Table } from '@locale-hub/design-system';
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { routes } from '../../../constants/routes';
-import ProgressBar from '../../../../../libs/design-system/src/lib/progress-bar/progress-bar';
 
 export default function ProjectsPage() {
   const [data, setData] = useState<MeDashboardResponse>(null);

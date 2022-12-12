@@ -25,14 +25,14 @@ export default function ProjectCommitsPage({
       // Showing latest first
       setCommits(data.commits.reverse());
     });
-    ApiConnector.projects.users(params.projectId).then(data => {
+    ApiConnector.projects.users.list(params.projectId).then(data => {
       if ('error' in data) {
         // TODO Toast
         return;
       }
       setUsers(data.users);
     });
-  }, []);
+  }, [params.projectId]);
 
 
   const deployCommit = async (commitId: string) => {

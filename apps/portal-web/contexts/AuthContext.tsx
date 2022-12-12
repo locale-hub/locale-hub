@@ -9,9 +9,9 @@ import { routes } from '../constants/routes';
 const AuthContext = createContext({
   loggedIn: false,
   user: null,
-  login: (_email: string, _password: string) => {},
-  logout: () => {},
-  register: (_name: string, _email: string, _password: string) => {}
+  login: null,
+  logout: null,
+  register: null
 });
 
 export const AuthContextProvider = ({
@@ -68,7 +68,8 @@ export const AuthContextProvider = ({
     setUser(null);
     setLoggedIn(false);
     // TODO: improve error handling
-    try { useEffect(() => redirect(routes.auth), []) } catch (e) {}
+    try { redirect(routes.auth.root) }
+    catch (e) { document.location.href = '/'; }
   }
 
   const value = { loggedIn, user, register, login, logout };

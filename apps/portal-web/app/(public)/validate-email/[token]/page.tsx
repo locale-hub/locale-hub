@@ -18,7 +18,7 @@ export default function ProjectCommitsPage({
         : 'success'
       );
   });
-  }, []);
+  }, [params.token]);
 
   return <div className='px-10 py-48 m-auto w-full text-center'>
     { 'loading' === status && <p>Validating your email...</p> }

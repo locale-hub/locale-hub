@@ -22,7 +22,7 @@ export default function OrganizationProjectsPage({
       }
       setData(data);
     })
-  }, []);
+  }, [params.organizationId]);
 
 
   const projectProgress = (projectId: string) => {

@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
-import { Button, InputField, Modal, ModalCreateApp, Spacer } from '@locale-hub/design-system';
+import React, { useEffect, useState } from 'react';
+import { Button, Modal, ModalCreateApp, Spacer } from '@locale-hub/design-system';
 import { ApiConnector } from '@locale-hub/api-connector';
 import { App } from '@locale-hub/data';
 import { DocumentDuplicateIcon, TrashIcon } from '@heroicons/react/24/outline';
@@ -21,7 +21,7 @@ export default function ProjectApplicationsPage({
       }
       setApps(data.applications);
     });
-  }, []);
+  }, [params.projectId]);
 
   const createApp = async (app?: App) => {
     setCreateModal(false);

@@ -21,17 +21,20 @@ import {
   ManifestsGetResponse,
   ProjectsGetResponse,
   ManifestWithStatus,
-  Manifest,
   MeNotificationsResponse,
   OrganizationsListResponse,
-  ProjectsPostResponse, OrganizationsPostResponse, CommitsGetResponse
+  ProjectsPostResponse, OrganizationsPostResponse, CommitsGetResponse, UserRoles
 } from '@locale-hub/data';
 import { Http } from './http';
 
 // TODO: replace with config based value
-const http = new Http('http://localhost:3000/v1');
+let http: Http;
 
 export const ApiConnector = {
+
+  initApi: (baseUrl: string, authUrl: string) => {
+    http = new Http(baseUrl, authUrl);
+  },
 
   auth: {
     getUser: (): User | null => {
@@ -174,9 +177,6 @@ export const ApiConnector = {
     projects: async (organizationId: string): Promise<OrganizationsProjectsGetResponse | ApiErrorResponse> => {
       return await http.get<OrganizationsProjectsGetResponse>(`/organizations/${organizationId}/projects`);
     },
-    users: async (organizationId: string): Promise<OrganizationsUsersGetResponse | ApiErrorResponse> => {
-      return await http.get<OrganizationsUsersGetResponse>(`/organizations/${organizationId}/users`);
-    },
     update: async (organization: Organization): Promise<void | ApiErrorResponse> => {
       return await http.put<Organization, void | ApiErrorResponse>(
         `/organizations/${organization.id}`,
@@ -197,6 +197,23 @@ export const ApiConnector = {
         }
       );
     },
+    users: {
+      list: async (organizationId: string): Promise<OrganizationsUsersGetResponse | ApiErrorResponse> => {
+        return await http.get<OrganizationsUsersGetResponse>(`/organizations/${organizationId}/users`);
+      },
+      invite: async (organizationId: string, name: string, email: string): Promise<null | ApiErrorResponse> => {
+        return await http.post<any, null | ApiErrorResponse>(
+          `/organizations/${organizationId}/users/invite`,
+          {
+            name,
+            primaryEmail: email,
+          }
+        );
+      },
+      delete: async (organizationId: string, userId: string): Promise<null | ApiErrorResponse> => {
+        return await http.delete<any, null | ApiErrorResponse>(`/organizations/${organizationId}/users/${userId}`);
+      }
+    }
   },
 
   projects: {
@@ -230,10 +247,23 @@ export const ApiConnector = {
     delete: async (projectId: string): Promise<null | ApiErrorResponse> => {
       return await http.delete<unknown, null | ApiErrorResponse>(`/projects/${projectId}`);
     },
-    users: async (projectId: string): Promise<ProjectsUsersGetResponse | ApiErrorResponse> => {
-      return await http.get<ProjectsUsersGetResponse>(`/projects/${projectId}/users`);
+    users: {
+      list: async (projectId: string): Promise<ProjectsUsersGetResponse | ApiErrorResponse> => {
+        return await http.get<ProjectsUsersGetResponse>(`/projects/${projectId}/users`);
+      },
+      delete: async (projectId: string, userId: string): Promise<null | ApiErrorResponse> => {
+        return await http.delete<any, null | ApiErrorResponse>(`/projects/${projectId}/users/${userId}`);
+      },
+      add: async (projectId: string, userId: string): Promise<null | ApiErrorResponse> => {
+        return await http.post<any, null | ApiErrorResponse>(
+          `/projects/${projectId}/users`,
+          {
+            userId,
+            role: UserRoles.USER
+          }
+        );
+      }
     },
-
     applications: {
       list: async (projectId: string): Promise<AppsListResponse | ApiErrorResponse> => {
         return await http.get<AppsListResponse>(`/projects/${projectId}/apps`);

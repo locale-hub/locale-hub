@@ -23,8 +23,22 @@
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nrwl/nx/typescript"],
-      "rules": {}
+      "extends": [
+        "plugin:@nrwl/nx/typescript",
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
+      ],
+      "rules": {
+        "@typescript-eslint/ban-ts-comment": [ "error", {
+            "ts-ignore": "allow-with-description"
+        }],
+        "@typescript-eslint/no-unused-vars": ["error", {
+          "argsIgnorePattern": "^_",
+          "destructuredArrayIgnorePattern": "^_",
+          "varsIgnorePattern": "^_"
+        }]
+      }
     },
     {
       "files": ["*.js", "*.jsx"],

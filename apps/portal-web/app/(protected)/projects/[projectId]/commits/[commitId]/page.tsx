@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { ApiConnector } from '@locale-hub/api-connector';
 import { Commit } from '@locale-hub/data';
-import { Button, DateFormat, Table } from '@locale-hub/design-system';
+import { DateFormat, Table } from '@locale-hub/design-system';
 
 export default function ProjectCommitDetailsPage({
   params
@@ -20,7 +20,7 @@ export default function ProjectCommitDetailsPage({
       }
       setCommit(data.commit);
     });
-  }, []);
+  }, [params.projectId, params.commitId]);
 
   return <div className='px-10 py-10 m-auto w-full center'>
     { commit && <>

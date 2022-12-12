@@ -1,7 +1,6 @@
 import { Dialog } from '@headlessui/react';
 import React, { useEffect, useState } from 'react';
 import { Button, InputField } from '@locale-hub/design-system';
-import { ManifestEntry } from '@locale-hub/data';
 
 export default function TranslationModal({
   isOpen,

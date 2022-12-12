@@ -8,7 +8,7 @@ export default function Button({
 }: {
   children?: React.ReactNode,
   disabled?: boolean,
-  onClick: React.MouseEventHandler<HTMLButtonElement>
+  onClick?: React.MouseEventHandler<HTMLButtonElement>
   type?: 'action' | 'default' | 'cancel' | 'confirm'
 }) {
   type ??= 'default';

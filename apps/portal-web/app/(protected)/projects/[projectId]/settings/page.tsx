@@ -30,14 +30,14 @@ export default function ProjectSettingsPage({
       setOwner(data.project.userId);
       setProject(data.project);
     });
-    ApiConnector.projects.users(params.projectId).then(data => {
+    ApiConnector.projects.users.list(params.projectId).then(data => {
       if ('error' in data) {
         // TODO Toast
         return;
       }
       setUsers(data.users);
     });
-  }, []);
+  }, [params.projectId]);
 
   const updateProject = () => {
     // TODO: form validation

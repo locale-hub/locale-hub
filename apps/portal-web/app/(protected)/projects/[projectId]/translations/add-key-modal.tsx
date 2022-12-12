@@ -1,6 +1,6 @@
 import { Dialog } from '@headlessui/react';
 import React, { useState } from 'react';
-import { Button, InputField, Select } from '@locale-hub/design-system';
+import { Button, InputField } from '@locale-hub/design-system';
 
 export default function AddKeyModal({
   isOpen,
