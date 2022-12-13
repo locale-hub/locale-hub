@@ -1,0 +1,7 @@
+Dear {{ userName }},
+
+Please click the link below to confirm your email.
+{{ link }}
+
+Regards,
+i18n Services

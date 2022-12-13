@@ -1,0 +1,8 @@
+Dear {{ inviteeName }},
+You have been invited to join the {{ organizationName }} on i18n Services.
+You access you account at this url: {{ loginUrl }}
+Your temporary password is: {{ rawPassword }}
+Please change it in your profile at your first login (for obvious security reasons).
+
+Regards,
+i18n Services

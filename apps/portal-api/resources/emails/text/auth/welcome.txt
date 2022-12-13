@@ -1,0 +1,5 @@
+Dear {{ userName }},
+Thanks for registering to i18n Services!
+
+Regards,
+i18n Services
