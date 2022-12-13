@@ -3,11 +3,12 @@
 import React, { useEffect, useState } from 'react';
 
 import { ApiConnector } from '@locale-hub/api-connector';
-import { MeDashboardResponse, } from '@locale-hub/data';
-import { DateFormat, Table } from '@locale-hub/design-system';
 import { routes } from '../../../constants/routes';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
+import Table from '@locale-hub/design-system/table/table';
+import DateFormat from '@locale-hub/design-system/date-format/date-format';
+import { MeDashboardResponse } from '@locale-hub/data/responses/me-dashboard.response';
 
 export default function OrganizationsPage() {
   const [data, setData] = useState<MeDashboardResponse>(null);

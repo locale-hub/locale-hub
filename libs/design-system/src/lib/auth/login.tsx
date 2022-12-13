@@ -4,8 +4,9 @@ import { LockClosedIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import Joi from 'joi';
-
-import { Button, InputField, Spacer } from '@locale-hub/design-system';
+import InputField from '@locale-hub/design-system/input-field/input-field';
+import Button from '@locale-hub/design-system/button/button';
+import Spacer from '@locale-hub/design-system/spacer/spacer';
 
 const schema = Joi.object({
   email: Joi.string().email({ tlds: {allow: false} }).required(),

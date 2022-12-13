@@ -1,7 +1,9 @@
 import { Dialog } from '@headlessui/react';
 import React, { useState } from 'react';
-import { Button, InputField, Select } from '@locale-hub/design-system';
-import { Organization } from '@locale-hub/data';
+import { Organization } from '@locale-hub/data/models/organization.model';
+import InputField from '@locale-hub/design-system/input-field/input-field';
+import Button from '@locale-hub/design-system/button/button';
+import Select from '@locale-hub/design-system/select/select';
 
 export default function AddProjectModal({
   isOpen,

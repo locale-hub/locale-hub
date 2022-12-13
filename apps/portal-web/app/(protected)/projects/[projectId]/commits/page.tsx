@@ -1,13 +1,17 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Button, DateFormat, Modal, UserIcon } from '@locale-hub/design-system';
 import { ApiConnector } from '@locale-hub/api-connector';
-import { Commit, User } from '@locale-hub/data';
 import { CloudArrowUpIcon, CodeBracketIcon, DocumentDuplicateIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { routes } from '../../../../../constants/routes';
 import toast from 'react-hot-toast';
+import { Commit } from '@locale-hub/data/models/commit.model';
+import Button from '@locale-hub/design-system/button/button';
+import DateFormat from '@locale-hub/design-system/date-format/date-format';
+import Modal from '@locale-hub/design-system/modal/modal';
+import { User } from '@locale-hub/data/models/user.model';
+import UserIcon from '@locale-hub/design-system/user-icon/user-icon';
 
 export default function ProjectCommitsPage({
   params

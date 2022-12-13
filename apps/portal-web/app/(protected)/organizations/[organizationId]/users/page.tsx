@@ -2,12 +2,15 @@
 
 import React, { useEffect, useState } from 'react';
 import { ApiConnector } from '@locale-hub/api-connector';
-import { Button, Menu, Table } from '@locale-hub/design-system';
-import { EmailStatus, User } from '@locale-hub/data';
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 import InviteUserModal from './invite-user-modal';
 import DeleteUserModal from '../../../../../components/delete-user-modal';
 import toast from 'react-hot-toast';
+import Table from '@locale-hub/design-system/table/table';
+import Button from '@locale-hub/design-system/button/button';
+import { EmailStatus } from '@locale-hub/data/enums/email-status.enum';
+import Menu from '@locale-hub/design-system/menu/menu';
+import { User } from '@locale-hub/data/models/user.model';
 
 export default function OrganizationUsersPage({
   params
@@ -42,7 +45,7 @@ export default function OrganizationUsersPage({
       toast.success('Success! We sent an invitation to the user');
       setUsers([
         ...users,
-        { id: email, name, primaryEmail: email, organizationId: params.organizationId,
+        { id: email, name, primaryEmail: email, passwordSalt: undefined,
           password: undefined, emails: [{email, createdAt: '', status: EmailStatus.PRIMARY }], role: 'user', createdAt: ''}
       ])
     });

@@ -1,14 +1,18 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Button, InputField, Modal, Select } from '@locale-hub/design-system';
-import { Project, User } from '@locale-hub/data';
 import { ApiConnector } from '@locale-hub/api-connector';
 import { locales } from '../../../../../constants/locales';
 import { redirect } from 'next/navigation';
 import { routes } from '../../../../../constants/routes';
 import toast from 'react-hot-toast';
 import Joi from 'joi';
+import { Project } from '@locale-hub/data/models/project.model';
+import InputField from '@locale-hub/design-system/input-field/input-field';
+import Button from '@locale-hub/design-system/button/button';
+import Select from '@locale-hub/design-system/select/select';
+import Modal from '@locale-hub/design-system/modal/modal';
+import { User } from '@locale-hub/data/models/user.model';
 
 const schema = Joi.object({
   name: Joi.string().min(4).required(),

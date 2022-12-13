@@ -1,7 +1,7 @@
 import { Dialog } from '@headlessui/react';
 import React from 'react';
-import { Button } from '@locale-hub/design-system';
-import { User } from '@locale-hub/data';
+import Button from '@locale-hub/design-system/button/button';
+import { User } from '@locale-hub/data/models/user.model';
 
 export default function DeleteUserModal({
   isOpen,

@@ -1,7 +1,8 @@
 import { Dialog } from '@headlessui/react';
 import React, { useState } from 'react';
-import { Button, Select } from '@locale-hub/design-system';
 import { locales } from '../../../../../constants/locales';
+import Button from '@locale-hub/design-system/button/button';
+import Select from '@locale-hub/design-system/select/select';
 
 export default function AddLocaleModal({
   isOpen,

@@ -2,9 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { ApiConnector } from '@locale-hub/api-connector';
-import { Commit } from '@locale-hub/data';
-import { DateFormat, Table } from '@locale-hub/design-system';
 import toast from 'react-hot-toast';
+import { Commit } from '@locale-hub/data/models/commit.model';
+import Table from '@locale-hub/design-system/table/table';
+import DateFormat from '@locale-hub/design-system/date-format/date-format';
 
 export default function ProjectCommitDetailsPage({
   params

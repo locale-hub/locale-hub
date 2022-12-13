@@ -4,9 +4,9 @@ import { redirect } from 'next/navigation';
 
 import { useAuth } from '../../../contexts/AuthContext';
 import { useState } from 'react';
-import { Auth } from '@locale-hub/design-system';
 import Image from 'next/image';
 import { routes } from '../../../constants/routes';
+import Auth from '@locale-hub/design-system/auth';
 
 export default function AuthPage() {
   const { register, login, loggedIn } = useAuth();

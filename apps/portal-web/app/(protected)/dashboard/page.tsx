@@ -1,14 +1,20 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import toast from 'react-hot-toast';
+import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 
 import { ApiConnector } from '@locale-hub/api-connector';
-import { MeDashboardResponse, Project } from '@locale-hub/data';
-import { Button, DateFormat, Menu, Modal, ProgressBar, Table } from '@locale-hub/design-system';
-import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
-import Link from 'next/link';
+import { MeDashboardResponse } from '@locale-hub/data/responses/me-dashboard.response';
 import { routes } from '../../../constants/routes';
-import toast from 'react-hot-toast';
+import { Project } from '@locale-hub/data/models/project.model';
+import Button from '@locale-hub/design-system/button/button';
+import Modal from '@locale-hub/design-system/modal/modal';
+import Table from '@locale-hub/design-system/table/table';
+import DateFormat from '@locale-hub/design-system/date-format/date-format';
+import Menu from '@locale-hub/design-system/menu/menu';
+import ProgressBar from '@locale-hub/design-system/progress-bar/progress-bar';
 
 export default function DashboardPage() {
   const [data, setData] = useState<MeDashboardResponse>(null);

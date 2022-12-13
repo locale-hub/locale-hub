@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { Sidebar } from '@locale-hub/design-system';
 import {
   AdjustmentsHorizontalIcon,
   ChartPieIcon,
@@ -9,6 +8,7 @@ import {
   UsersIcon
 } from '@heroicons/react/24/solid';
 import { routes } from '../../../../constants/routes';
+import Sidebar from '@locale-hub/design-system/sidebar/sidebar';
 
 export default function OrganizationLayout({
   children,

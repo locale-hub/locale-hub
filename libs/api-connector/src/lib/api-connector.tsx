@@ -1,31 +1,32 @@
 'use client';
 import decode from 'jwt-decode';
 
-import {
-  ApiErrorResponse,
-  MeDashboardResponse,
-  OrganizationsUsersGetResponse,
-  OrganizationsProjectsGetResponse,
-  Project,
-  ProjectsListResponse,
-  TokenResponse,
-  User,
-  ProjectsUsersGetResponse,
-  OrganizationsGetResponse,
-  Organization,
-  OrganizationsUsageGetResponse,
-  CommitsListResponse,
-  AppsListResponse,
-  AppsPostResponse,
-  FileFormat,
-  ManifestsGetResponse,
-  ProjectsGetResponse,
-  ManifestWithStatus,
-  MeNotificationsResponse,
-  OrganizationsListResponse,
-  ProjectsPostResponse, OrganizationsPostResponse, CommitsGetResponse, UserRoles
-} from '@locale-hub/data';
 import { Http } from './http';
+import { ProjectsGetResponse } from '@locale-hub/data/responses/projects-get.response';
+import { Organization } from '@locale-hub/data/models/organization.model';
+import { OrganizationsPostResponse } from '@locale-hub/data/responses/organizations-post.response';
+import { FileFormat } from '@locale-hub/data/enums/file-format.enum';
+import { OrganizationsProjectsGetResponse } from '@locale-hub/data/responses/organizations-projects-get.response';
+import { MeNotificationsResponse } from '@locale-hub/data/responses/me-notifications.response';
+import { AppsPostResponse } from '@locale-hub/data/responses/apps-post.response';
+import { ManifestsGetResponse } from '@locale-hub/data/responses/manifests-get.response';
+import { OrganizationsListResponse } from '@locale-hub/data/responses/organizations-list.response';
+import { ProjectsListResponse } from '@locale-hub/data/responses/projects-list.response';
+import { ProjectsUsersGetResponse } from '@locale-hub/data/responses/projects-users-get.response';
+import { CommitsListResponse } from '@locale-hub/data/responses/commits-list.response';
+import { UserRoles } from '@locale-hub/data/enums/user-roles.enum';
+import { CommitsGetResponse } from '@locale-hub/data/responses/commits-get.response';
+import { ApiErrorResponse } from '@locale-hub/data/responses/api-error.response';
+import { MeDashboardResponse } from '@locale-hub/data/responses/me-dashboard.response';
+import { OrganizationsGetResponse } from '@locale-hub/data/responses/organizations-get.response';
+import { OrganizationsUsageGetResponse } from '@locale-hub/data/responses/organizations-usage-get.response';
+import { Project } from '@locale-hub/data/models/project.model';
+import { ProjectsPostResponse } from '@locale-hub/data/responses/projects-post.response';
+import { TokenResponse } from '@locale-hub/data/responses/token.response';
+import { ManifestWithStatus } from '@locale-hub/data/models/manifest-with-status.model';
+import { AppsListResponse } from '@locale-hub/data/responses/apps-list.response';
+import { OrganizationsUsersGetResponse } from '@locale-hub/data/responses/organizations-users-get.response';
+import { User } from '@locale-hub/data/models/user.model';
 
 let http: Http;
 

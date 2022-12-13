@@ -6,6 +6,6 @@ export interface Notification {
   text?: string;
   img?: string;
   link?: string;
-  status: NotificationStatus;
+  users: { id: string; status: NotificationStatus; }[];
   createdAt: string;
 }

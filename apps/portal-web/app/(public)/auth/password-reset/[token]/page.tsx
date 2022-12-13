@@ -5,9 +5,10 @@ import { redirect } from 'next/navigation';
 
 import { routes } from '../../../../../constants/routes';
 import { ApiConnector } from '@locale-hub/api-connector';
-import { Button, InputField } from '@locale-hub/design-system';
 import toast from 'react-hot-toast';
 import Joi from 'joi';
+import InputField from '@locale-hub/design-system/input-field/input-field';
+import Button from '@locale-hub/design-system/button/button';
 
 const schema = Joi.object({
   email: Joi.string().email({ tlds: {allow: false} }).required(),

@@ -3,11 +3,11 @@
 import React from 'react';
 import Link from 'next/link';
 
-import { Navbar } from '@locale-hub/design-system';
 import '../styles/globals.css'
 import { useAuth } from '../contexts/AuthContext';
 import { routes } from '../constants/routes';
 import NavigationAuthenticated from '../components/navigation-authenticated';
+import Navbar from '@locale-hub/design-system/navbar/navbar';
 
 export default function App({
   onThemeChange,

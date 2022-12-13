@@ -5,16 +5,20 @@ import { BellAlertIcon, DocumentTextIcon, PlusIcon } from '@heroicons/react/24/o
 import Link from 'next/link';
 
 import { routes } from '../constants/routes';
-import { SlideOver, Spacer, UserIcon } from '@locale-hub/design-system';
 import { useAuth } from '../contexts/AuthContext';
 import { ApiConnector } from '@locale-hub/api-connector';
-import { Notification, NotificationStatus, Organization } from '@locale-hub/data';
 import NotificationCard from './notification-card';
 import { Menu } from '@headlessui/react';
 import AddProjectModal from './add-project-modal';
 import AddOrganizationModal from './add-organization-modal';
 import toast from 'react-hot-toast';
 import { redirect } from 'next/navigation';
+import { Organization } from '@locale-hub/data/models/organization.model';
+import { Notification } from '@locale-hub/data/models/notification.model';
+import SlideOver from '@locale-hub/design-system/slide-over/slide-over';
+import Spacer from '@locale-hub/design-system/spacer/spacer';
+import { NotificationStatus } from '@locale-hub/data/enums/notification-status.enum';
+import UserIcon from '@locale-hub/design-system/user-icon/user-icon';
 
 export default function NavigationAuthenticated() {
   const { user, logout } = useAuth();
@@ -89,7 +93,7 @@ export default function NavigationAuthenticated() {
        onClose={() => setOpenNotifications(false)}
        title='Notifications'
     >
-      { notifications.filter(n => NotificationStatus.UNREAD === n.status).map((notification) =>
+      { notifications.filter(n => NotificationStatus.UNREAD === n.users.find(d => d.id === user.id).status).map((notification) =>
         <NotificationCard key={notification.id}
           notification={notification}
           onArchive={() => onArchive(notification.id)}
@@ -106,7 +110,7 @@ export default function NavigationAuthenticated() {
     <div className='relative hover:cursor-pointer'
          onClick={() => setOpenNotifications(!openNotifications)}>
       <div className="inline-flex absolute -top-2 right-0 justify-center items-center w-5 h-5 text-xs font-bold rounded-full bg-primary">
-        { notifications.filter(n => NotificationStatus.UNREAD === n.status).length }
+        { notifications.filter(n => NotificationStatus.UNREAD === n.users.find(d => d.id === user.id).status).length }
       </div>
       <BellAlertIcon className='mx-2 h-6 w-6' />
     </div>

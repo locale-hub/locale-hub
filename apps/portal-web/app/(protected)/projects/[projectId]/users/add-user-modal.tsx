@@ -1,7 +1,8 @@
 import { Dialog } from '@headlessui/react';
 import React, { useState } from 'react';
-import { Button, Select } from '@locale-hub/design-system';
-import { User } from '@locale-hub/data';
+import Button from '@locale-hub/design-system/button/button';
+import Select from '@locale-hub/design-system/select/select';
+import { User } from '@locale-hub/data/models/user.model';
 
 export default function AddUserModal({
   isOpen,

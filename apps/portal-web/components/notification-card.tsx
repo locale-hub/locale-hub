@@ -1,10 +1,11 @@
 'use client';
 
 import React from 'react';
-import { Notification } from '@locale-hub/data';
-import { Button, Card } from '@locale-hub/design-system';
 import { ArchiveBoxArrowDownIcon, DocumentMagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import Link from 'next/link';
+import Button from '@locale-hub/design-system/button/button';
+import Card from '@locale-hub/design-system/card/card';
+import { Notification } from '@locale-hub/data/models/notification.model';
 
 export default function NotificationCard({
   notification,

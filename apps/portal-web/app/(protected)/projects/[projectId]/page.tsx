@@ -2,12 +2,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { ApiConnector } from '@locale-hub/api-connector';
-import { ProjectsGetResponse } from '@locale-hub/data';
-import { Card, ProgressBar } from '@locale-hub/design-system';
 import Link from 'next/link';
 import { routes } from '../../../../constants/routes';
 import toast from 'react-hot-toast';
 import { environment } from '../../../../environment';
+import { ProjectsGetResponse } from '@locale-hub/data/responses/projects-get.response';
+import ProgressBar from '@locale-hub/design-system/progress-bar/progress-bar';
+import Card from '@locale-hub/design-system/card/card';
 
 type Action = {
   img: string,

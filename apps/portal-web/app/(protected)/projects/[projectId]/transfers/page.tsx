@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
-import { Button } from '@locale-hub/design-system';
 import { ApiConnector } from '@locale-hub/api-connector';
-import { FileFormat } from '@locale-hub/data';
 import toast from 'react-hot-toast';
+import Button from '@locale-hub/design-system/button/button';
+import { FileFormat } from '@locale-hub/data/enums/file-format.enum';
 
 
 export default function ProjectTransfersPage({

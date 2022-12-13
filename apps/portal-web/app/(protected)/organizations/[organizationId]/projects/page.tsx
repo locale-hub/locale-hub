@@ -1,12 +1,15 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { ApiConnector } from '@locale-hub/api-connector';
 import Link from 'next/link';
-import { routes } from '../../../../../constants/routes';
-import { DateFormat, ProgressBar, Table } from '@locale-hub/design-system';
-import { OrganizationsProjectsGetResponse } from '@locale-hub/data';
 import toast from 'react-hot-toast';
+
+import { routes } from '../../../../../constants/routes';
+import { ApiConnector } from '@locale-hub/api-connector';
+import { OrganizationsProjectsGetResponse } from '@locale-hub/data/responses/organizations-projects-get.response';
+import ProgressBar from '@locale-hub/design-system/progress-bar/progress-bar';
+import Table from '@locale-hub/design-system/table/table';
+import DateFormat from '@locale-hub/design-system/date-format/date-format';
 
 export default function OrganizationProjectsPage({
   params

@@ -3,10 +3,14 @@
 import React, { useEffect, useState } from 'react';
 import { TrashIcon } from '@heroicons/react/24/outline';
 
-import { Button, InputField, Select, Spacer, UserIcon } from '@locale-hub/design-system';
 import { ApiConnector } from '@locale-hub/api-connector';
-import { User } from '@locale-hub/data';
 import toast from 'react-hot-toast';
+import InputField from '@locale-hub/design-system/input-field/input-field';
+import Button from '@locale-hub/design-system/button/button';
+import Spacer from '@locale-hub/design-system/spacer/spacer';
+import Select from '@locale-hub/design-system/select/select';
+import { User } from '@locale-hub/data/models/user.model';
+import UserIcon from '@locale-hub/design-system/user-icon/user-icon';
 
 export default function Page() {
   const [passwords, setPasswords] = useState<{ old: string, new: string, new2: string }>({ old: '', new: '', new2: '' });

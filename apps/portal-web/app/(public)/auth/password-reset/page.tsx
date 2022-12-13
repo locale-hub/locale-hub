@@ -8,7 +8,9 @@ import { routes } from '../../../../constants/routes';
 import { ApiConnector } from '@locale-hub/api-connector';
 import toast from 'react-hot-toast';
 import Joi from 'joi';
-import { Button, InputField, Spacer } from '@locale-hub/design-system';
+import InputField from '@locale-hub/design-system/input-field/input-field';
+import Button from '@locale-hub/design-system/button/button';
+import Spacer from '@locale-hub/design-system/spacer/spacer';
 
 const schema = Joi.object({
   email: Joi.string().email({ tlds: {allow: false} }).required(),

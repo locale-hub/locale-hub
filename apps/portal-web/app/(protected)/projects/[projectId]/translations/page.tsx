@@ -1,14 +1,16 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Button, Spacer, Table } from '@locale-hub/design-system';
-import { ManifestWithStatus } from '@locale-hub/data';
 import { ApiConnector } from '@locale-hub/api-connector';
 import TranslationModal from './translation-modal';
 import AddLocaleModal from './add-locale-modal';
 import AddKeyModal from './add-key-modal';
 import CommitModal from './commit-modal';
 import toast from 'react-hot-toast';
+import Table from '@locale-hub/design-system/table/table';
+import { ManifestWithStatus } from '@locale-hub/data/models/manifest-with-status.model';
+import Button from '@locale-hub/design-system/button/button';
+import Spacer from '@locale-hub/design-system/spacer/spacer';
 
 
 export default function ProjectTranslationsPage({

@@ -1,11 +1,14 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, ModalCreateApp, Spacer } from '@locale-hub/design-system';
 import { ApiConnector } from '@locale-hub/api-connector';
-import { App } from '@locale-hub/data';
 import { DocumentDuplicateIcon, TrashIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
+import ModalCreateApp from '@locale-hub/design-system/modal/modal-create-app';
+import Button from '@locale-hub/design-system/button/button';
+import Spacer from '@locale-hub/design-system/spacer/spacer';
+import Modal from '@locale-hub/design-system/modal/modal';
+import { App } from '@locale-hub/data/models/app.model';
 
 export default function ProjectApplicationsPage({
   params

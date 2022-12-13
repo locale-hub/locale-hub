@@ -2,12 +2,14 @@
 
 import React, { useEffect, useState } from 'react';
 import { ApiConnector } from '@locale-hub/api-connector';
-import { Button, Menu, Table } from '@locale-hub/design-system';
-import { User } from '@locale-hub/data';
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 import DeleteUserModal from '../../../../../components/delete-user-modal';
 import AddUserModal from './add-user-modal';
 import toast from 'react-hot-toast';
+import Table from '@locale-hub/design-system/table/table';
+import Button from '@locale-hub/design-system/button/button';
+import Menu from '@locale-hub/design-system/menu/menu';
+import { User } from '@locale-hub/data/models/user.model';
 
 export default function ProjectUsersPage({
   params

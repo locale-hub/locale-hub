@@ -1,7 +1,6 @@
-import { ApiErrorResponse } from '@locale-hub/data';
 import { redirect } from 'next/navigation';
-
-import { ErrorCode } from '@locale-hub/data';
+import { ApiErrorResponse } from '@locale-hub/data/responses/api-error.response';
+import { ErrorCode } from '@locale-hub/data/enums/error-code.enum';
 
 export class Http {
 

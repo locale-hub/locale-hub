@@ -3,12 +3,18 @@
 import React, { useEffect, useState } from 'react';
 
 import { ApiConnector } from '@locale-hub/api-connector';
-import { MeDashboardResponse, Project } from '@locale-hub/data';
-import { Button, DateFormat, Menu, Modal, ProgressBar, Table } from '@locale-hub/design-system';
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { routes } from '../../../constants/routes';
 import toast from 'react-hot-toast';
+import { Project } from '@locale-hub/data/models/project.model';
+import Table from '@locale-hub/design-system/table/table';
+import Button from '@locale-hub/design-system/button/button';
+import DateFormat from '@locale-hub/design-system/date-format/date-format';
+import { MeDashboardResponse } from '@locale-hub/data/responses/me-dashboard.response';
+import Menu from '@locale-hub/design-system/menu/menu';
+import Modal from '@locale-hub/design-system/modal/modal';
+import ProgressBar from '@locale-hub/design-system/progress-bar/progress-bar';
 
 export default function ProjectsPage() {
   const [data, setData] = useState<MeDashboardResponse>(null);
