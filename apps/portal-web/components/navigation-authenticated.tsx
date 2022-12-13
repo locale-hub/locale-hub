@@ -93,7 +93,7 @@ export default function NavigationAuthenticated() {
        onClose={() => setOpenNotifications(false)}
        title='Notifications'
     >
-      { notifications.filter(n => NotificationStatus.UNREAD === n.users.find(d => d.id === user.id).status).map((notification) =>
+      { notifications.filter(n => NotificationStatus.UNREAD === n.status).map((notification) =>
         <NotificationCard key={notification.id}
           notification={notification}
           onArchive={() => onArchive(notification.id)}
@@ -110,7 +110,7 @@ export default function NavigationAuthenticated() {
     <div className='relative hover:cursor-pointer'
          onClick={() => setOpenNotifications(!openNotifications)}>
       <div className="inline-flex absolute -top-2 right-0 justify-center items-center w-5 h-5 text-xs font-bold rounded-full bg-primary">
-        { notifications.filter(n => NotificationStatus.UNREAD === n.users.find(d => d.id === user.id).status).length }
+        { notifications.filter(n => NotificationStatus.UNREAD === n.status).length }
       </div>
       <BellAlertIcon className='mx-2 h-6 w-6' />
     </div>
