@@ -1,4 +1,4 @@
-import MongoClient, {Db, FilterQuery, Logger, OptionalId, UpdateQuery} from 'mongodb';
+import MongoClient, {Db, FilterQuery, Logger, UpdateQuery} from 'mongodb';
 
 let client: Db;
 

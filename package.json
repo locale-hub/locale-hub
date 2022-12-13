@@ -2,9 +2,10 @@
   "name": "locale-hub",
   "version": "3.0.0",
   "scripts": {
-    "start": "nx serve",
-    "build": "nx build",
-    "test": "nx test"
+    "start": "nx run-many --target=serve",
+    "build": "nx run-many --target=build",
+    "lint": "nx run-many --target=lint",
+    "test": "nx run-many --target=test"
   },
   "private": true,
   "dependencies": {

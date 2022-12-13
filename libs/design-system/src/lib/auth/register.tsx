@@ -2,8 +2,8 @@
 import { LockClosedIcon } from '@heroicons/react/24/solid';
 import React, { useState } from 'react';
 import Joi from 'joi';
-import InputField from '@locale-hub/design-system/input-field/input-field';
-import Button from '@locale-hub/design-system/button/button';
+import InputField from '../input-field/input-field';
+import Button from '../button/button';
 
 const schema = Joi.object({
   name: Joi.string().min(4).required(),

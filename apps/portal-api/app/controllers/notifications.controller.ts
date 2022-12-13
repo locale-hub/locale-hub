@@ -20,7 +20,7 @@ router.get('', async function(req: Request, res: Response) {
     });
 
     const notifications = list.map((notification) => {
-      const status = notification.users
+      const status = notification.users!
         .filter((u) => userId === u.id)[0]
         .status ??
         NotificationStatus.UNREAD;

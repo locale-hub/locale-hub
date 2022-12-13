@@ -89,7 +89,7 @@ export class NotificationRepository {
       });
     }
 
-    notification.users = notification.users.map((user) => {
+    notification.users = notification.users!.map((user) => {
       if (user.id === userId) {
         user.status = NotificationStatus.READ;
       }

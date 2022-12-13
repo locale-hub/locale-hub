@@ -1,7 +1,7 @@
 import { Dialog } from '@headlessui/react';
 import React, { useState } from 'react';
-import InputField from '@locale-hub/design-system/input-field/input-field';
-import Button from '@locale-hub/design-system/button/button';
+import InputField from '../input-field/input-field';
+import Button from '../button/button';
 
 export default function ModalCreateApp({
   isOpen,
