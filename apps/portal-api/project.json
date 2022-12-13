@@ -1,7 +1,7 @@
 {
   "name": "portal-api",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/portal-api/src",
+  "sourceRoot": "apps/portal-api",
   "projectType": "application",
   "targets": {
     "build": {
@@ -11,21 +11,15 @@
         "target": "node",
         "compiler": "tsc",
         "outputPath": "dist/apps/portal-api",
-        "main": "apps/portal-api/src/main.ts",
+        "main": "apps/portal-api/main.ts",
         "tsConfig": "apps/portal-api/tsconfig.app.json",
-        "assets": ["apps/portal-api/src/assets"]
+        "assets": ["apps/portal-api/assets"]
       },
       "configurations": {
         "production": {
           "optimization": true,
           "extractLicenses": true,
-          "inspect": false,
-          "fileReplacements": [
-            {
-              "replace": "apps/portal-api/src/environments/environment.ts",
-              "with": "apps/portal-api/src/environments/environment.prod.ts"
-            }
-          ]
+          "inspect": false
         }
       }
     },
