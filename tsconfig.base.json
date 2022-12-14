@@ -15,8 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@locale-hub/config": ["config/global.config.ts"],
       "@locale-hub/api-connector": ["libs/api-connector/src/index.ts"],
+      "@locale-hub/config": ["config/global.config.ts"],
       "@locale-hub/data/*": ["libs/data/src/lib/*"],
       "@locale-hub/design-system/*": ["libs/design-system/src/lib/*"]
     }

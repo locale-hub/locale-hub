@@ -1,9 +1,9 @@
 import * as MailService from './mail.service';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-dayjs.extend(utc)
-import {generateEmailConfirmationToken} from '../middlewares/auth.middleware';
-import {jwtService} from './jwt.service';
+dayjs.extend(utc);
+import { generateEmailConfirmationToken } from '../middlewares/auth.middleware';
+import { jwtService } from './jwt.service';
 import { Email } from '@locale-hub/data/models/email.model';
 import { UserRepository } from '@locale-hub/data/repositories/user.repository';
 import { EmailStatus } from '@locale-hub/data/enums/email-status.enum';
@@ -23,7 +23,12 @@ const userRepository = new UserRepository();
  * @param {string} salt Password salt
  * @return {User|null} The newly created user, null if not created
  */
-export const createUser = async (name :string, email: string, password: string, salt: string): Promise<User> => {
+export const createUser = async (
+  name: string,
+  email: string,
+  password: string,
+  salt: string
+): Promise<User> => {
   return await userRepository.insert(name, email, password, salt);
 };
 
@@ -36,7 +41,10 @@ export const findIn = async (ids: string[]): Promise<User[]> => {
   return await userRepository.findIn(ids);
 };
 
-export const updateUser = async (current: User, updated: User): Promise<User> => {
+export const updateUser = async (
+  current: User,
+  updated: User
+): Promise<User> => {
   const user = await userRepository.findByEmail(current.primaryEmail);
 
   const newEmails = updated.emails
@@ -46,7 +54,7 @@ export const updateUser = async (current: User, updated: User): Promise<User> =>
       return data;
     });
 
-  for (const {email} of newEmails) {
+  for (const { email } of newEmails) {
     if (await userRepository.emailExists(email)) {
       throw new ApiException({
         message: `Email '${email}' already exists.`,
@@ -73,20 +81,23 @@ export const updateUser = async (current: User, updated: User): Promise<User> =>
       {
         userName: user.name,
         link,
-      },
+      }
     );
   }
 
   return await userRepository.update(current.id, user);
 };
 
-export const validateNewUserEmail = async (current: User, body: { token: string }): Promise<User> => {
+export const validateNewUserEmail = async (
+  current: User,
+  body: { token: string }
+): Promise<User> => {
   const user = await userRepository.findByEmail(current.primaryEmail);
 
-  const invitation = (await jwtService.read<any>(body.token)).invitation as UserInvitation;
+  const invitation = (await jwtService.read<any>(body.token))
+    .invitation as UserInvitation;
 
-  const hasEmail = user.emails
-    .some((e: Email) => e.email === invitation.email);
+  const hasEmail = user.emails.some((e: Email) => e.email === invitation.email);
   const isExpired = dayjs(invitation.createdAt)
     .add(15, 'minutes')
     .isBefore(dayjs().utc());

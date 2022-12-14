@@ -1,12 +1,12 @@
-import {dbInsert, dbMultiple, dbSingle, dbUpdate} from './db.repository';
-import {Notification} from '../models/notification.model';
-import {ApiException} from '../exceptions/api.exception';
-import {ErrorCode} from '../enums/error-code.enum';
-import {NotificationStatus} from '../enums/notification-status.enum';
-import {v4 as uuid} from 'uuid';
+import { dbInsert, dbMultiple, dbSingle, dbUpdate } from './db.repository';
+import { Notification } from '../models/notification.model';
+import { ApiException } from '../exceptions/api.exception';
+import { ErrorCode } from '../enums/error-code.enum';
+import { NotificationStatus } from '../enums/notification-status.enum';
+import { v4 as uuid } from 'uuid';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-dayjs.extend(utc)
+dayjs.extend(utc);
 
 export class NotificationRepository {
   private readonly collectionName = 'notifications';
@@ -20,8 +20,13 @@ export class NotificationRepository {
    * @param {string} link Optional portal web url
    * @param {string} img An optional image link to display
    */
-  create = async (userIds: string[], title: string, text?: string, link?: string, img?: string)
-    : Promise<Notification> => {
+  create = async (
+    userIds: string[],
+    title: string,
+    text?: string,
+    link?: string,
+    img?: string
+  ): Promise<Notification> => {
     const users = userIds.map((userId) => {
       return {
         id: userId,
@@ -57,17 +62,19 @@ export class NotificationRepository {
    * @param {NotificationStatus} status The status used to filter notifications
    * @return {Notification[]} The list notifications
    */
-  getForUser = async (userId: string, status: NotificationStatus): Promise<Notification[]> => {
+  getForUser = async (
+    userId: string,
+    status: NotificationStatus
+  ): Promise<Notification[]> => {
     const notifications = await dbMultiple<Notification>(this.collectionName, {
-      'users': {
-        'id': userId,
-        'status': status,
+      users: {
+        id: userId,
+        status: status,
       },
     });
 
     return notifications ?? [];
-  }
-
+  };
 
   /**
    * Remove Project
@@ -76,7 +83,10 @@ export class NotificationRepository {
    * @param {string} userId A User id
    * @return {boolean} true if deleted successfully, false otherwise
    */
-  discardForUser = async (notificationId: string, userId: string): Promise<boolean> => {
+  discardForUser = async (
+    notificationId: string,
+    userId: string
+  ): Promise<boolean> => {
     const notification = await dbSingle<Notification>(this.collectionName, {
       id: notificationId,
     });
@@ -96,8 +106,14 @@ export class NotificationRepository {
       return user;
     });
 
-    return dbUpdate<Notification>(this.collectionName, {id: notificationId}, {$set: {
-      users: notification.users,
-    }});
-  }
+    return dbUpdate<Notification>(
+      this.collectionName,
+      { id: notificationId },
+      {
+        $set: {
+          users: notification.users,
+        },
+      }
+    );
+  };
 }

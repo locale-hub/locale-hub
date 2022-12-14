@@ -12,18 +12,20 @@ export enum FormattedType {
 type FormattedManifest = {
   [locale: string]: {
     [key: string]: {
-      type: FormattedType,
-      value: string,
-      array: { [idx: number]: string },
+      type: FormattedType;
+      value: string;
+      array: { [idx: number]: string };
       plural: {
-        one: string,
-        many: string,
-      },
-    },
-  },
+        one: string;
+        many: string;
+      };
+    };
+  };
 };
 
-export const getFormattedManifest = (manifest: ManifestContent): FormattedManifest => {
+export const getFormattedManifest = (
+  manifest: ManifestContent
+): FormattedManifest => {
   const formatted: FormattedManifest = {};
 
   _.forEach(manifest, (manifest, locale) => {
@@ -44,7 +46,7 @@ export const getFormattedManifest = (manifest: ManifestContent): FormattedManife
           type: FormattedType.value,
           value: '',
           array: {},
-          plural: {one: '', many: ''},
+          plural: { one: '', many: '' },
         };
       }
 
@@ -57,7 +59,7 @@ export const getFormattedManifest = (manifest: ManifestContent): FormattedManife
       } else if (isPluralKey(key)) {
         formatted[locale][keyPrefix].type = FormattedType.plural;
         if (null === formatted[locale][keyPrefix].plural) {
-          formatted[locale][keyPrefix].plural = {one: '', many: ''};
+          formatted[locale][keyPrefix].plural = { one: '', many: '' };
         }
         if ('one' === keyBracketIdx) {
           formatted[locale][keyPrefix].plural.one = value;
@@ -74,7 +76,6 @@ export const getFormattedManifest = (manifest: ManifestContent): FormattedManife
 
   return formatted;
 };
-
 
 const isPluralKey = (key: string): boolean => {
   return key.includes('[one]') || key.includes('[many]');

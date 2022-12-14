@@ -20,4 +20,5 @@ Please note we have a code of conduct, please follow it in all your interactions
    Pull Request would represent. The versioning scheme we use is [SemVer](http://semver.org/).
 
    **NOTE**: MAJOR & MINOR versions are synced with PORTAL WEB to keep things simple. PATCH versions are product dependent
+
 4. You may merge the Pull Request in once you have at least the sign-off of author of this repo.

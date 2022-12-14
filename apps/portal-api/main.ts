@@ -1,4 +1,4 @@
-import {app} from './app';
+import { app } from './app';
 import { redisConnect } from '@locale-hub/data/repositories/redis.service';
 import { validateObject } from './app/logic/middlewares/validateObject.middleware';
 import { dbConnect } from '@locale-hub/data/repositories/db.repository';
@@ -13,7 +13,10 @@ const validateConfig = async (): Promise<void> => {
 };
 
 const validateDbConnection = async (): Promise<void> => {
-  const isConnected = await dbConnect(environment.database.uri, environment.database.name);
+  const isConnected = await dbConnect(
+    environment.database.uri,
+    environment.database.name
+  );
   if (!isConnected) {
     throw new Error('Connexion failure with the DB.');
   }
@@ -39,7 +42,7 @@ const startApp = async (): Promise<void> => {
 startApp()
   .then(() => {
     const port = environment.portal.api.port;
-    app.listen(port, function() {
+    app.listen(port, function () {
       console.log(`Portal API is listening on port ${port}!`);
     });
   })

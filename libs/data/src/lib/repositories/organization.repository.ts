@@ -1,13 +1,19 @@
-import {dbDelete, dbInsert, dbMultiple, dbSingle, dbUpdate} from './db.repository';
-import {Organization} from '../models/organization.model';
-import {User} from '../models/user.model';
+import {
+  dbDelete,
+  dbInsert,
+  dbMultiple,
+  dbSingle,
+  dbUpdate,
+} from './db.repository';
+import { Organization } from '../models/organization.model';
+import { User } from '../models/user.model';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-dayjs.extend(utc)
-import {ApiException} from '../exceptions/api.exception';
-import {ErrorCode} from '../enums/error-code.enum';
-import {NotificationRepository} from './notification.repository';
-import {UserRoles} from '../enums/user-roles.enum';
+dayjs.extend(utc);
+import { ApiException } from '../exceptions/api.exception';
+import { ErrorCode } from '../enums/error-code.enum';
+import { NotificationRepository } from './notification.repository';
+import { UserRoles } from '../enums/user-roles.enum';
 
 const notificationRepository = new NotificationRepository();
 
@@ -22,8 +28,12 @@ export class OrganizationRepository {
    * @param {string} name Organization name
    * @return {Organization} the newly created organization, null otherwise
    */
-  insert = async (id: string, ownerUserId: string, name: string): Promise<Organization> => {
-    const user = await dbSingle<User>('users', {id: ownerUserId});
+  insert = async (
+    id: string,
+    ownerUserId: string,
+    name: string
+  ): Promise<Organization> => {
+    const user = await dbSingle<User>('users', { id: ownerUserId });
 
     if (null === user) {
       throw new ApiException({
@@ -53,13 +63,13 @@ export class OrganizationRepository {
       [user.id],
       'Organization created!',
       `Welcome to ${organization.name}!<br />` +
-      'You can invite users in your organization. They will be able to view projects, translate your app ' +
-      'and integrate those in your applications.',
-      `/organizations/${organization.id}/users`,
+        'You can invite users in your organization. They will be able to view projects, translate your app ' +
+        'and integrate those in your applications.',
+      `/organizations/${organization.id}/users`
     );
 
     return organization;
-  }
+  };
 
   /**
    * Find an organization by its id
@@ -68,7 +78,9 @@ export class OrganizationRepository {
    * @return {Organization} The organization found, null otherwise
    */
   find = async (id: string): Promise<Organization> => {
-    const organization = await dbSingle<Organization>(this.collectionName, {id});
+    const organization = await dbSingle<Organization>(this.collectionName, {
+      id,
+    });
 
     if (null === organization) {
       throw new ApiException({
@@ -79,7 +91,7 @@ export class OrganizationRepository {
     }
 
     return organization;
-  }
+  };
 
   /**
    * List of organization's users
@@ -88,7 +100,9 @@ export class OrganizationRepository {
    * @return {User[]} The list users found, empty array if no result found
    */
   findUsers = async (organizationId: string): Promise<User[]> => {
-    const organization = await dbSingle<Organization>(this.collectionName, {id: organizationId});
+    const organization = await dbSingle<Organization>(this.collectionName, {
+      id: organizationId,
+    });
 
     if (null === organization) {
       throw new ApiException({
@@ -112,12 +126,12 @@ export class OrganizationRepository {
       });
     }
 
-    return users
-      .map((user) => {
-        user.role = (organization.owner === user.id) ? UserRoles.OWNER : UserRoles.USER;
-        return user;
-      });
-  }
+    return users.map((user) => {
+      user.role =
+        organization.owner === user.id ? UserRoles.OWNER : UserRoles.USER;
+      return user;
+    });
+  };
 
   /**
    * Update organization's information
@@ -125,16 +139,24 @@ export class OrganizationRepository {
    * @return {boolean} true if deleted successfully, false otherwise
    */
   put = async (organization: Organization): Promise<boolean> => {
-    return await dbUpdate<Organization>(this.collectionName, {id: organization.id}, {$set: {
-      name: organization.name,
-      owner: organization.owner,
-      users: organization.users,
-    }});
-  }
+    return await dbUpdate<Organization>(
+      this.collectionName,
+      { id: organization.id },
+      {
+        $set: {
+          name: organization.name,
+          owner: organization.owner,
+          users: organization.users,
+        },
+      }
+    );
+  };
 
   delete = async (organizationId: string): Promise<boolean> => {
-    return await dbDelete<Organization>(this.collectionName, {id: organizationId});
-  }
+    return await dbDelete<Organization>(this.collectionName, {
+      id: organizationId,
+    });
+  };
 
   /**
    * @throws ApiException
@@ -159,5 +181,5 @@ export class OrganizationRepository {
     }
 
     return organizations;
-  }
+  };
 }

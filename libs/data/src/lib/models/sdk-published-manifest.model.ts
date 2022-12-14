@@ -1,4 +1,4 @@
-import {ChangeList} from './change-list.model';
+import { ChangeList } from './change-list.model';
 
 export interface SdkPublishedManifest {
   defaultLocale?: string;
@@ -6,4 +6,3 @@ export interface SdkPublishedManifest {
   commitId?: string;
   commit?: ChangeList;
 }
-

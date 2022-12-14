@@ -12,15 +12,18 @@ import { ManifestWithStatus } from '@locale-hub/data/models/manifest-with-status
 import Button from '@locale-hub/design-system/button/button';
 import Spacer from '@locale-hub/design-system/spacer/spacer';
 
-
 export default function ProjectTranslationsPage({
-  params
+  params,
 }: {
-  params: { projectId: string }
+  params: { projectId: string };
 }) {
   const [manifests, setManifests] = useState<ManifestWithStatus>();
   const [selectedLocale, setSelectedLocale] = useState<string>();
-  const [entry, setEntry] = useState<{ locale: string, key: string, value: string }>();
+  const [entry, setEntry] = useState<{
+    locale: string;
+    key: string;
+    value: string;
+  }>();
   const [changesMade, setChangesMade] = useState(false);
 
   const [openTranslationModal, setOpenTranslationModal] = useState(false);
@@ -43,17 +46,23 @@ export default function ProjectTranslationsPage({
     setEntry({
       locale: selectedLocale,
       key: key,
-      value: manifests.manifest[selectedLocale][key]
+      value: manifests.manifest[selectedLocale][key],
     });
     setOpenTranslationModal(true);
   };
 
-  const entryUpdate = (entry: { locale: string, key: string, value: string }) => {
+  const entryUpdate = (entry: {
+    locale: string;
+    key: string;
+    value: string;
+  }) => {
     setOpenTranslationModal(false);
     if (undefined === entry || null === entry) {
       return;
     }
-    setChangesMade(changesMade || manifests.manifest[entry.locale][entry.key] !== entry.value);
+    setChangesMade(
+      changesMade || manifests.manifest[entry.locale][entry.key] !== entry.value
+    );
     manifests.manifest[entry.locale][entry.key] = entry.value;
     setManifests(manifests);
   };
@@ -68,18 +77,19 @@ export default function ProjectTranslationsPage({
       keys: manifests.keys,
       manifest: {
         ...manifests.manifest,
-        [locale]: { // generate empty locale values with all required keys
+        [locale]: {
+          // generate empty locale values with all required keys
           ...(() => {
             const obj = {};
             for (const key of manifests.keys) {
               obj[key] = '';
             }
             return obj;
-          })()
-        }
-      }
+          })(),
+        },
+      },
     });
-  }
+  };
 
   const onNewKey = (key: string) => {
     setOpenAddKeyModal(false);
@@ -94,66 +104,102 @@ export default function ProjectTranslationsPage({
     setManifests({
       locales: manifests.locales,
       keys: [...manifests.keys, key],
-      manifest: tmp
+      manifest: tmp,
     });
-  }
+  };
 
   const onNewCommit = (title: string, description: string) => {
     setOpenCommitModal(false);
     if (undefined === title || undefined === description) {
       return;
     }
-    ApiConnector.projects.commits.post(params.projectId, manifests, title, description).then((data) => {
-      if ('error' in data) {
-        toast.error('Failed to commit changes');
-        return;
-      }
-      toast.success('Changes commited');
-    });
-  }
-
-  return <>
-    <div className='flex'>
-      <AddLocaleModal isOpen={openAddLocaleModal} onClose={onNewLocale} />
-      <AddKeyModal isOpen={openAddKeyModal} onClose={onNewKey} />
-      <CommitModal isOpen={openCommitModal} onClose={onNewCommit} />
-      <TranslationModal isOpen={openTranslationModal} entry={entry} onClose={entryUpdate} />
-      <div className="inline-flex rounded-md border border-slate-400/50 overflow-hidden" role="group">
-        { manifests && manifests.locales.map(locale =>
-          <button onClick={() => setSelectedLocale(locale)} key={locale}
-            className={`
-              py-2 px-4 w-16 text-sm font-medium bg-white border-r border-slate-400/50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600
-              ${selectedLocale === locale ? 'text-primary' : 'text-black dark:text-white'}
-            `}>
-            {locale}
-          </button>
-          )
+    ApiConnector.projects.commits
+      .post(params.projectId, manifests, title, description)
+      .then((data) => {
+        if ('error' in data) {
+          toast.error('Failed to commit changes');
+          return;
         }
+        toast.success('Changes commited');
+      });
+  };
+
+  return (
+    <>
+      <div className="flex">
+        <AddLocaleModal isOpen={openAddLocaleModal} onClose={onNewLocale} />
+        <AddKeyModal isOpen={openAddKeyModal} onClose={onNewKey} />
+        <CommitModal isOpen={openCommitModal} onClose={onNewCommit} />
+        <TranslationModal
+          isOpen={openTranslationModal}
+          entry={entry}
+          onClose={entryUpdate}
+        />
+        <div
+          className="inline-flex rounded-md border border-slate-400/50 overflow-hidden"
+          role="group"
+        >
+          {manifests &&
+            manifests.locales.map((locale) => (
+              <button
+                onClick={() => setSelectedLocale(locale)}
+                key={locale}
+                className={`
+              py-2 px-4 w-16 text-sm font-medium bg-white border-r border-slate-400/50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600
+              ${
+                selectedLocale === locale
+                  ? 'text-primary'
+                  : 'text-black dark:text-white'
+              }
+            `}
+              >
+                {locale}
+              </button>
+            ))}
+        </div>
+        <Spacer />
+        <div className="grid grid-cols-3 gap-4">
+          <Button onClick={() => setOpenAddLocaleModal(true)}>
+            Add Locale
+          </Button>
+          <Button type="action" onClick={() => setOpenAddKeyModal(true)}>
+            Add Translation key
+          </Button>
+          <Button
+            type="cancel"
+            disabled={false === changesMade}
+            onClick={() => setOpenCommitModal(true)}
+          >
+            Commit
+          </Button>
+        </div>
       </div>
-      <Spacer />
-      <div className='grid grid-cols-3 gap-4'>
-        <Button onClick={() => setOpenAddLocaleModal(true)}>Add Locale</Button>
-        <Button type='action' onClick={() => setOpenAddKeyModal(true)}>Add Translation key</Button>
-        <Button type='cancel' disabled={false === changesMade}
-                onClick={() => setOpenCommitModal(true)}
-        >Commit</Button>
-      </div>
-    </div>
-    { manifests && <>
-      <Table
-        heads={[
-          { key: 'status', label: 'Status', className: 'w-1/12' },
-          { key: 'key', label: 'Key', className: 'w-3/12' },
-          { key: 'preview', label: 'Preview', className: 'w-6/12' },
-          { key: 'actions', label: 'Actions', className: 'w-2/12 text-center' }
-        ]}
-        entries={manifests.keys.map(key => ({
-          status: '',
-          key: key,
-          preview: manifests.manifest[selectedLocale][key],
-          actions: <div className='text-right'><Button onClick={() => openEditor(key)}>Open Editor</Button></div>
-        }))}
-      />
-    </>}
-  </>;
+      {manifests && (
+        <>
+          <Table
+            heads={[
+              { key: 'status', label: 'Status', className: 'w-1/12' },
+              { key: 'key', label: 'Key', className: 'w-3/12' },
+              { key: 'preview', label: 'Preview', className: 'w-6/12' },
+              {
+                key: 'actions',
+                label: 'Actions',
+                className: 'w-2/12 text-center',
+              },
+            ]}
+            entries={manifests.keys.map((key) => ({
+              status: '',
+              key: key,
+              preview: manifests.manifest[selectedLocale][key],
+              actions: (
+                <div className="text-right">
+                  <Button onClick={() => openEditor(key)}>Open Editor</Button>
+                </div>
+              ),
+            }))}
+          />
+        </>
+      )}
+    </>
+  );
 }

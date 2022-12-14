@@ -3,14 +3,9 @@ import { ApiErrorResponse } from '@locale-hub/data/responses/api-error.response'
 import { ErrorCode } from '@locale-hub/data/enums/error-code.enum';
 
 export class Http {
-
   private authorization = '';
 
-  constructor(
-    private baseUrl: string,
-    private authUrl: string
-  ) {
-  }
+  constructor(private baseUrl: string, private authUrl: string) {}
 
   private headers = () => {
     if ('' === this.authorization) {
@@ -20,15 +15,19 @@ export class Http {
       Accept: 'application/json',
       'Access-Control-Allow-Origin': this.baseUrl,
       Authorization: this.authorization,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     };
-  }
+  };
 
   setToken(token: string) {
     this.authorization = token;
   }
 
-  private async apiCall<TBody, TResponse>(method: string, url: string, body?: TBody): Promise<TResponse | ApiErrorResponse> {
+  private async apiCall<TBody, TResponse>(
+    method: string,
+    url: string,
+    body?: TBody
+  ): Promise<TResponse | ApiErrorResponse> {
     try {
       const init: RequestInit = {
         method: method,
@@ -42,66 +41,82 @@ export class Http {
 
       if (401 === res.status) {
         redirect(this.authUrl);
-        return { error: {
-          statusCode: 401,
-          code: ErrorCode.userAccessUnauthorized,
-          message: 'Unauthorized, please login again'
-        }};
+        return {
+          error: {
+            statusCode: 401,
+            code: ErrorCode.userAccessUnauthorized,
+            message: 'Unauthorized, please login again',
+          },
+        };
       }
 
       const json = await res.json();
 
-      return (undefined !== json?.error)
-        ? json as ApiErrorResponse
-        : json as TResponse;
+      return undefined !== json?.error
+        ? (json as ApiErrorResponse)
+        : (json as TResponse);
     } catch (err: any) {
-      return { error: {
-        statusCode: 500,
-        code: ErrorCode.unknownError,
-        message: 'Unexpected error',
-        errors: [ `${err}` ]
-      }};
+      return {
+        error: {
+          statusCode: 500,
+          code: ErrorCode.unknownError,
+          message: 'Unexpected error',
+          errors: [`${err}`],
+        },
+      };
     }
   }
 
-  async get<TResponse> (path: string): Promise<TResponse | ApiErrorResponse> {
+  async get<TResponse>(path: string): Promise<TResponse | ApiErrorResponse> {
     return this.apiCall<unknown, TResponse>('GET', path);
   }
 
-  async post<TBody, TResponse> (path: string, body?: TBody): Promise<TResponse | ApiErrorResponse> {
+  async post<TBody, TResponse>(
+    path: string,
+    body?: TBody
+  ): Promise<TResponse | ApiErrorResponse> {
     return this.apiCall<TBody, TResponse>('POST', path, body);
   }
 
-  async put<TBody, TResponse> (path: string, body?: TBody): Promise<TResponse | ApiErrorResponse> {
+  async put<TBody, TResponse>(
+    path: string,
+    body?: TBody
+  ): Promise<TResponse | ApiErrorResponse> {
     return this.apiCall<TBody, TResponse>('PUT', path, body);
   }
 
-  async patch<TBody, TResponse> (path: string, body?: TBody): Promise<TResponse | ApiErrorResponse> {
+  async patch<TBody, TResponse>(
+    path: string,
+    body?: TBody
+  ): Promise<TResponse | ApiErrorResponse> {
     return this.apiCall<TBody, TResponse>('PATCH', path, body);
   }
 
-  async delete<TBody, TResponse> (path: string, body?: TBody): Promise<TResponse | ApiErrorResponse> {
+  async delete<TBody, TResponse>(
+    path: string,
+    body?: TBody
+  ): Promise<TResponse | ApiErrorResponse> {
     return this.apiCall<TBody, TResponse>('DELETE', path, body);
   }
 
-
-  async getBlob (path: string): Promise<Blob | ApiErrorResponse> {
+  async getBlob(path: string): Promise<Blob | ApiErrorResponse> {
     try {
       const init: RequestInit = {
         method: 'GET',
-        headers: this.headers()
+        headers: this.headers(),
       };
 
       const res = await fetch(`${this.baseUrl}${path}`, init);
       return await res.blob();
     } catch (err: any) {
-      return { error: {
+      return {
+        error: {
           statusCode: 500,
           code: ErrorCode.unknownError,
           message: 'Unexpected error',
-          errors: [ `${err}` ]
-        }};
+          errors: [`${err}`],
+        },
+      };
     }
   }
-
 }

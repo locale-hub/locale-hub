@@ -1,11 +1,10 @@
-import {Request, Response, Router as createRouter} from 'express';
+import { Request, Response, Router as createRouter } from 'express';
 
-
-import {validateRequest} from '../logic/middlewares/validateRequest.middleware';
-import {getOrganizationUsers} from '../logic/services/organization.service';
+import { validateRequest } from '../logic/middlewares/validateRequest.middleware';
+import { getOrganizationUsers } from '../logic/services/organization.service';
 import * as UserService from '../logic/services/user.service';
 import * as MailService from '../logic/services/mail.service';
-import {sendError} from '../logic/helpers/sendError.helper';
+import { sendError } from '../logic/helpers/sendError.helper';
 import crypto from 'crypto';
 import argon2 from 'argon2';
 import { UserGroupEntry } from '@locale-hub/data/models/user-group-entry.model';
@@ -19,7 +18,7 @@ import { ApiException } from '@locale-hub/data/exceptions/api.exception';
 import { environment } from '../../environments/environment';
 import { User } from '@locale-hub/data/models/user.model';
 
-const router = createRouter({mergeParams: true});
+const router = createRouter({ mergeParams: true });
 const userRepository = new UserRepository();
 const organizationRepository = new OrganizationRepository();
 const projectRepository = new ProjectRepository();
@@ -30,14 +29,15 @@ const secret = Buffer.from(environment.security.password.secret, 'utf8');
 /**
  * Get users of the given organization
  */
-router.get('/', async function(req: Request, res: Response) {
-  const users = (await getOrganizationUsers(req.params.organizationId))
-    .map((user: User) => {
+router.get('/', async function (req: Request, res: Response) {
+  const users = (await getOrganizationUsers(req.params.organizationId)).map(
+    (user: User) => {
       // TODO: create response class
       // delete user.password;
       // delete user.passwordSalt;
       return user;
-    });
+    }
+  );
 
   res.json({
     users,
@@ -50,7 +50,7 @@ router.get('/', async function(req: Request, res: Response) {
 router.post(
   '/invite',
   validateRequest(inviteUserRequest),
-  async function(req: Request, res: Response) {
+  async function (req: Request, res: Response) {
     try {
       const organizationId = req.params.organizationId;
       const inviteeName = req.body.name;
@@ -59,44 +59,59 @@ router.post(
       // validate authenticated user is owner
       const organization = await organizationRepository.find(organizationId);
       if (organization.owner !== req.user.id) {
-        return sendError(res, new ApiException({
-          statusCode: 403,
-          code: ErrorCode.organizationActionRequiresOwnerAccess,
-          message: 'Only the organization owner can send invitations',
-        }));
+        return sendError(
+          res,
+          new ApiException({
+            statusCode: 403,
+            code: ErrorCode.organizationActionRequiresOwnerAccess,
+            message: 'Only the organization owner can send invitations',
+          })
+        );
       }
 
       // user already in organization
       if (organization.users.includes(inviteeEmail)) {
-        return sendError(res, new ApiException({
-          statusCode: 400,
-          code: ErrorCode.organizationUserAlreadyExists,
-          message: 'The given email is already a part of the organization',
-        }));
+        return sendError(
+          res,
+          new ApiException({
+            statusCode: 400,
+            code: ErrorCode.organizationUserAlreadyExists,
+            message: 'The given email is already a part of the organization',
+          })
+        );
       }
 
       const userExists = await userEmailExists(inviteeEmail);
       if (!userExists) {
-      // create user
+        // create user
         const rawPassword = Math.random().toString(36).slice(2);
-        const salt = await crypto.randomBytes(environment.security.password.saltLength);
+        const salt = await crypto.randomBytes(
+          environment.security.password.saltLength
+        );
         const password = await argon2.hash(rawPassword, {
           type: argon2.argon2id,
           salt,
           secret,
         });
-        await UserService.createUser(inviteeName, inviteeEmail, password, salt.toString());
+        await UserService.createUser(
+          inviteeName,
+          inviteeEmail,
+          password,
+          salt.toString()
+        );
 
         // send email
         const loginUrl = `${environment.portal.web.uri}${environment.portal.web.routes.login}`;
-        MailService.send(inviteeEmail,
+        MailService.send(
+          inviteeEmail,
           `You have been invited to Locale Hub by ${organization.name} organization!`,
-          'organizations.userInvite', {
+          'organizations.userInvite',
+          {
             inviteeName: inviteeName,
             organizationName: organization.name,
             loginUrl: loginUrl,
             rawPassword: rawPassword,
-          },
+          }
         );
       }
 
@@ -107,68 +122,78 @@ router.post(
       await notificationRepository.create(
         [user.id],
         'Organization invitation',
-        `You have been invited to ${organization.name} organization. You should gain access to projects soon.`,
+        `You have been invited to ${organization.name} organization. You should gain access to projects soon.`
       );
 
       res.status(204).send();
     } catch (error) {
       sendError(res, error as Error);
     }
-  });
+  }
+);
 
 /**
  * Remove user from the organization
  */
-router.delete(
-  '/:userId',
-  async function(req: Request, res: Response) {
-    try {
-      const userIdToDelete = req.params.userId;
+router.delete('/:userId', async function (req: Request, res: Response) {
+  try {
+    const userIdToDelete = req.params.userId;
 
-      // validate authenticated user is owner
-      const organization = await organizationRepository.find(req.params.organizationId);
-      if (organization.owner !== req.user.id) {
-        return sendError(res, new ApiException({
+    // validate authenticated user is owner
+    const organization = await organizationRepository.find(
+      req.params.organizationId
+    );
+    if (organization.owner !== req.user.id) {
+      return sendError(
+        res,
+        new ApiException({
           statusCode: 403,
           code: ErrorCode.organizationActionRequiresOwnerAccess,
           message: 'Only the owner can remove users',
-        }));
-      }
+        })
+      );
+    }
 
-      // Owner cannot be removed
-      if (userIdToDelete === req.user.id) {
-        return sendError(res, new ApiException({
+    // Owner cannot be removed
+    if (userIdToDelete === req.user.id) {
+      return sendError(
+        res,
+        new ApiException({
           statusCode: 403,
           code: ErrorCode.organizationUserCannotRemoveOwner,
           message: 'Organization owner cannot be removed',
-        }));
-      }
-
-      // TODO: Remove user from organization, not userRepository
-      await userRepository.delete(organization.id, userIdToDelete);
-
-      const projects = await projectRepository.getFromOrganizations([organization.id]);
-      for (const project of projects) {
-        const users = project.users.filter((u: UserGroupEntry) => u.id !== userIdToDelete);
-        if (users.length !== project.users.length) {
-          project.users = users;
-          await projectRepository.update(project.id, project);
-        }
-      }
-
-      await notificationRepository.create(
-        [userIdToDelete],
-        'Organization removal',
-        `You have been removed from organization ${organization.name}. ` +
-        'You cannot access the projects from this organization anymore.',
+        })
       );
-
-      res.status(204).send();
-    } catch (error) {
-      sendError(res, error as Error);
     }
-  });
 
+    // TODO: Remove user from organization, not userRepository
+    await userRepository.delete(organization.id, userIdToDelete);
+
+    const projects = await projectRepository.getFromOrganizations([
+      organization.id,
+    ]);
+    for (const project of projects) {
+      const users = project.users.filter(
+        (u: UserGroupEntry) => u.id !== userIdToDelete
+      );
+      if (users.length !== project.users.length) {
+        project.users = users;
+        await projectRepository.update(project.id, project);
+      }
+    }
+
+    await notificationRepository.create(
+      [userIdToDelete],
+      'Organization removal',
+      `You have been removed from organization ${organization.name}. ` +
+        'You cannot access the projects from this organization anymore.'
+    );
+
+    res.status(204).send();
+  } catch (error) {
+    sendError(res, error as Error);
+  }
+});
 
 // ###
 // private inner methods

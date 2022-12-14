@@ -1,4 +1,3 @@
-
 /**
  * List of errors the API can returns
  */
@@ -19,7 +18,7 @@ export enum ErrorCode {
   notificationNotFound = 'notification_not_found',
   requestInvalid = 'request_invalid',
   routeNotFound = 'route_not_found',
-  unknownError =  'unknown_error',
+  unknownError = 'unknown_error',
   userAccessExpired = 'user_access_expired',
   userAccessForbidden = 'user_access_forbidden',
   userAccessUnauthorized = 'user_access_unauthorized',

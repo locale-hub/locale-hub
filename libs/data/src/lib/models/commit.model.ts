@@ -1,4 +1,4 @@
-import {ChangeList} from './change-list.model';
+import { ChangeList } from './change-list.model';
 
 export interface Commit {
   id: string;

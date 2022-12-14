@@ -1,6 +1,6 @@
 import { NotificationRepository } from '@locale-hub/data/repositories/notification.repository';
 import { NotificationStatus } from '@locale-hub/data/enums/notification-status.enum';
-import {Notification} from '@locale-hub/data/models/notification.model';
+import { Notification } from '@locale-hub/data/models/notification.model';
 
 const notificationRepository = new NotificationRepository();
 
@@ -10,7 +10,10 @@ const notificationRepository = new NotificationRepository();
  * @param {NotificationStatus} status type of notification desired
  * @return {Notification[]} List of notifications
  */
-export const getNotificationsForUser = async (userId: string, status: NotificationStatus): Promise<Notification[]> => {
+export const getNotificationsForUser = async (
+  userId: string,
+  status: NotificationStatus
+): Promise<Notification[]> => {
   return notificationRepository.getForUser(userId, status);
 };
 
@@ -20,6 +23,9 @@ export const getNotificationsForUser = async (userId: string, status: Notificati
  * @param {string} userId A user id
  * @return {boolean} true if updated, false otherwise
  */
-export const discardNotificationForUser = async (notificationId: string, userId: string): Promise<boolean> => {
+export const discardNotificationForUser = async (
+  notificationId: string,
+  userId: string
+): Promise<boolean> => {
   return await notificationRepository.discardForUser(notificationId, userId);
 };

@@ -1,4 +1,4 @@
-import {EmailStatus} from '../enums/email-status.enum';
+import { EmailStatus } from '../enums/email-status.enum';
 
 export interface Email {
   email: string;

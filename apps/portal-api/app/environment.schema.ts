@@ -53,7 +53,6 @@ export const environmentSchema = Joi.object({
   }).optional(),
 
   security: Joi.object({
-
     cors: Joi.object({
       origin: Joi.string().required(),
     }).required(),

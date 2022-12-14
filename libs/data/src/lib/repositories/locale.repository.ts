@@ -1,7 +1,7 @@
-import {dbMultiple, dbSingle} from './db.repository';
-import {Locale} from '../models/locale.model';
-import {ApiException} from '../exceptions/api.exception';
-import {ErrorCode} from '../enums/error-code.enum';
+import { dbMultiple, dbSingle } from './db.repository';
+import { Locale } from '../models/locale.model';
+import { ApiException } from '../exceptions/api.exception';
+import { ErrorCode } from '../enums/error-code.enum';
 
 export class LocaleRepository {
   private readonly collectionName = 'locales';
@@ -13,7 +13,9 @@ export class LocaleRepository {
    * @return {Locale} The locale found, null otherwise
    */
   find = async (localeTag: string): Promise<Locale> => {
-    const locale = await dbSingle<Locale>(this.collectionName, {tag: localeTag});
+    const locale = await dbSingle<Locale>(this.collectionName, {
+      tag: localeTag,
+    });
 
     if (null === locale) {
       throw new ApiException({
@@ -24,7 +26,7 @@ export class LocaleRepository {
     }
 
     return locale;
-  }
+  };
 
   /**
    * Find a list of entries from a set a keys
@@ -33,7 +35,9 @@ export class LocaleRepository {
    * @return {Locale[]} The list locales found, empty array if no result found
    */
   findIn = async (localeTags: string[]): Promise<Locale[]> => {
-    const locales = await dbMultiple<Locale>(this.collectionName, {tag: {$in: localeTags}});
+    const locales = await dbMultiple<Locale>(this.collectionName, {
+      tag: { $in: localeTags },
+    });
 
     if (null === locales) {
       throw new ApiException({
@@ -44,7 +48,7 @@ export class LocaleRepository {
     }
 
     return locales;
-  }
+  };
 
   /**
    * Retrieve all locales
@@ -63,5 +67,5 @@ export class LocaleRepository {
     }
 
     return locales;
-  }
+  };
 }

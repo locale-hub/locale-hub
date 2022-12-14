@@ -10,11 +10,11 @@ type Theme = 'dark' | 'light';
 export default function Navbar({
   children,
   theme,
-  onThemeChange
+  onThemeChange,
 }: {
-  theme: Theme,
-  onThemeChange?: (theme: Theme) => void,
-  children?: React.ReactNode
+  theme: Theme;
+  onThemeChange?: (theme: Theme) => void;
+  children?: React.ReactNode;
 }) {
   let currentTheme: Theme = theme;
 
@@ -23,22 +23,38 @@ export default function Navbar({
     if (undefined !== onThemeChange) {
       onThemeChange(currentTheme);
     }
-  }
+  };
 
-  return <nav className="sticky top-0 flex px-10 py-4 h-16 z-30 bg-gray-100 dark:bg-dark border-b border-1 border-black/10 dark:border-white/40">
-    <div className="w-5/12 flex items-center">
-      <Link href='/'>
-        <Image src="/logo-white.svg" alt="Locale Hub logo" width="40" height="40" className='hidden dark:inline' />
-        <Image src="/logo.svg" alt="Locale Hub logo" width="40" height="40" className='inline dark:hidden' />
-        <h1 className="inline-block align-middle text-2xl font-semibold px-2">Locale Hub</h1>
-      </Link>
-    </div>
-    <div className="w-7/12 flex justify-end items-center">
-      {children}
-      <span className='hover:cursor-pointer pl-4' onClick={onThemeClicked}>
-          <MoonIcon className='hidden dark:inline h-6 w-6' />
-          <SunIcon className='dark:hidden h-6 w-6' />
+  return (
+    <nav className="sticky top-0 flex px-10 py-4 h-16 z-30 bg-gray-100 dark:bg-dark border-b border-1 border-black/10 dark:border-white/40">
+      <div className="w-5/12 flex items-center">
+        <Link href="/">
+          <Image
+            src="/logo-white.svg"
+            alt="Locale Hub logo"
+            width="40"
+            height="40"
+            className="hidden dark:inline"
+          />
+          <Image
+            src="/logo.svg"
+            alt="Locale Hub logo"
+            width="40"
+            height="40"
+            className="inline dark:hidden"
+          />
+          <h1 className="inline-block align-middle text-2xl font-semibold px-2">
+            Locale Hub
+          </h1>
+        </Link>
+      </div>
+      <div className="w-7/12 flex justify-end items-center">
+        {children}
+        <span className="hover:cursor-pointer pl-4" onClick={onThemeClicked}>
+          <MoonIcon className="hidden dark:inline h-6 w-6" />
+          <SunIcon className="dark:hidden h-6 w-6" />
         </span>
-    </div>
-  </nav>
+      </div>
+    </nav>
+  );
 }

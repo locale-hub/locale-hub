@@ -6,13 +6,25 @@ import * as _ from 'lodash';
 import * as Sentry from '@sentry/node';
 import { environment } from '../../../environments/environment';
 
-
 // '../../' is to go back to root folder as __dirname is giving the current folder.
-const htmlFolder = path.join(__dirname, '../../', environment.email.resources.html);
-const textFolder = path.join(__dirname, '../../', environment.email.resources.text);
+const htmlFolder = path.join(
+  __dirname,
+  '../../',
+  environment.email.resources.html
+);
+const textFolder = path.join(
+  __dirname,
+  '../../',
+  environment.email.resources.text
+);
 
-type MailOptions = {to: string, subject: string, template: string, data: KeyValueObject };
-type KeyValueObject = {[key: string]: string};
+type MailOptions = {
+  to: string;
+  subject: string;
+  template: string;
+  data: KeyValueObject;
+};
+type KeyValueObject = { [key: string]: string };
 
 /**
  * Replace the `{{ key }}` values by the desired values
@@ -21,10 +33,13 @@ type KeyValueObject = {[key: string]: string};
  * @return {string} The updated content
  */
 const replaceAll = (content: string, data: KeyValueObject): string => {
-  const formattedData: KeyValueObject = _.mapKeys(data, (value: string, key: string) => `{{ ${key} }}`);
+  const formattedData: KeyValueObject = _.mapKeys(
+    data,
+    (value: string, key: string) => `{{ ${key} }}`
+  );
   const regex = new RegExp(Object.keys(formattedData).join('|'), 'gi');
 
-  return content.replace(regex, function(matched) {
+  return content.replace(regex, function (matched) {
     return formattedData[matched];
   });
 };
@@ -32,11 +47,11 @@ const replaceAll = (content: string, data: KeyValueObject): string => {
 const mailQueue = new Queue(async (options: MailOptions, cb) => {
   let htmlContent = await fs.promises.readFile(
     `${htmlFolder}${options.template.replace('.', '/')}.html`,
-    {encoding: 'utf-8'},
+    { encoding: 'utf-8' }
   );
   let textContent = await fs.promises.readFile(
     `${textFolder}${options.template.replace('.', '/')}.txt`,
-    {encoding: 'utf-8'},
+    { encoding: 'utf-8' }
   );
 
   htmlContent = replaceAll(htmlContent, options.data);
@@ -75,7 +90,12 @@ const transporter = nodemailer.createTransport({
  * @param {string} template path from resources/email/ folder. Sub-folder should be expressed as '.'
  * @param {KeyValueObject} data KeyValue to use in the email. { 'key': 'value'} will replace '\{\{ key \}\}' by 'value'
  */
-export const send = (to: string, subject: string, template: string, data: KeyValueObject = {}): void => {
+export const send = (
+  to: string,
+  subject: string,
+  template: string,
+  data: KeyValueObject = {}
+): void => {
   try {
     mailQueue.push({
       to,

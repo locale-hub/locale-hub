@@ -6,9 +6,9 @@ import { routes } from '../../constants/routes';
 import React from 'react';
 
 export default function ProtectedLayout({
-  children
+  children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   const { loggedIn } = useAuth();
 

@@ -1,18 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>You have been invited to {{ organizationName }} organization!</title>
-</head>
-<body>
+  </head>
+  <body>
     <h4>Dear {{ inviteeName }},</h4>
 
-    <p>You have been invited to join the {{ organizationName }} on i18n Services.</p>
-    <p>You access you account at this url: <a href="{{ loginUrl }}">{{ loginUrl }}</a></p>
+    <p>
+      You have been invited to join the {{ organizationName }} on i18n Services.
+    </p>
+    <p>
+      You access you account at this url:
+      <a href="{{ loginUrl }}">{{ loginUrl }}</a>
+    </p>
     <p>Your temporary password is: <b>{{ rawPassword }}</b>.</p>
-    <p>Please change it in your profile at your first login (for obvious security reasons).</p>
+    <p>
+      Please change it in your profile at your first login (for obvious security
+      reasons).
+    </p>
     <br />
     <p>Regards,</p>
     i18n Services
-</body>
+  </body>
 </html>

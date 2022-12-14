@@ -1,12 +1,12 @@
-import {v4 as uuid} from 'uuid';
+import { v4 as uuid } from 'uuid';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-dayjs.extend(utc)
+dayjs.extend(utc);
 
-import {dbDelete, dbInsert, dbMultiple, dbSingle} from './db.repository';
-import {App} from '../models/app.model';
-import {ApiException} from '../exceptions/api.exception';
-import {ErrorCode} from '../enums/error-code.enum';
+import { dbDelete, dbInsert, dbMultiple, dbSingle } from './db.repository';
+import { App } from '../models/app.model';
+import { ApiException } from '../exceptions/api.exception';
+import { ErrorCode } from '../enums/error-code.enum';
 
 export class AppRepository {
   private readonly collectionName = 'apps';
@@ -21,8 +21,13 @@ export class AppRepository {
    * @param {string} identifier App identifier, like a package name or domain name
    * @return {App} the newly created App, null otherwise
    */
-  insert = async (projectId: string, name: string, key: string, type: string, identifier: string)
-    : Promise<App> => {
+  insert = async (
+    projectId: string,
+    name: string,
+    key: string,
+    type: string,
+    identifier: string
+  ): Promise<App> => {
     const app = await dbInsert<App>(this.collectionName, {
       id: uuid(),
       projectId,
@@ -42,7 +47,7 @@ export class AppRepository {
     }
 
     return app;
-  }
+  };
 
   /**
    * Find a app by its id
@@ -51,7 +56,7 @@ export class AppRepository {
    * @return {App} The app found, null otherwise
    */
   find = async (appId: string): Promise<App | null> => {
-    const app = await dbSingle<App>(this.collectionName, {id: appId});
+    const app = await dbSingle<App>(this.collectionName, { id: appId });
 
     if (null === app) {
       throw new ApiException({
@@ -62,7 +67,7 @@ export class AppRepository {
     }
 
     return app;
-  }
+  };
 
   /**
    * List apps of a given project
@@ -71,7 +76,7 @@ export class AppRepository {
    * @return {App[]} List of project's app
    */
   findByProject = async (projectId: string): Promise<App[]> => {
-    const apps = await dbMultiple<App>(this.collectionName, {projectId});
+    const apps = await dbMultiple<App>(this.collectionName, { projectId });
 
     if (null === apps) {
       throw new ApiException({
@@ -82,7 +87,7 @@ export class AppRepository {
     }
 
     return apps;
-  }
+  };
 
   /**
    * Delete a app by its id
@@ -91,6 +96,6 @@ export class AppRepository {
    * @return {boolean} true if app deleted, false otherwise
    */
   delete = async (appId: string, projectId: string): Promise<boolean> => {
-    return await dbDelete<App>(this.collectionName, {id: appId, projectId});
-  }
+    return await dbDelete<App>(this.collectionName, { id: appId, projectId });
+  };
 }

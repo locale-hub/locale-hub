@@ -13,9 +13,9 @@ import Menu from '@locale-hub/design-system/menu/menu';
 import { User } from '@locale-hub/data/models/user.model';
 
 export default function OrganizationUsersPage({
-  params
+  params,
 }: {
-  params: { organizationId: string }
+  params: { organizationId: string };
 }) {
   const [selectedUser, setSelectedUser] = useState<User>(null);
   const [users, setUsers] = useState<User[]>([]);
@@ -23,13 +23,15 @@ export default function OrganizationUsersPage({
   const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
 
   useEffect(() => {
-    ApiConnector.organizations.users.list(params.organizationId).then(data => {
-      if ('error' in data) {
-        toast.error('Failed to retrieve users');
-        return;
-      }
-      setUsers(data.users);
-    })
+    ApiConnector.organizations.users
+      .list(params.organizationId)
+      .then((data) => {
+        if ('error' in data) {
+          toast.error('Failed to retrieve users');
+          return;
+        }
+        setUsers(data.users);
+      });
   }, [params.organizationId]);
 
   const inviteUser = (name?: string, email?: string) => {
@@ -37,66 +39,92 @@ export default function OrganizationUsersPage({
     if (undefined === name || undefined === email) {
       return;
     }
-    ApiConnector.organizations.users.invite(params.organizationId, name, email).then((data) => {
-      if ('error' in data) {
-        toast.error('Failed to invite user');
-        return;
-      }
-      toast.success('Success! We sent an invitation to the user');
-      setUsers([
-        ...users,
-        { id: email, name, primaryEmail: email, passwordSalt: undefined,
-          password: undefined, emails: [{email, createdAt: '', status: EmailStatus.PRIMARY }], role: 'user', createdAt: ''}
-      ])
-    });
+    ApiConnector.organizations.users
+      .invite(params.organizationId, name, email)
+      .then((data) => {
+        if ('error' in data) {
+          toast.error('Failed to invite user');
+          return;
+        }
+        toast.success('Success! We sent an invitation to the user');
+        setUsers([
+          ...users,
+          {
+            id: email,
+            name,
+            primaryEmail: email,
+            passwordSalt: undefined,
+            password: undefined,
+            emails: [{ email, createdAt: '', status: EmailStatus.PRIMARY }],
+            role: 'user',
+            createdAt: '',
+          },
+        ]);
+      });
   };
 
   const openDeleteModal = (user: User) => {
     setDeleteUserModalOpen(true);
     setSelectedUser(user);
-  }
+  };
 
   const deleteUser = (shouldDelete: boolean) => {
     setDeleteUserModalOpen(false);
     if (false === shouldDelete) {
       return;
     }
-    ApiConnector.organizations.users.delete(params.organizationId, selectedUser.id).then((data) => {
-      if ('error' in data) {
-        toast.error('Failed to delete user');
-        return;
-      }
-      setUsers(users.filter(u => u.id !== selectedUser.id));
-      setSelectedUser(null);
-      toast.success('User deleted!');
-    })
-  }
+    ApiConnector.organizations.users
+      .delete(params.organizationId, selectedUser.id)
+      .then((data) => {
+        if ('error' in data) {
+          toast.error('Failed to delete user');
+          return;
+        }
+        setUsers(users.filter((u) => u.id !== selectedUser.id));
+        setSelectedUser(null);
+        toast.success('User deleted!');
+      });
+  };
 
-  return <div className='px-10 py-10 m-auto w-9/12 center'>
-    <InviteUserModal isOpen={inviteUserModalOpen} onClose={inviteUser} />
-    <DeleteUserModal isOpen={deleteUserModalOpen} onClose={deleteUser} user={selectedUser} />
-    <div className='flex justify-end'>
-      <Button type='action' onClick={() => setInviteUserModalOpen(true)} >Add user</Button>
+  return (
+    <div className="px-10 py-10 m-auto w-9/12 center">
+      <InviteUserModal isOpen={inviteUserModalOpen} onClose={inviteUser} />
+      <DeleteUserModal
+        isOpen={deleteUserModalOpen}
+        onClose={deleteUser}
+        user={selectedUser}
+      />
+      <div className="flex justify-end">
+        <Button type="action" onClick={() => setInviteUserModalOpen(true)}>
+          Add user
+        </Button>
+      </div>
+      <Table
+        className="w-full mx-auto mt-12"
+        heads={[
+          { key: 'name', label: 'Project Name', className: 'w-6/12' },
+          { key: 'email', label: 'Email', className: 'w-4/12' },
+          { key: 'role', label: 'Role', className: 'w-1/12' },
+          { key: 'actions', label: '', className: 'w-1/12' },
+        ]}
+        entries={
+          users.map((user) => ({
+            name: user.name,
+            email: user.primaryEmail,
+            role: user.role,
+            actions: (
+              <Menu
+                onClick={() => openDeleteModal(user)}
+                button={
+                  <EllipsisHorizontalIcon className="h-6 w-6 text-white" />
+                }
+              >
+                <span className="text-warn">Delete</span>
+              </Menu>
+            ),
+          })) ?? []
+        }
+      />
     </div>
-    <Table
-      className='w-full mx-auto mt-12'
-      heads={[
-        { key: 'name', label: 'Project Name', className: 'w-6/12' },
-        { key: 'email', label: 'Email', className: 'w-4/12' },
-        { key: 'role', label: 'Role', className: 'w-1/12' },
-        { key: 'actions', label: '', className: 'w-1/12' },
-      ]}
-      entries={users.map((user) => ({
-        name: user.name,
-        email: user.primaryEmail,
-        role: user.role,
-        actions: <Menu
-          onClick={() => openDeleteModal(user) }
-          button={<EllipsisHorizontalIcon className='h-6 w-6 text-white' />}
-          >
-          <span className='text-warn'>Delete</span>
-        </Menu>
-      })) ?? []}
-    />
-  </div>;
+  );
 }

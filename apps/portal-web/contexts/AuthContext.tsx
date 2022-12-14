@@ -13,13 +13,13 @@ const AuthContext = createContext({
   user: null,
   login: null,
   logout: null,
-  register: null
+  register: null,
 });
 
 export const AuthContextProvider = ({
-  children
+  children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) => {
   let refreshInterval;
   const [user, setUser] = useState(null);
@@ -36,9 +36,8 @@ export const AuthContextProvider = ({
       refreshInterval = setInterval(() => {
         ApiConnector.auth.refreshToken();
       }, environment.portal.web.refreshTokenInterval);
-    }
-    else {
-      clearInterval(refreshInterval)
+    } else {
+      clearInterval(refreshInterval);
     }
   }, [loggedIn]);
 
@@ -51,7 +50,7 @@ export const AuthContextProvider = ({
     }
     setUser(user);
     setLoggedIn(true);
-  }
+  };
 
   const login = async (email: string, password: string) => {
     const user = await ApiConnector.auth.login(email, password);
@@ -62,22 +61,23 @@ export const AuthContextProvider = ({
     }
     setUser(user);
     setLoggedIn(true);
-  }
+  };
 
   const logout = async () => {
     await ApiConnector.auth.logout();
     setUser(null);
     setLoggedIn(false);
-    try { redirect(routes.auth.root) }
-    catch (e) { document.location.href = '/'; }
-  }
+    try {
+      redirect(routes.auth.root);
+    } catch (e) {
+      document.location.href = '/';
+    }
+  };
 
   const value = { loggedIn, user, register, login, logout };
 
-  return <AuthContext.Provider value={value}>
-    {children}
-  </AuthContext.Provider>;
-}
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
 
 export default AuthContext;
 

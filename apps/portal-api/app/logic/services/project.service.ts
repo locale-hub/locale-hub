@@ -1,11 +1,11 @@
 import { Project } from '@locale-hub/data/models/project.model';
-import {ProjectRepository} from '@locale-hub/data/repositories/project.repository';
-import {LocaleRepository} from '@locale-hub/data/repositories/locale.repository';
-import {UserRoles} from '@locale-hub/data/enums/user-roles.enum';
-import {User} from '@locale-hub/data/models/user.model';
-import {UserRepository} from '@locale-hub/data/repositories/user.repository';
-import {ProjectTranslationProgress} from '@locale-hub/data/models/project-translation-progress.model';
-import {NotificationRepository} from '@locale-hub/data/repositories/notification.repository';
+import { ProjectRepository } from '@locale-hub/data/repositories/project.repository';
+import { LocaleRepository } from '@locale-hub/data/repositories/locale.repository';
+import { UserRoles } from '@locale-hub/data/enums/user-roles.enum';
+import { User } from '@locale-hub/data/models/user.model';
+import { UserRepository } from '@locale-hub/data/repositories/user.repository';
+import { ProjectTranslationProgress } from '@locale-hub/data/models/project-translation-progress.model';
+import { NotificationRepository } from '@locale-hub/data/repositories/notification.repository';
 
 const projectRepository = new ProjectRepository();
 const localeRepository = new LocaleRepository();
@@ -20,18 +20,27 @@ const notificationRepository = new NotificationRepository();
  * @param {string} defaultLocale The default project locale
  * @return {Project|null} The newly created project, null in case of failure
  */
-export const createProject = async (name: string, organizationId: string, owner: User,
-  defaultLocale: string): Promise<Project | null> => {
+export const createProject = async (
+  name: string,
+  organizationId: string,
+  owner: User,
+  defaultLocale: string
+): Promise<Project | null> => {
   const locale = await localeRepository.find(defaultLocale);
   const localeTag: string = null !== locale ? locale.tag : 'en';
 
-  const project = await projectRepository.insert(name, organizationId, owner, localeTag);
+  const project = await projectRepository.insert(
+    name,
+    organizationId,
+    owner,
+    localeTag
+  );
 
   await notificationRepository.create(
     [owner.id],
     'Project created!',
     `Project ${name} has been created. You can now start translating your apps.`,
-    `/projects/${project.id}/overview`,
+    `/projects/${project.id}/overview`
   );
 
   return project;
@@ -52,7 +61,10 @@ export const getProject = async (projectId: string): Promise<Project> => {
  * @param {Project} project The updated information about the project
  * @return {boolean} true if updated successfully, false otherwise
  */
-export const updateProject = async (projectId: string, project: Project): Promise<boolean> => {
+export const updateProject = async (
+  projectId: string,
+  project: Project
+): Promise<boolean> => {
   return await projectRepository.update(projectId, project);
 };
 
@@ -68,7 +80,7 @@ export const deleteProject = async (projectId: string): Promise<boolean> => {
   await notificationRepository.create(
     project.users.map((u) => u.id),
     'Project deleted',
-    `Project ${project.name} has been delete.`,
+    `Project ${project.name} has been delete.`
   );
 
   return isDeleted;
@@ -79,15 +91,21 @@ export const deleteProject = async (projectId: string): Promise<boolean> => {
  * @param {string[]} projectIds List to get translation progress
  * @return {ProjectTranslationProgress} The projects progress
  */
-export const getProjectsTranslationProgress = async (projectIds: string[]): Promise<ProjectTranslationProgress[]> => {
-  return await Promise.all(projectIds.map(async (projectId) => {
-    const progress = await projectRepository.getTranslationProgress(projectId);
+export const getProjectsTranslationProgress = async (
+  projectIds: string[]
+): Promise<ProjectTranslationProgress[]> => {
+  return await Promise.all(
+    projectIds.map(async (projectId) => {
+      const progress = await projectRepository.getTranslationProgress(
+        projectId
+      );
 
-    return {
-      projectId,
-      progress,
-    };
-  }));
+      return {
+        projectId,
+        progress,
+      };
+    })
+  );
 };
 
 /**
@@ -119,7 +137,11 @@ export const getUserList = async (projectId: string): Promise<User[]> => {
  * @param {UserRoles} role The role of the user in the given project
  * @return {boolean} true if added properly, false otherwise
  */
-export const addUser = async (projectId: string, userId: string, role: UserRoles): Promise<boolean> => {
+export const addUser = async (
+  projectId: string,
+  userId: string,
+  role: UserRoles
+): Promise<boolean> => {
   const project = await projectRepository.find(projectId);
 
   if (null === project) {
@@ -140,7 +162,7 @@ export const addUser = async (projectId: string, userId: string, role: UserRoles
   await notificationRepository.create(
     [userId],
     'Project invitation',
-    `You have been invited to ${project.name}.`,
+    `You have been invited to ${project.name}.`
   );
 
   return await updateProject(projectId, project);
@@ -153,14 +175,20 @@ export const addUser = async (projectId: string, userId: string, role: UserRoles
  * @param {string} userId The user Id to remove
  * @return {boolean} true if removed properly, false otherwise
  */
-export const revokeUser = async (projectId: string, authenticatedUserId: string, userId: string): Promise<boolean> => {
+export const revokeUser = async (
+  projectId: string,
+  authenticatedUserId: string,
+  userId: string
+): Promise<boolean> => {
   const project = await projectRepository.find(projectId);
 
   if (null === project) {
     return false;
   }
 
-  const authenticatedUserExists = project.users.filter((entry) => entry.id === authenticatedUserId);
+  const authenticatedUserExists = project.users.filter(
+    (entry) => entry.id === authenticatedUserId
+  );
   if (0 !== authenticatedUserExists.length) {
     const index = project.users.indexOf(authenticatedUserExists[0]);
 
@@ -174,7 +202,7 @@ export const revokeUser = async (projectId: string, authenticatedUserId: string,
   await notificationRepository.create(
     [userId],
     'Project removal',
-    `You have been removed to ${project.name}.`,
+    `You have been removed to ${project.name}.`
   );
 
   return await updateProject(projectId, project);

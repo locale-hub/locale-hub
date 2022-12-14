@@ -1,4 +1,3 @@
-
 export const globalConfiguration = {
   production: false,
   environment: 'development',
@@ -16,7 +15,7 @@ export const globalConfiguration = {
 
   documentation: {
     root: 'https://locale-hub.gitbook.io/',
-    sdk: 'https://doc.locale-hub.com/sdk/overview'
+    sdk: 'https://doc.locale-hub.com/sdk/overview',
   },
 
   email: {
@@ -37,7 +36,7 @@ export const globalConfiguration = {
   portal: {
     api: {
       uri: 'http://localhost:3000/v1',
-      port: 3000
+      port: 3000,
     },
     web: {
       refreshTokenInterval: 13 * 60 * 1000, // 13 minutes
@@ -47,18 +46,19 @@ export const globalConfiguration = {
         login: '/login',
         passwordReset: '/auth/password-reset',
       },
-    }
+    },
   },
 
   public: {
     web: {
       hostname: 'http://localhost:4202',
-      releasesRoute: '/releases'
-    }
+      releasesRoute: '/releases',
+    },
   },
 
   // if features.sdk = true
-  sdk: { // if features.sdk = true
+  sdk: {
+    // if features.sdk = true
     redis: {
       uri: 'redis://localhost:6379/0',
     },
@@ -86,5 +86,4 @@ export const globalConfiguration = {
   sentry: {
     uri: undefined,
   },
-
 };

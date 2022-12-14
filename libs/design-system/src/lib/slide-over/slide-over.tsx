@@ -1,17 +1,17 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Dialog, Transition } from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { Dialog, Transition } from '@headlessui/react';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 export default function SlideOver({
   children,
   isOpen,
   onClose,
-  title
+  title,
 }: {
-  children: React.ReactNode,
-  isOpen?: boolean,
-  onClose?: () => void,
-  title: string,
+  children: React.ReactNode;
+  isOpen?: boolean;
+  onClose?: () => void;
+  title: string;
 }) {
   const [open, setOpen] = useState(isOpen ?? false);
 
@@ -24,7 +24,7 @@ export default function SlideOver({
     if (undefined !== onClose) {
       onClose();
     }
-  }
+  };
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -77,11 +77,11 @@ export default function SlideOver({
                   <div className="flex h-full flex-col overflow-y-scroll py-6 shadow-xl">
                     <div className="px-4 sm:px-6">
                       <Dialog.Title className="text-lg font-medium">
-                        { title }
+                        {title}
                       </Dialog.Title>
                     </div>
                     <div className="relative mt-6 flex-1 px-4 sm:px-6">
-                      { children }
+                      {children}
                     </div>
                   </div>
                 </Dialog.Panel>
@@ -91,5 +91,5 @@ export default function SlideOver({
         </div>
       </Dialog>
     </Transition.Root>
-  )
+  );
 }

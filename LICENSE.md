@@ -2,11 +2,12 @@ Business Source License 1.1
 
 Parameters
 
-- **Licensor**:             Jeremy PICHON
-- **Licensed Work**:        Locale Hub
+- **Licensor**: Jeremy PICHON
+- **Licensed Work**: Locale Hub
 - **The Licensed Work is**: (c)2020 Locale Hub
 - **Additional Use Grant**: You may make use of the Licensed Work, provided
   that you do not use the Licensed Work for an Application Translation Service.
+
 ```
 An "Application Translation Service" is a commercial offering
 that allows third parties (other than your employees and
@@ -14,8 +15,9 @@ contractors) to access the functionality of the Licensed
 Work so that such third parties directly benefit from the
 Translation or Translation serving features of the Licensed Work.
 ```
-- **Change Date**:          2025-12-13
-- **Change License**:       Apache License, Version 2.0
+
+- **Change Date**: 2025-12-13
+- **Change License**: Apache License, Version 2.0
 
 For information about alternative licensing arrangements for the Software,
 please visit: https://locale-hub.com/pricing/
@@ -29,7 +31,7 @@ under an Open Source License, as stated in this License.
 License text copyright (c) 2017 MariaDB Corporation Ab, All Rights Reserved.
 "Business Source License" is a trademark of MariaDB Corporation Ab.
 
------------------------------------------------------------------------------
+---
 
 Business Source License 1.1
 

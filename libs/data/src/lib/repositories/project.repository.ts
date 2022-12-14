@@ -1,15 +1,22 @@
-import {dbAggregate, dbDelete, dbInsert, dbMultiple, dbSingle, dbUpdate} from './db.repository';
-import {Project} from '../models/project.model';
-import {v4 as uuid} from 'uuid';
+import {
+  dbAggregate,
+  dbDelete,
+  dbInsert,
+  dbMultiple,
+  dbSingle,
+  dbUpdate,
+} from './db.repository';
+import { Project } from '../models/project.model';
+import { v4 as uuid } from 'uuid';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-dayjs.extend(utc)
-import {App} from '../models/app.model';
-import {Commit} from '../models/commit.model';
-import {User} from '../models/user.model';
-import {UserRoles} from '../enums/user-roles.enum';
-import {ApiException} from '../exceptions/api.exception';
-import {ErrorCode} from '../enums/error-code.enum';
+dayjs.extend(utc);
+import { App } from '../models/app.model';
+import { Commit } from '../models/commit.model';
+import { User } from '../models/user.model';
+import { UserRoles } from '../enums/user-roles.enum';
+import { ApiException } from '../exceptions/api.exception';
+import { ErrorCode } from '../enums/error-code.enum';
 
 export class ProjectRepository {
   private readonly collectionName = 'projects';
@@ -23,8 +30,12 @@ export class ProjectRepository {
    * @param {string} defaultLocale Default locale tag of the project
    * @return {Project} the newly created project, null otherwise
    */
-  insert = async (name: string, organizationId: string, user: User, defaultLocale: string)
-    : Promise<Project> => {
+  insert = async (
+    name: string,
+    organizationId: string,
+    user: User,
+    defaultLocale: string
+  ): Promise<Project> => {
     const project = await dbInsert<Project>(this.collectionName, {
       id: uuid(),
       name,
@@ -51,7 +62,7 @@ export class ProjectRepository {
     }
 
     return project;
-  }
+  };
 
   /**
    * Find an project by its id
@@ -60,7 +71,9 @@ export class ProjectRepository {
    * @return {Project} The project found, null otherwise
    */
   find = async (projectId: string): Promise<Project> => {
-    const project = await dbSingle<Project>(this.collectionName, {id: projectId});
+    const project = await dbSingle<Project>(this.collectionName, {
+      id: projectId,
+    });
 
     if (null === project) {
       throw new ApiException({
@@ -71,7 +84,7 @@ export class ProjectRepository {
     }
 
     return project;
-  }
+  };
 
   /**
    * List of organization's projects
@@ -79,7 +92,9 @@ export class ProjectRepository {
    * @param {string[]} organizationIds Organization Id list
    * @return {Project[]} The list projects found, empty array if no result found
    */
-  getFromOrganizations = async (organizationIds: string[]): Promise<Project[]> => {
+  getFromOrganizations = async (
+    organizationIds: string[]
+  ): Promise<Project[]> => {
     const projects = await dbMultiple<Project>(this.collectionName, {
       organizationId: {
         $in: organizationIds,
@@ -95,7 +110,7 @@ export class ProjectRepository {
     }
 
     return projects;
-  }
+  };
 
   /**
    * Update a project
@@ -104,8 +119,12 @@ export class ProjectRepository {
    * @return {boolean} true if updated successfully, false otherwise
    */
   update = async (projectId: string, project: Project): Promise<boolean> => {
-    return await dbUpdate<Project>(this.collectionName, {id: projectId}, {$set: project});
-  }
+    return await dbUpdate<Project>(
+      this.collectionName,
+      { id: projectId },
+      { $set: project }
+    );
+  };
 
   /**
    * Remove Project
@@ -114,11 +133,10 @@ export class ProjectRepository {
    * @return {boolean} true if deleted successfully, false otherwise
    */
   delete = async (projectId: string): Promise<boolean> => {
-    await dbDelete<App>('apps', {projectId});
-    await dbDelete<Commit>('commits', {projectId});
-    return await dbDelete<Project>(this.collectionName, {id: projectId});
-  }
-
+    await dbDelete<App>('apps', { projectId });
+    await dbDelete<Commit>('commits', { projectId });
+    return await dbDelete<Project>(this.collectionName, { id: projectId });
+  };
 
   /**
    * Get translation progress for a given project
@@ -127,11 +145,13 @@ export class ProjectRepository {
    * @return {number} translation progress if the given project
    */
   getTranslationProgress = async (projectId: string): Promise<number> => {
-    const commits: Commit[] | null = await dbAggregate<Commit>('commits', [{
-      $match: {
-        projectId,
+    const commits: Commit[] | null = await dbAggregate<Commit>('commits', [
+      {
+        $match: {
+          projectId,
+        },
       },
-    }]);
+    ]);
 
     if (null === commits) {
       throw new ApiException({
@@ -161,7 +181,11 @@ export class ProjectRepository {
       }
       for (const key of Object.values(latestChanges.keys)) {
         const entry = manifest[locale][key];
-        if (undefined === entry || null === entry || 0 === entry.trim().length) {
+        if (
+          undefined === entry ||
+          null === entry ||
+          0 === entry.trim().length
+        ) {
           continue;
         }
         translatedCount++;
@@ -169,5 +193,5 @@ export class ProjectRepository {
     }
 
     return translatedCount / total;
-  }
+  };
 }

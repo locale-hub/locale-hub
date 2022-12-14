@@ -1,13 +1,19 @@
-import {Request, Response, Router as createRouter} from 'express';
+import { Request, Response, Router as createRouter } from 'express';
 import rateLimit from 'express-rate-limit';
 
-import {generateAuthToken} from '../logic/middlewares/auth.middleware';
-import {validateRequest} from '../logic/middlewares/validateRequest.middleware';
-import {sendError} from '../logic/helpers/sendError.helper';
-import {updateUser, validateNewUserEmail} from '../logic/services/user.service';
-import {getOrganizationProjects, getUsersOrganizations} from '../logic/services/organization.service';
+import { generateAuthToken } from '../logic/middlewares/auth.middleware';
+import { validateRequest } from '../logic/middlewares/validateRequest.middleware';
+import { sendError } from '../logic/helpers/sendError.helper';
+import {
+  updateUser,
+  validateNewUserEmail,
+} from '../logic/services/user.service';
+import {
+  getOrganizationProjects,
+  getUsersOrganizations,
+} from '../logic/services/organization.service';
 import argon2 from 'argon2';
-import {getProjectsTranslationProgress} from '../logic/services/project.service';
+import { getProjectsTranslationProgress } from '../logic/services/project.service';
 import { updateUserPasswordSchema } from '@locale-hub/data/requests/updateUserPassword.request';
 import { UserRepository } from '@locale-hub/data/repositories/user.repository';
 import { updateUserSchema } from '@locale-hub/data/requests/updateUser.request';
@@ -23,7 +29,7 @@ const editPasswordRateLimiter = rateLimit({
   skipSuccessfulRequests: true,
 });
 
-const router = createRouter({mergeParams: true});
+const router = createRouter({ mergeParams: true });
 const userRepository = new UserRepository();
 
 const secret = Buffer.from(environment.security.password.secret, 'utf8');
@@ -33,8 +39,9 @@ const secret = Buffer.from(environment.security.password.secret, 'utf8');
  */
 router.put(
   '/',
-  editPasswordRateLimiter, validateRequest(updateUserSchema),
-  async function(req: Request, res: Response) {
+  editPasswordRateLimiter,
+  validateRequest(updateUserSchema),
+  async function (req: Request, res: Response) {
     try {
       const user = await updateUser(req.user, req.body.user);
 
@@ -49,34 +56,35 @@ router.put(
     } catch (error) {
       sendError(res, error as Error);
     }
-  });
+  }
+);
 
 /**
  * Get users organizations
  */
-router.get(
-  '/dashboard',
-  async function(req: Request, res: Response) {
-    try {
-      const user = req.user as User;
+router.get('/dashboard', async function (req: Request, res: Response) {
+  try {
+    const user = req.user as User;
 
-      const organizations = await getUsersOrganizations(user);
+    const organizations = await getUsersOrganizations(user);
 
-      const projects = (await getOrganizationProjects(organizations.map((o) => o.id)))
-        .filter((project) => project.users.map((u) => u.id).includes(user.id));
+    const projects = (
+      await getOrganizationProjects(organizations.map((o) => o.id))
+    ).filter((project) => project.users.map((u) => u.id).includes(user.id));
 
-      const progress = await getProjectsTranslationProgress(projects.map((project) => project.id));
+    const progress = await getProjectsTranslationProgress(
+      projects.map((project) => project.id)
+    );
 
-
-      res.json({
-        organizations,
-        projects,
-        progress,
-      });
-    } catch (error) {
-      sendError(res, error as Error);
-    }
-  });
+    res.json({
+      organizations,
+      projects,
+      progress,
+    });
+  } catch (error) {
+    sendError(res, error as Error);
+  }
+});
 
 /**
  * Update current user password
@@ -84,7 +92,7 @@ router.get(
 router.put(
   '/password',
   validateRequest(updateUserPasswordSchema),
-  async function(req: Request, res: Response) {
+  async function (req: Request, res: Response) {
     try {
       const user = await userRepository.find(req.user.id);
       const passwordCorrect = await argon2.verify(user.password, req.body.old, {
@@ -93,11 +101,14 @@ router.put(
         secret,
       });
       if (!passwordCorrect) {
-        return sendError(res, new ApiException({
-          statusCode: 401,
-          code: ErrorCode.userPasswordMismatch,
-          message: 'Password mismatch',
-        }));
+        return sendError(
+          res,
+          new ApiException({
+            statusCode: 401,
+            code: ErrorCode.userPasswordMismatch,
+            message: 'Password mismatch',
+          })
+        );
       }
 
       const password = await argon2.hash(req.body.new, {
@@ -111,8 +122,8 @@ router.put(
     } catch (error) {
       sendError(res, error as Error);
     }
-  });
-
+  }
+);
 
 /**
  * Edit current users information
@@ -120,7 +131,7 @@ router.put(
 router.post(
   '/validate-email',
   validateRequest(validateEmailSchema),
-  async function(req: Request, res: Response) {
+  async function (req: Request, res: Response) {
     try {
       const user = await validateNewUserEmail(req.user, req.body);
 
@@ -135,7 +146,8 @@ router.post(
     } catch (error) {
       sendError(res, error as Error);
     }
-  });
+  }
+);
 
 // TODO: Delete user endpoint
 

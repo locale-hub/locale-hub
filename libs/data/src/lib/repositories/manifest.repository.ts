@@ -1,10 +1,10 @@
-import {dbAggregate, dbSingle} from './db.repository';
-import {Commit} from '../models/commit.model';
-import {CommitRepository} from './commit.repository';
-import {ChangeList} from '../models/change-list.model';
-import {Manifest} from '../models/manifest.model';
-import {ApiException} from '../exceptions/api.exception';
-import {ErrorCode} from '../enums/error-code.enum';
+import { dbAggregate, dbSingle } from './db.repository';
+import { Commit } from '../models/commit.model';
+import { CommitRepository } from './commit.repository';
+import { ChangeList } from '../models/change-list.model';
+import { Manifest } from '../models/manifest.model';
+import { ApiException } from '../exceptions/api.exception';
+import { ErrorCode } from '../enums/error-code.enum';
 
 const commitRepository = new CommitRepository();
 
@@ -14,7 +14,9 @@ const commitRepository = new CommitRepository();
  * @param {string} projectId Project Id to search commits dates in
  * @return {string[]} The list of dates a commit has been made
  */
-const getPublishedCommitDates = async (projectId: string): Promise<string[]> => {
+const getPublishedCommitDates = async (
+  projectId: string
+): Promise<string[]> => {
   const commits = await commitRepository.findByProject(projectId);
 
   if (0 === commits.filter((c) => c.deployed).length) {
@@ -39,11 +41,13 @@ export class ManifestRepository {
    * @return {ManifestEntry[]} The list latest manifest values
    */
   get = async (projectId: string): Promise<ChangeList> => {
-    const commits = await dbAggregate<Commit>('commits', [{
-      $match: {
-        projectId: projectId,
+    const commits = await dbAggregate<Commit>('commits', [
+      {
+        $match: {
+          projectId: projectId,
+        },
       },
-    }]);
+    ]);
 
     if (null === commits) {
       throw new ApiException({
@@ -53,10 +57,10 @@ export class ManifestRepository {
       });
     }
 
-    return commits.length > 0 ?
-      commits[commits.length - 1].changeList :
-      {locales: [], keys: [], manifest: {}};
-  }
+    return commits.length > 0
+      ? commits[commits.length - 1].changeList
+      : { locales: [], keys: [], manifest: {} };
+  };
 
   /**
    * Return published ManifestEntries for a given project
@@ -71,12 +75,14 @@ export class ManifestRepository {
       return null;
     }
 
-    const commits = await dbAggregate<Commit>('commits', [{
-      $match: {
-        projectId: projectId,
-        deployed: true,
+    const commits = await dbAggregate<Commit>('commits', [
+      {
+        $match: {
+          projectId: projectId,
+          deployed: true,
+        },
       },
-    }]);
+    ]);
 
     if (null === commits) {
       throw new ApiException({
@@ -86,10 +92,10 @@ export class ManifestRepository {
       });
     }
 
-    return commits.length > 0 ?
-      commits[commits.length - 1].changeList :
-      {locales: [], keys: [], manifest: {}};
-  }
+    return commits.length > 0
+      ? commits[commits.length - 1].changeList
+      : { locales: [], keys: [], manifest: {} };
+  };
 
   /**
    * Return latest ManifestEntries for a given project and locale
@@ -98,12 +104,17 @@ export class ManifestRepository {
    * @param {string} locale Locale tag
    * @return {Manifest} The list latest manifest values for a given locale
    */
-  getLocale = async (projectId: string, locale: string): Promise<Manifest | null> => {
-    const commits = await dbAggregate<Commit>('commits', [{
-      $match: {
-        projectId: projectId,
+  getLocale = async (
+    projectId: string,
+    locale: string
+  ): Promise<Manifest | null> => {
+    const commits = await dbAggregate<Commit>('commits', [
+      {
+        $match: {
+          projectId: projectId,
+        },
       },
-    }]);
+    ]);
 
     if (null === commits) {
       throw new ApiException({
@@ -124,7 +135,7 @@ export class ManifestRepository {
     }
 
     return changeList.manifest[locale];
-  }
+  };
 
   /**
    * Return ManifestEntries for a given commit
@@ -133,13 +144,18 @@ export class ManifestRepository {
    * @param {string} commitId Project Id to get the manifest from
    * @return {ChangeList} The list of manifest values for the given commit
    */
-  getCommit = async (projectId: string, commitId: string): Promise<ChangeList | null> => {
-    const commit = await dbSingle<Commit>('commits', [{
-      $match: {
-        projectId: projectId,
-        id: commitId,
+  getCommit = async (
+    projectId: string,
+    commitId: string
+  ): Promise<ChangeList | null> => {
+    const commit = await dbSingle<Commit>('commits', [
+      {
+        $match: {
+          projectId: projectId,
+          id: commitId,
+        },
       },
-    }]);
+    ]);
 
     if (null === commit) {
       throw new ApiException({
@@ -150,5 +166,5 @@ export class ManifestRepository {
     }
 
     return commit.changeList;
-  }
+  };
 }

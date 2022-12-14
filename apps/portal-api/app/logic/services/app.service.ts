@@ -3,7 +3,6 @@ import { ProjectRepository } from '@locale-hub/data/repositories/project.reposit
 import { AppRepository } from '@locale-hub/data/repositories/app.repository';
 import { App } from '@locale-hub/data/models/app.model';
 
-
 const appRepository = new AppRepository();
 const projectRepository = new ProjectRepository();
 
@@ -24,8 +23,12 @@ export const getAppsFromProject = async (projectId: string): Promise<App[]> => {
  * @param {string} identifier The app source (eg: domain name, package name, ...)
  * @return {App|null} The newly created app, null if creation failed
  */
-export const createApp = async (projectId: string, appName: string, appType: string, identifier: string)
-  : Promise<App> => {
+export const createApp = async (
+  projectId: string,
+  appName: string,
+  appType: string,
+  identifier: string
+): Promise<App> => {
   await projectRepository.find(projectId);
 
   const key = crypto.randomBytes(64).toString('hex');
@@ -39,6 +42,9 @@ export const createApp = async (projectId: string, appName: string, appType: str
  * @param {string} appId The App Id
  * @return {boolean} true if deleted, false otherwise
  */
-export const deleteApp = async (projectId: string, appId: string): Promise<boolean> => {
+export const deleteApp = async (
+  projectId: string,
+  appId: string
+): Promise<boolean> => {
   return await appRepository.delete(appId, projectId);
 };

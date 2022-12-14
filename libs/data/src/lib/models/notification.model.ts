@@ -1,4 +1,4 @@
-import {NotificationStatus} from '../enums/notification-status.enum';
+import { NotificationStatus } from '../enums/notification-status.enum';
 
 // TODO: fix client/server side data difference
 export interface Notification {
@@ -8,7 +8,7 @@ export interface Notification {
   img?: string;
   link?: string;
   // server side
-  users?: { id: string; status: NotificationStatus; }[];
+  users?: { id: string; status: NotificationStatus }[];
   // client side
   status?: NotificationStatus;
   createdAt: string;

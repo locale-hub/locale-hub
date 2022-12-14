@@ -1,9 +1,9 @@
-import {dbInsert, dbMultiple, dbSingle, dbUpdate} from './db.repository';
-import {Commit} from '../models/commit.model';
-import {v4 as uuid} from 'uuid';
-import {ChangeList} from '../models/change-list.model';
-import {ApiException} from '../exceptions/api.exception';
-import {ErrorCode} from '../enums/error-code.enum';
+import { dbInsert, dbMultiple, dbSingle, dbUpdate } from './db.repository';
+import { Commit } from '../models/commit.model';
+import { v4 as uuid } from 'uuid';
+import { ChangeList } from '../models/change-list.model';
+import { ApiException } from '../exceptions/api.exception';
+import { ErrorCode } from '../enums/error-code.enum';
 
 export class CommitRepository {
   private readonly collectionName = 'commits';
@@ -19,8 +19,14 @@ export class CommitRepository {
    * @param {string} createdAt Date of creation of the commit
    * @return {Commit} the newly created commit, null otherwise
    */
-  insert = async (projectId: string, authorId: string, title: string, description: string, changeList: ChangeList,
-    createdAt: string): Promise<Commit> => {
+  insert = async (
+    projectId: string,
+    authorId: string,
+    title: string,
+    description: string,
+    changeList: ChangeList,
+    createdAt: string
+  ): Promise<Commit> => {
     const commit = await dbInsert<Commit>(this.collectionName, {
       id: uuid(),
       projectId,
@@ -41,7 +47,7 @@ export class CommitRepository {
     }
 
     return commit;
-  }
+  };
 
   /**
    * Find a commit by its id
@@ -50,7 +56,9 @@ export class CommitRepository {
    * @return {Commit} The commit found, null otherwise
    */
   find = async (commitId: string): Promise<Commit> => {
-    const commit = await dbSingle<Commit>(this.collectionName, {id: commitId});
+    const commit = await dbSingle<Commit>(this.collectionName, {
+      id: commitId,
+    });
 
     if (null === commit) {
       throw new ApiException({
@@ -61,7 +69,7 @@ export class CommitRepository {
     }
 
     return commit;
-  }
+  };
 
   /**
    * List commits of a given project
@@ -70,7 +78,9 @@ export class CommitRepository {
    * @return {Commit[]} List of project's commits
    */
   findByProject = async (projectId: string): Promise<Commit[]> => {
-    const commits = await dbMultiple<Commit>(this.collectionName, {projectId});
+    const commits = await dbMultiple<Commit>(this.collectionName, {
+      projectId,
+    });
 
     if (null === commits) {
       throw new ApiException({
@@ -81,7 +91,7 @@ export class CommitRepository {
     }
 
     return commits;
-  }
+  };
 
   /**
    * Update the `deployed` status of a given commit
@@ -89,9 +99,18 @@ export class CommitRepository {
    * @param {boolean} deployed The new status of the commit
    * @return {boolean} true if updated successfully, false otherwise
    */
-  setPublishState = async (commitId: string, deployed: boolean): Promise<boolean> => {
-    return await dbUpdate<Commit>(this.collectionName, {id: commitId}, {$set: {
-      deployed,
-    }});
-  }
+  setPublishState = async (
+    commitId: string,
+    deployed: boolean
+  ): Promise<boolean> => {
+    return await dbUpdate<Commit>(
+      this.collectionName,
+      { id: commitId },
+      {
+        $set: {
+          deployed,
+        },
+      }
+    );
+  };
 }

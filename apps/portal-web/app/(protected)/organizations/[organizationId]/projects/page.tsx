@@ -12,42 +12,53 @@ import Table from '@locale-hub/design-system/table/table';
 import DateFormat from '@locale-hub/design-system/date-format/date-format';
 
 export default function OrganizationProjectsPage({
-  params
+  params,
 }: {
-  params: { organizationId: string }
+  params: { organizationId: string };
 }) {
   const [data, setData] = useState<OrganizationsProjectsGetResponse>(null);
 
   useEffect(() => {
-    ApiConnector.organizations.projects(params.organizationId).then(data => {
+    ApiConnector.organizations.projects(params.organizationId).then((data) => {
       if ('error' in data) {
         toast.error('Failed to retrieve projects');
         return;
       }
       setData(data);
-    })
+    });
   }, [params.organizationId]);
 
-
   const projectProgress = (projectId: string) => {
-    const progress = 100 * data.progress.find(project => project.projectId === projectId).progress;
+    const progress =
+      100 *
+      data.progress.find((project) => project.projectId === projectId).progress;
     return <ProgressBar fill={progress} />;
-  }
+  };
 
-
-  return <div className='px-10 py-10'>
-    <Table
-      className='w-9/12 mx-auto mt-12'
-      heads={[
-        { key: 'name', label: 'Project Name', className: 'w-7/12' },
-        { key: 'status', label: 'Status', className: 'w-3/12' },
-        { key: 'createdAt', label: 'Creation Date', className: 'w-2/12' },
-      ]}
-      entries={data?.projects.map(project => ({
-        name: <Link className='text-primary' href={routes.projects.overview(project.id)}>{project.name}</Link>,
-        status: projectProgress(project.id),
-        createdAt: <DateFormat date={project.createdAt} />,
-      })) ?? []}
-    />
-  </div>;
+  return (
+    <div className="px-10 py-10">
+      <Table
+        className="w-9/12 mx-auto mt-12"
+        heads={[
+          { key: 'name', label: 'Project Name', className: 'w-7/12' },
+          { key: 'status', label: 'Status', className: 'w-3/12' },
+          { key: 'createdAt', label: 'Creation Date', className: 'w-2/12' },
+        ]}
+        entries={
+          data?.projects.map((project) => ({
+            name: (
+              <Link
+                className="text-primary"
+                href={routes.projects.overview(project.id)}
+              >
+                {project.name}
+              </Link>
+            ),
+            status: projectProgress(project.id),
+            createdAt: <DateFormat date={project.createdAt} />,
+          })) ?? []
+        }
+      />
+    </div>
+  );
 }

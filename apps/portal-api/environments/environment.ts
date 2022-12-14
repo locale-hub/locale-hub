@@ -16,8 +16,8 @@ export const environment = {
     api: config.portal.api,
     web: {
       uri: config.portal.web.uri,
-      routes: config.portal.web.routes
-    }
+      routes: config.portal.web.routes,
+    },
   },
   sdk: config.sdk,
   security: config.security,

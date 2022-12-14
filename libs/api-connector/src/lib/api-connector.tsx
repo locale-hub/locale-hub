@@ -31,7 +31,6 @@ import { User } from '@locale-hub/data/models/user.model';
 let http: Http;
 
 export const ApiConnector = {
-
   initApi: (baseUrl: string, authUrl: string) => {
     http = new Http(baseUrl, authUrl);
   },
@@ -39,16 +38,17 @@ export const ApiConnector = {
   auth: {
     getUser: (): User | null => {
       const token = localStorage.getItem('token');
-      return null !== token
-        ? (decode(token) as any).user as User
-        : null;
+      return null !== token ? ((decode(token) as any).user as User) : null;
     },
 
-    login: async (primaryEmail: string, password: string): Promise<User | ApiErrorResponse> => {
-      const res = await http.post<any, TokenResponse>(
-        '/auth/login',
-        { primaryEmail, password }
-      );
+    login: async (
+      primaryEmail: string,
+      password: string
+    ): Promise<User | ApiErrorResponse> => {
+      const res = await http.post<any, TokenResponse>('/auth/login', {
+        primaryEmail,
+        password,
+      });
       if ('error' in res) {
         return res as ApiErrorResponse;
       }
@@ -75,11 +75,14 @@ export const ApiConnector = {
       return (decode(token) as any).user as User;
     },
 
-    register: async (name: string, primaryEmail: string, password: string): Promise<User | ApiErrorResponse> => {
-      const res = await http.post<any, TokenResponse>(
-        '/auth/register',
-        { user: { name, primaryEmail, password } }
-      );
+    register: async (
+      name: string,
+      primaryEmail: string,
+      password: string
+    ): Promise<User | ApiErrorResponse> => {
+      const res = await http.post<any, TokenResponse>('/auth/register', {
+        user: { name, primaryEmail, password },
+      });
       if ('error' in res) {
         return res as ApiErrorResponse;
       }
@@ -90,21 +93,27 @@ export const ApiConnector = {
       return (decode(token) as any).user as User;
     },
 
-    resetPassword: async (primaryEmail: string): Promise<void | ApiErrorResponse> => {
-      const res = await http.post<any, any>(
-        '/auth/password-reset',
-        { primaryEmail }
-      );
+    resetPassword: async (
+      primaryEmail: string
+    ): Promise<void | ApiErrorResponse> => {
+      const res = await http.post<any, any>('/auth/password-reset', {
+        primaryEmail,
+      });
       if ('error' in res) {
         return res as ApiErrorResponse;
       }
     },
 
-    resetPasswordApply: async (resetToken: string, primaryEmail: string, password: string): Promise<User | ApiErrorResponse> => {
-      const res = await http.post<any, TokenResponse>(
-        '/auth/apply',
-        { primaryEmail, resetToken, password }
-      );
+    resetPasswordApply: async (
+      resetToken: string,
+      primaryEmail: string,
+      password: string
+    ): Promise<User | ApiErrorResponse> => {
+      const res = await http.post<any, TokenResponse>('/auth/apply', {
+        primaryEmail,
+        resetToken,
+        password,
+      });
       if ('error' in res) {
         return res as ApiErrorResponse;
       }
@@ -115,10 +124,9 @@ export const ApiConnector = {
       return (decode(token) as any).user as User;
     },
     validateEmail: async (token: string): Promise<User | ApiErrorResponse> => {
-      const res = await http.post<any, TokenResponse>(
-        '/me/validate-email',
-        { token }
-      );
+      const res = await http.post<any, TokenResponse>('/me/validate-email', {
+        token,
+      });
       if ('error' in res) {
         return res as ApiErrorResponse;
       }
@@ -127,14 +135,14 @@ export const ApiConnector = {
       http.setToken(resToken);
       localStorage.setItem('token', resToken);
       return (decode(resToken) as any).user as User;
-    }
+    },
   },
 
   me: {
     dashboard: async (): Promise<MeDashboardResponse | ApiErrorResponse> => {
       return await http.get<MeDashboardResponse>('/me/dashboard');
     },
-    update:  async (user: User): Promise<User | ApiErrorResponse> => {
+    update: async (user: User): Promise<User | ApiErrorResponse> => {
       const res = await http.put<any, TokenResponse>('/me', { user });
       if ('error' in res) {
         return res as ApiErrorResponse;
@@ -149,59 +157,97 @@ export const ApiConnector = {
       const token = localStorage.getItem('token')!;
       return (decode(token) as any).user as User;
     },
-    updatePassword: async (oldPassword: string, newPassword: string): Promise<null | ApiErrorResponse> => {
-      const res = await http.put<any, any>('/me/password', { old: oldPassword, new: newPassword });
+    updatePassword: async (
+      oldPassword: string,
+      newPassword: string
+    ): Promise<null | ApiErrorResponse> => {
+      const res = await http.put<any, any>('/me/password', {
+        old: oldPassword,
+        new: newPassword,
+      });
       if ('error' in res) {
         return res as ApiErrorResponse;
       }
       return null;
-    }
+    },
   },
 
   notifications: {
     list: async (): Promise<MeNotificationsResponse | ApiErrorResponse> => {
       return await http.get<MeNotificationsResponse>('/notifications');
     },
-    discard: async (notificationId: string): Promise<null | ApiErrorResponse> => {
-      return await http.delete<void, null | ApiErrorResponse>(`/notifications/${notificationId}`);
-    }
+    discard: async (
+      notificationId: string
+    ): Promise<null | ApiErrorResponse> => {
+      return await http.delete<void, null | ApiErrorResponse>(
+        `/notifications/${notificationId}`
+      );
+    },
   },
 
   organizations: {
     list: async (): Promise<OrganizationsListResponse | ApiErrorResponse> => {
       return await http.get<OrganizationsListResponse>('/organizations');
     },
-    get: async (organizationId: string): Promise<OrganizationsGetResponse | ApiErrorResponse> => {
-      return await http.get<OrganizationsGetResponse>(`/organizations/${organizationId}`);
+    get: async (
+      organizationId: string
+    ): Promise<OrganizationsGetResponse | ApiErrorResponse> => {
+      return await http.get<OrganizationsGetResponse>(
+        `/organizations/${organizationId}`
+      );
     },
-    projects: async (organizationId: string): Promise<OrganizationsProjectsGetResponse | ApiErrorResponse> => {
-      return await http.get<OrganizationsProjectsGetResponse>(`/organizations/${organizationId}/projects`);
+    projects: async (
+      organizationId: string
+    ): Promise<OrganizationsProjectsGetResponse | ApiErrorResponse> => {
+      return await http.get<OrganizationsProjectsGetResponse>(
+        `/organizations/${organizationId}/projects`
+      );
     },
-    update: async (organization: Organization): Promise<null | ApiErrorResponse> => {
+    update: async (
+      organization: Organization
+    ): Promise<null | ApiErrorResponse> => {
       return await http.put<Organization, null | ApiErrorResponse>(
         `/organizations/${organization.id}`,
         organization
       );
     },
-    usage: async (organizationId: string): Promise<OrganizationsUsageGetResponse | ApiErrorResponse> => {
-      return await http.get<OrganizationsUsageGetResponse>(`/organizations/${organizationId}/usage`);
+    usage: async (
+      organizationId: string
+    ): Promise<OrganizationsUsageGetResponse | ApiErrorResponse> => {
+      return await http.get<OrganizationsUsageGetResponse>(
+        `/organizations/${organizationId}/usage`
+      );
     },
-    delete: async (organizationId: string): Promise<null | ApiErrorResponse> => {
-      return await http.delete<void, null | ApiErrorResponse>(`/organizations/${organizationId}`);
+    delete: async (
+      organizationId: string
+    ): Promise<null | ApiErrorResponse> => {
+      return await http.delete<void, null | ApiErrorResponse>(
+        `/organizations/${organizationId}`
+      );
     },
-    post: async (name: string): Promise<OrganizationsPostResponse | ApiErrorResponse> => {
+    post: async (
+      name: string
+    ): Promise<OrganizationsPostResponse | ApiErrorResponse> => {
       return await http.post<any, OrganizationsPostResponse | ApiErrorResponse>(
         '/organizations',
         {
-          organization: { name }
+          organization: { name },
         }
       );
     },
     users: {
-      list: async (organizationId: string): Promise<OrganizationsUsersGetResponse | ApiErrorResponse> => {
-        return await http.get<OrganizationsUsersGetResponse>(`/organizations/${organizationId}/users`);
+      list: async (
+        organizationId: string
+      ): Promise<OrganizationsUsersGetResponse | ApiErrorResponse> => {
+        return await http.get<OrganizationsUsersGetResponse>(
+          `/organizations/${organizationId}/users`
+        );
       },
-      invite: async (organizationId: string, name: string, email: string): Promise<null | ApiErrorResponse> => {
+      invite: async (
+        organizationId: string,
+        name: string,
+        email: string
+      ): Promise<null | ApiErrorResponse> => {
         return await http.post<any, null | ApiErrorResponse>(
           `/organizations/${organizationId}/users/invite`,
           {
@@ -210,10 +256,15 @@ export const ApiConnector = {
           }
         );
       },
-      delete: async (organizationId: string, userId: string): Promise<null | ApiErrorResponse> => {
-        return await http.delete<any, null | ApiErrorResponse>(`/organizations/${organizationId}/users/${userId}`);
-      }
-    }
+      delete: async (
+        organizationId: string,
+        userId: string
+      ): Promise<null | ApiErrorResponse> => {
+        return await http.delete<any, null | ApiErrorResponse>(
+          `/organizations/${organizationId}/users/${userId}`
+        );
+      },
+    },
   },
 
   projects: {
@@ -225,16 +276,22 @@ export const ApiConnector = {
 
       return res.projects;
     },
-    get: async (projectId: string): Promise<ProjectsGetResponse | ApiErrorResponse> => {
+    get: async (
+      projectId: string
+    ): Promise<ProjectsGetResponse | ApiErrorResponse> => {
       return await http.get<ProjectsGetResponse>(`/projects/${projectId}`);
     },
-    post: async (organizationId: string, name: string, defaultLocale: string): Promise<ProjectsPostResponse | ApiErrorResponse> => {
+    post: async (
+      organizationId: string,
+      name: string,
+      defaultLocale: string
+    ): Promise<ProjectsPostResponse | ApiErrorResponse> => {
       return await http.post<any, ProjectsPostResponse | ApiErrorResponse>(
         '/projects',
         {
           organizationId,
           name,
-          defaultLocale
+          defaultLocale,
         }
       );
     },
@@ -245,31 +302,52 @@ export const ApiConnector = {
       );
     },
     delete: async (projectId: string): Promise<null | ApiErrorResponse> => {
-      return await http.delete<unknown, null | ApiErrorResponse>(`/projects/${projectId}`);
+      return await http.delete<unknown, null | ApiErrorResponse>(
+        `/projects/${projectId}`
+      );
     },
     users: {
-      list: async (projectId: string): Promise<ProjectsUsersGetResponse | ApiErrorResponse> => {
-        return await http.get<ProjectsUsersGetResponse>(`/projects/${projectId}/users`);
+      list: async (
+        projectId: string
+      ): Promise<ProjectsUsersGetResponse | ApiErrorResponse> => {
+        return await http.get<ProjectsUsersGetResponse>(
+          `/projects/${projectId}/users`
+        );
       },
-      delete: async (projectId: string, userId: string): Promise<null | ApiErrorResponse> => {
-        return await http.delete<any, null | ApiErrorResponse>(`/projects/${projectId}/users/${userId}`);
+      delete: async (
+        projectId: string,
+        userId: string
+      ): Promise<null | ApiErrorResponse> => {
+        return await http.delete<any, null | ApiErrorResponse>(
+          `/projects/${projectId}/users/${userId}`
+        );
       },
-      add: async (projectId: string, userId: string): Promise<null | ApiErrorResponse> => {
+      add: async (
+        projectId: string,
+        userId: string
+      ): Promise<null | ApiErrorResponse> => {
         return await http.post<any, null | ApiErrorResponse>(
           `/projects/${projectId}/users`,
           {
             userId,
-            role: UserRoles.USER
+            role: UserRoles.USER,
           }
         );
-      }
+      },
     },
     applications: {
-      list: async (projectId: string): Promise<AppsListResponse | ApiErrorResponse> => {
+      list: async (
+        projectId: string
+      ): Promise<AppsListResponse | ApiErrorResponse> => {
         return await http.get<AppsListResponse>(`/projects/${projectId}/apps`);
       },
-      delete: async (projectId: string, appId: string): Promise<null | ApiErrorResponse> => {
-        return await http.delete<unknown, null | ApiErrorResponse>(`/projects/${projectId}/apps/${appId}`);
+      delete: async (
+        projectId: string,
+        appId: string
+      ): Promise<null | ApiErrorResponse> => {
+        return await http.delete<unknown, null | ApiErrorResponse>(
+          `/projects/${projectId}/apps/${appId}`
+        );
       },
       create: async (projectId: string, name: string, identifier: string) => {
         return await http.post<any, AppsPostResponse | ApiErrorResponse>(
@@ -277,41 +355,72 @@ export const ApiConnector = {
           {
             name,
             type: 'other',
-            identifier
+            identifier,
           }
         );
-      }
+      },
     },
     bundles: {
-      get: async (projectId: string, format: FileFormat): Promise<Blob | ApiErrorResponse> => {
-        return await http.getBlob(`/projects/${projectId}/bundles?format=${format}`);
+      get: async (
+        projectId: string,
+        format: FileFormat
+      ): Promise<Blob | ApiErrorResponse> => {
+        return await http.getBlob(
+          `/projects/${projectId}/bundles?format=${format}`
+        );
       },
     },
     commits: {
-      list: async (projectId: string): Promise<CommitsListResponse | ApiErrorResponse> => {
-        return await http.get<CommitsListResponse>(`/projects/${projectId}/commits`);
+      list: async (
+        projectId: string
+      ): Promise<CommitsListResponse | ApiErrorResponse> => {
+        return await http.get<CommitsListResponse>(
+          `/projects/${projectId}/commits`
+        );
       },
-      publish: async (projectId: string, commitId: string): Promise<void | ApiErrorResponse> => {
+      publish: async (
+        projectId: string,
+        commitId: string
+      ): Promise<void | ApiErrorResponse> => {
         return await http.put<{ deployed: boolean }, void | ApiErrorResponse>(
           `/projects/${projectId}/commits/${commitId}`,
           { deployed: true }
         );
       },
-      post: async (projectId: string, manifest: ManifestWithStatus, title: string, description: string): Promise<null | ApiErrorResponse> => {
-        return await http.post<{ title: string, description: string, changeList: ManifestWithStatus }, null | ApiErrorResponse>(
-          `/projects/${projectId}/commits`,
-          { title, description, changeList: manifest }
+      post: async (
+        projectId: string,
+        manifest: ManifestWithStatus,
+        title: string,
+        description: string
+      ): Promise<null | ApiErrorResponse> => {
+        return await http.post<
+          {
+            title: string;
+            description: string;
+            changeList: ManifestWithStatus;
+          },
+          null | ApiErrorResponse
+        >(`/projects/${projectId}/commits`, {
+          title,
+          description,
+          changeList: manifest,
+        });
+      },
+      get: async (
+        projectId: string,
+        commitId: string
+      ): Promise<CommitsGetResponse | ApiErrorResponse> => {
+        return await http.get<CommitsGetResponse>(
+          `/projects/${projectId}/commits/${commitId}`
         );
       },
-      get: async (projectId: string, commitId: string): Promise<CommitsGetResponse | ApiErrorResponse> => {
-        return await http.get<CommitsGetResponse>(`/projects/${projectId}/commits/${commitId}`);
-      }
     },
     manifests: {
-      get: async (projectId: string): Promise<ManifestsGetResponse | ApiErrorResponse> => {
+      get: async (
+        projectId: string
+      ): Promise<ManifestsGetResponse | ApiErrorResponse> => {
         return await http.get(`/projects/${projectId}/manifests`);
       },
     },
-  }
-
+  },
 };

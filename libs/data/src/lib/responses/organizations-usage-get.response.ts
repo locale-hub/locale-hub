@@ -1,4 +1,7 @@
-import {OrganizationApiUsage, OrganizationStorageUsage} from '../models/usage.model';
+import {
+  OrganizationApiUsage,
+  OrganizationStorageUsage,
+} from '../models/usage.model';
 
 export interface OrganizationsUsageGetResponse {
   usage: {

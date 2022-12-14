@@ -1,18 +1,21 @@
-import {Request, Response, Router as createRouter} from 'express';
+import { Request, Response, Router as createRouter } from 'express';
 import argon2 from 'argon2';
 import crypto from 'crypto';
-import {v4 as uuid} from 'uuid';
+import { v4 as uuid } from 'uuid';
 import rateLimit from 'express-rate-limit';
 import fs from 'fs/promises';
 
-import {authenticate, generateAuthToken} from '../logic/middlewares/auth.middleware';
-import {validateRequest} from '../logic/middlewares/validateRequest.middleware';
+import {
+  authenticate,
+  generateAuthToken,
+} from '../logic/middlewares/auth.middleware';
+import { validateRequest } from '../logic/middlewares/validateRequest.middleware';
 import * as MailService from '../logic/services/mail.service';
-import {sendError} from '../logic/helpers/sendError.helper';
+import { sendError } from '../logic/helpers/sendError.helper';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-dayjs.extend(utc)
-import {jwtService} from '../logic/services/jwt.service';
+dayjs.extend(utc);
+import { jwtService } from '../logic/services/jwt.service';
 import { passwordResetSchema } from '@locale-hub/data/requests/passwordReset.request';
 import { UserRepository } from '@locale-hub/data/repositories/user.repository';
 import { createUserSchema } from '@locale-hub/data/requests/createUser.request';
@@ -46,7 +49,7 @@ const refreshTokenRateLimiter = rateLimit({
   max: 10, // max requests per IP
 }); // ~13 minutes
 
-const router = createRouter({mergeParams: true});
+const router = createRouter({ mergeParams: true });
 const userRepository = new UserRepository();
 const organizationRepository = new OrganizationRepository();
 
@@ -59,18 +62,24 @@ const secret = Buffer.from(environment.security.password.secret, 'utf8');
  */
 router.post(
   '/register',
-  registerRateLimiter, validateRequest(createUserSchema),
-  async function(req: Request, res: Response) {
+  registerRateLimiter,
+  validateRequest(createUserSchema),
+  async function (req: Request, res: Response) {
     try {
       if (await isCommonPassword(req.body.user.password)) {
-        return sendError(res, new ApiException({
-          statusCode: 400,
-          code: ErrorCode.userPasswordWeak,
-          message: 'Weak password',
-        }));
+        return sendError(
+          res,
+          new ApiException({
+            statusCode: 400,
+            code: ErrorCode.userPasswordWeak,
+            message: 'Weak password',
+          })
+        );
       }
 
-      const salt = await crypto.randomBytes(environment.security.password.saltLength);
+      const salt = await crypto.randomBytes(
+        environment.security.password.saltLength
+      );
       const password = await argon2.hash(req.body.user.password, {
         type: argon2.argon2id,
         salt,
@@ -81,24 +90,25 @@ router.post(
         req.body.user.name,
         req.body.user.primaryEmail,
         password,
-        salt.toString(),
+        salt.toString()
       );
 
       await organizationRepository.insert(
         uuid(), // orgId
         user.id,
-        'My personal org',
+        'My personal org'
       );
 
       MailService.send(
         user.primaryEmail,
         'Welcome to i18n Services',
-        'auth.welcome', {
+        'auth.welcome',
+        {
           userName: user.name,
-        },
+        }
       );
 
-      const token = await generateAuthToken({user});
+      const token = await generateAuthToken({ user });
 
       res.json({
         token,
@@ -106,31 +116,40 @@ router.post(
     } catch (error) {
       sendError(res, error as Error);
     }
-  });
+  }
+);
 
 /**
  * Login route
  */
 router.post(
   '/login',
-  loginRateLimiter, validateRequest(loginUserSchema),
-  async function(req: Request, res: Response) {
+  loginRateLimiter,
+  validateRequest(loginUserSchema),
+  async function (req: Request, res: Response) {
     try {
       const user = await userRepository.findByEmail(req.body.primaryEmail);
 
-      const passCorrect = await argon2.verify(user.password, req.body.password, {
-        type: argon2.argon2id,
-        salt: Buffer.from(user.passwordSalt, 'utf8'),
-        secret,
-      });
+      const passCorrect = await argon2.verify(
+        user.password,
+        req.body.password,
+        {
+          type: argon2.argon2id,
+          salt: Buffer.from(user.passwordSalt, 'utf8'),
+          secret,
+        }
+      );
       if (!passCorrect) {
-        return sendError(res, new ApiException({
-          statusCode: 404,
-          code: ErrorCode.userNotFound,
-          message: 'User not found',
-        }));
+        return sendError(
+          res,
+          new ApiException({
+            statusCode: 404,
+            code: ErrorCode.userNotFound,
+            message: 'User not found',
+          })
+        );
       }
-      const token = await generateAuthToken({user});
+      const token = await generateAuthToken({ user });
 
       res.json({
         token,
@@ -138,15 +157,17 @@ router.post(
     } catch (error) {
       sendError(res, error as Error);
     }
-  });
+  }
+);
 
 /**
  * Request password reset process
  */
 router.post(
   '/password-reset',
-  resetRequestRateLimiter, validateRequest(passwordResetSchema),
-  async function(req: Request, res: Response) {
+  resetRequestRateLimiter,
+  validateRequest(passwordResetSchema),
+  async function (req: Request, res: Response) {
     try {
       const email = req.body.primaryEmail;
       const user = await userRepository.findByEmail(email);
@@ -155,52 +176,61 @@ router.post(
       user.name = '';
       user.password = '';
       user.passwordSalt = '';
-      const token = await generateAuthToken({user});
+      const token = await generateAuthToken({ user });
       const url = `${environment.portal.web.uri}${environment.portal.web.routes.passwordReset}/${token}`;
 
       MailService.send(
         user.primaryEmail,
         'Password reset request',
-        'auth.password-reset-request', {
+        'auth.password-reset-request',
+        {
           userName: userName,
           url: url,
-        },
+        }
       );
 
       res.status(204).send();
     } catch (error) {
       sendError(res, error as Error);
     }
-  });
+  }
+);
 
 /**
  * Apply the password reset request
  */
 router.post(
   '/password-reset/apply',
-  resetRequestRateLimiter, validateRequest(passwordResetApplySchema),
-  async function(req: Request, res: Response) {
+  resetRequestRateLimiter,
+  validateRequest(passwordResetApplySchema),
+  async function (req: Request, res: Response) {
     try {
       const token = req.body.token;
       const email = req.body.primaryEmail;
       const password = req.body.password;
 
       if (await isCommonPassword(password)) {
-        return sendError(res, new ApiException({
-          statusCode: 400,
-          code: ErrorCode.userPasswordWeak,
-          message: 'Weak password',
-        }));
+        return sendError(
+          res,
+          new ApiException({
+            statusCode: 400,
+            code: ErrorCode.userPasswordWeak,
+            message: 'Weak password',
+          })
+        );
       }
 
       const decoded = await jwtService.read<JwtModel>(token);
       if (decoded.user.primaryEmail !== email) {
-      // email does not match token email value
-        return sendError(res, new ApiException({
-          statusCode: 400,
-          code: ErrorCode.requestInvalid,
-          message: 'Invalid email provided',
-        }));
+        // email does not match token email value
+        return sendError(
+          res,
+          new ApiException({
+            statusCode: 400,
+            code: ErrorCode.requestInvalid,
+            message: 'Invalid email provided',
+          })
+        );
       }
 
       const oldUser = await userRepository.findByEmail(email);
@@ -215,12 +245,13 @@ router.post(
       MailService.send(
         user.primaryEmail,
         'Password updated',
-        'auth.password-reset-apply', {
+        'auth.password-reset-apply',
+        {
           userName: user.name,
-        },
+        }
       );
 
-      const newToken = await generateAuthToken({user});
+      const newToken = await generateAuthToken({ user });
 
       res.json({
         token: newToken,
@@ -228,28 +259,33 @@ router.post(
     } catch (error) {
       sendError(res, error as Error);
     }
-  });
+  }
+);
 
 /**
  * Refresh Json Web Token given
  */
 router.post(
   '/refresh-token',
-  refreshTokenRateLimiter, authenticate,
-  async function(req: Request, res: Response) {
+  refreshTokenRateLimiter,
+  authenticate,
+  async function (req: Request, res: Response) {
     try {
-      const loginExpiration = dayjs(req.jwt.lastLogin).clone().add(
-        environment.security.password.expirationInDays,
-        'days',
-      );
+      const loginExpiration = dayjs(req.jwt.lastLogin)
+        .clone()
+        .add(environment.security.password.expirationInDays, 'days');
       const now = dayjs(new Date()).utc();
 
-      if (loginExpiration.diff(now) < 0) { // if expiration date is past (from now)
-        return sendError(res, new ApiException({
-          statusCode: 401,
-          code: ErrorCode.userAccessExpired,
-          message: 'User authentication has expired, please login again',
-        }));
+      if (loginExpiration.diff(now) < 0) {
+        // if expiration date is past (from now)
+        return sendError(
+          res,
+          new ApiException({
+            statusCode: 401,
+            code: ErrorCode.userAccessExpired,
+            message: 'User authentication has expired, please login again',
+          })
+        );
       }
 
       const newToken = await generateAuthToken({
@@ -263,12 +299,14 @@ router.post(
     } catch (error) {
       sendError(res, error as Error);
     }
-  });
+  }
+);
 
-const isCommonPassword = async (password: string): Promise<boolean> =>{
+const isCommonPassword = async (password: string): Promise<boolean> => {
   if (0 === commonPasswords.length) {
-    commonPasswords = (await fs.readFile(environment.security.password.forbiddenList, 'utf8'))
-      .split('\n');
+    commonPasswords = (
+      await fs.readFile(environment.security.password.forbiddenList, 'utf8')
+    ).split('\n');
   }
 
   return commonPasswords.includes(password);

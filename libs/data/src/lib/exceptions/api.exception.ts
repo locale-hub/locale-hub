@@ -1,4 +1,4 @@
-import {ApiError} from '../models/api-error.model';
+import { ApiError } from '../models/api-error.model';
 
 export class ApiException extends Error {
   error: ApiError;

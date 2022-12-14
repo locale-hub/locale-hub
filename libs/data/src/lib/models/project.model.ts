@@ -1,4 +1,4 @@
-import {UserGroupEntry} from './user-group-entry.model';
+import { UserGroupEntry } from './user-group-entry.model';
 
 export interface Project {
   id: string;

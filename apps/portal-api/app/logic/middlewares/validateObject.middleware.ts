@@ -7,7 +7,10 @@ import Joi from 'joi';
  * @param {T} object The object to validate
  * @return {boolean} true if config is valid, false otherwise
  */
-export const validateObject = async <T> (schema: Joi.ObjectSchema, object: T): Promise<boolean> => {
+export const validateObject = async <T>(
+  schema: Joi.ObjectSchema,
+  object: T
+): Promise<boolean> => {
   try {
     const validation = await schema.validate(object);
     if (undefined !== validation.error) {

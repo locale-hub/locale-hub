@@ -1,4 +1,4 @@
-import {Manifest} from './manifest.model';
+import { Manifest } from './manifest.model';
 
 export interface ChangeList {
   locales: string[];

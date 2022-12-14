@@ -1,8 +1,8 @@
-import {dbAggregate} from './db.repository';
-import {Commit} from '../models/commit.model';
-import {Manifest} from '../models/manifest.model';
-import {ApiException} from '../exceptions/api.exception';
-import {ErrorCode} from '../enums/error-code.enum';
+import { dbAggregate } from './db.repository';
+import { Commit } from '../models/commit.model';
+import { Manifest } from '../models/manifest.model';
+import { ApiException } from '../exceptions/api.exception';
+import { ErrorCode } from '../enums/error-code.enum';
 
 type ManifestContent = { [locale: string]: Manifest };
 
@@ -14,12 +14,14 @@ export class BundleRepository {
    * @return {ManifestContent} The bundle content
    */
   getBundle = async (projectId: string): Promise<ManifestContent> => {
-    const commits: Commit[] | null = await dbAggregate<Commit>('commits', [{
-      $match: {
-        projectId,
-        deployed: true,
+    const commits: Commit[] | null = await dbAggregate<Commit>('commits', [
+      {
+        $match: {
+          projectId,
+          deployed: true,
+        },
       },
-    }]);
+    ]);
 
     if (null === commits) {
       throw new ApiException({
@@ -41,13 +43,15 @@ export class BundleRepository {
 
     for (const locale of Object.keys(manifestLog)) {
       for (const key of Object.keys(manifestLog[locale])) {
-        manifestLog[locale][key] = this.applyNestedKeys(manifestLog[locale][key], manifestLog[locale]);
+        manifestLog[locale][key] = this.applyNestedKeys(
+          manifestLog[locale][key],
+          manifestLog[locale]
+        );
       }
     }
 
     return manifestLog;
-  }
-
+  };
 
   private applyNestedKeys(value: string, manifest: Manifest) {
     const matches = [...value.matchAll(/{{\s*(\w|\.|-)+\s*}}/gi)];
@@ -56,15 +60,14 @@ export class BundleRepository {
     }
 
     for (const match of matches) {
-      const nestedKey = match[0]
-        .replace(/{{\s*/gi, '')
-        .replace(/\s*}}/gi, '');
+      const nestedKey = match[0].replace(/{{\s*/gi, '').replace(/\s*}}/gi, '');
 
       const matchedEntry = manifest[nestedKey];
-      const newValue = undefined !== matchedEntry ?
-        // Apply sub-nested keys
-        this.applyNestedKeys(matchedEntry, manifest) :
-        '';
+      const newValue =
+        undefined !== matchedEntry
+          ? // Apply sub-nested keys
+            this.applyNestedKeys(matchedEntry, manifest)
+          : '';
 
       value = value.replace(match[0], newValue);
     }

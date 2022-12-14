@@ -1,6 +1,6 @@
 import * as jose from 'jose';
-import {JWTPayload} from 'jose/dist/types/types';
-import {GenerateKeyPairResult} from 'jose';
+import { JWTPayload } from 'jose/dist/types/types';
+import { GenerateKeyPairResult } from 'jose';
 import { environment } from '../../../environments/environment';
 
 const algorithm = 'EdDSA' as const;
@@ -13,12 +13,12 @@ class JwtService {
       JwtService._instance = new JwtService();
     }
     return JwtService._instance;
-  }
+  };
 
   private __keyPair?: GenerateKeyPairResult = undefined;
   private async keyPair(): Promise<GenerateKeyPairResult> {
     if (undefined === this.__keyPair) {
-      this.__keyPair = await jose.generateKeyPair(algorithm, {crv: crv});
+      this.__keyPair = await jose.generateKeyPair(algorithm, { crv: crv });
     }
     return this.__keyPair;
   }
@@ -27,7 +27,7 @@ class JwtService {
     const kp = await this.keyPair();
 
     return await new jose.SignJWT(payload)
-      .setProtectedHeader({alg: algorithm})
+      .setProtectedHeader({ alg: algorithm })
       .setIssuedAt()
       .setIssuer(environment.security.jwt.issuer)
       .setAudience(environment.security.jwt.audience)
@@ -38,7 +38,7 @@ class JwtService {
   async read<TModel>(jwt: string): Promise<TModel> {
     const kp = await this.keyPair();
 
-    const {payload} = await jose.jwtVerify(jwt, kp.publicKey, {
+    const { payload } = await jose.jwtVerify(jwt, kp.publicKey, {
       issuer: environment.security.jwt.issuer,
       audience: environment.security.jwt.audience,
       algorithms: [algorithm],

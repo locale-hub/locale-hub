@@ -8,7 +8,9 @@ const commitRepository = new CommitRepository();
  * @param {string} projectId A Project ID
  * @return {Commit[]} List of the commits from the given project
  */
-export const getCommitsFromProject = async (projectId: string): Promise<Commit[]> => {
+export const getCommitsFromProject = async (
+  projectId: string
+): Promise<Commit[]> => {
   return await commitRepository.findByProject(projectId);
 };
 
@@ -17,7 +19,9 @@ export const getCommitsFromProject = async (projectId: string): Promise<Commit[]
  * @param {string} projectId A Project ID
  * @return {Commit} Deployed commits from the given project, null if no deployed commit
  */
-export const getDeployedCommitFromProject = async (projectId: string): Promise<Commit> => {
+export const getDeployedCommitFromProject = async (
+  projectId: string
+): Promise<Commit> => {
   const commits = await commitRepository.findByProject(projectId);
   return commits.filter((c: Commit) => c.deployed)[0] ?? null;
 };
@@ -38,7 +42,11 @@ export const getCommit = async (commitId: string): Promise<Commit> => {
  * @param {boolean} deployed true if should be published, false otherwise
  * @return {boolean} true if update is successful, false otherwise
  */
-export const publish = async (projectId: string, commitId: string, deployed: boolean): Promise<boolean> => {
+export const publish = async (
+  projectId: string,
+  commitId: string,
+  deployed: boolean
+): Promise<boolean> => {
   const commits = await getCommitsFromProject(projectId);
 
   if (null === commits) {

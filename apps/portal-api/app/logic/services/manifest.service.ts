@@ -8,14 +8,16 @@ dayjs.extend(utc);
 const commitRepository = new CommitRepository();
 const manifestRepository = new ManifestRepository();
 
-type HistoryEntry = { date: string, value: string };
+type HistoryEntry = { date: string; value: string };
 
 /**
  * Generate a manifest with the latest values
  * @param {string} projectId The projectId to generate the manifest
  * @return {ChangeList} The latest manifest
  */
-export const getManifestFromProject = async (projectId: string): Promise<ChangeList> => {
+export const getManifestFromProject = async (
+  projectId: string
+): Promise<ChangeList> => {
   const changeList = await manifestRepository.get(projectId);
 
   if (null === changeList) {
@@ -37,11 +39,23 @@ export const getManifestFromProject = async (projectId: string): Promise<ChangeL
  * @param {string} commitTitle Short title of the commit
  * @param {string} commitDescription Longer description of the commit
  */
-export const updateManifestFromProject = async (authorId: string, projectId: string, changeList: ChangeList,
-  commitTitle: string, commitDescription: string): Promise<void> => {
+export const updateManifestFromProject = async (
+  authorId: string,
+  projectId: string,
+  changeList: ChangeList,
+  commitTitle: string,
+  commitDescription: string
+): Promise<void> => {
   const createdAt = dayjs().utc().toISOString();
 
-  await commitRepository.insert(projectId, authorId, commitTitle, commitDescription, changeList, createdAt);
+  await commitRepository.insert(
+    projectId,
+    authorId,
+    commitTitle,
+    commitDescription,
+    changeList,
+    createdAt
+  );
 };
 
 /**
@@ -51,8 +65,11 @@ export const updateManifestFromProject = async (authorId: string, projectId: str
  * @param {string} locale The locale from which we desire the history
  * @return {HistoryEntry[]} List of changes made
  */
-export const getKeyHistoryFromProject = async (projectId: string, key: string, locale: string)
-  : Promise<HistoryEntry[]> => {
+export const getKeyHistoryFromProject = async (
+  projectId: string,
+  key: string,
+  locale: string
+): Promise<HistoryEntry[]> => {
   const commits = await commitRepository.findByProject(projectId);
 
   const history: HistoryEntry[] = [];
@@ -60,7 +77,10 @@ export const getKeyHistoryFromProject = async (projectId: string, key: string, l
 
   for (const commit of commits) {
     const changeList = commit.changeList;
-    if (!changeList.locales.includes(locale) && !changeList.keys.includes(key)) {
+    if (
+      !changeList.locales.includes(locale) &&
+      !changeList.keys.includes(key)
+    ) {
       continue;
     }
     if (lastValue === changeList.manifest[locale][key]) {

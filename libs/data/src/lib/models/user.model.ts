@@ -1,4 +1,4 @@
-import {Email} from './email.model';
+import { Email } from './email.model';
 
 export type User = {
   id: string;
@@ -9,4 +9,4 @@ export type User = {
   passwordSalt: string;
   role?: string;
   createdAt: string;
-}
+};

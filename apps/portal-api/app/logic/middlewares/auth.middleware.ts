@@ -1,11 +1,11 @@
-import {NextFunction, Request, Response} from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 import _ from 'lodash';
-import {sendError} from '../helpers/sendError.helper';
+import { sendError } from '../helpers/sendError.helper';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-dayjs.extend(utc)
-import {jwtService} from '../services/jwt.service';
+dayjs.extend(utc);
+import { jwtService } from '../services/jwt.service';
 import { UserRepository } from '@locale-hub/data/repositories/user.repository';
 import { ErrorCode } from '@locale-hub/data/enums/error-code.enum';
 import { UserInvitation } from '@locale-hub/data/models/user-invitation.model';
@@ -20,20 +20,27 @@ const userRepository = new UserRepository();
  * @param {Response} res Express Response
  * @param {NextFunction} next Express NextFunction
  */
-export const authenticate = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+export const authenticate = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   const token: string = req.headers['authorization'] as string;
 
   try {
     const jwtData = await jwtService.read<JwtModel>(
-      token.replace('Bearer ', ''),
+      token.replace('Bearer ', '')
     );
 
-    if (!await userExists(jwtData.user.id)) {
-      sendError(res, new ApiException({
-        statusCode: 401,
-        code: ErrorCode.userAccessUnauthorized,
-        message: 'Unauthorized',
-      }));
+    if (!(await userExists(jwtData.user.id))) {
+      sendError(
+        res,
+        new ApiException({
+          statusCode: 401,
+          code: ErrorCode.userAccessUnauthorized,
+          message: 'Unauthorized',
+        })
+      );
       return;
     }
 
@@ -41,11 +48,14 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     req.jwt = jwtData;
     next();
   } catch (ex) {
-    sendError(res, new ApiException({
-      statusCode: 401,
-      code: ErrorCode.userAccessUnauthorized,
-      message: 'Unauthorized',
-    }));
+    sendError(
+      res,
+      new ApiException({
+        statusCode: 401,
+        code: ErrorCode.userAccessUnauthorized,
+        message: 'Unauthorized',
+      })
+    );
   }
 };
 
@@ -55,14 +65,17 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
  * @return {string} The new JsonWebToken
  */
 export const generateAuthToken = async (bias: JwtModel): Promise<string> => {
-  const lastLogin = undefined !== bias.lastLogin ? bias.lastLogin : dayjs().utc().toISOString();
+  const lastLogin =
+    undefined !== bias.lastLogin ? bias.lastLogin : dayjs().utc().toISOString();
   return await jwtService.sign({
     user: _.omit(bias.user, ['_id', 'password', 'passwordSalt']),
     lastLogin,
   });
 };
 
-export const generateEmailConfirmationToken = async (invitation: UserInvitation): Promise<string> => {
+export const generateEmailConfirmationToken = async (
+  invitation: UserInvitation
+): Promise<string> => {
   return await jwtService.sign({
     invitation,
   });
