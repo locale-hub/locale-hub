@@ -1,6 +1,7 @@
 {
   "name": "locale-hub",
   "version": "3.0.0",
+  "license": "Business Source License 1.1",
   "scripts": {
     "start": "nx run-many --target=serve",
     "build": "nx run-many --target=build",
@@ -8,7 +9,6 @@
     "test": "nx run-many --target=test",
     "prepare": "husky install"
   },
-  "private": true,
   "dependencies": {
     "@headlessui/react": "^1.7.4",
     "@heroicons/react": "^2.0.13",

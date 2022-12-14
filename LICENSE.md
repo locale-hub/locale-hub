@@ -16,7 +16,7 @@ Work so that such third parties directly benefit from the
 Translation or Translation serving features of the Licensed Work.
 ```
 
-- **Change Date**: 2025-12-13
+- **Change Date**: 2025-12-14
 - **Change License**: Apache License, Version 2.0
 
 For information about alternative licensing arrangements for the Software,
