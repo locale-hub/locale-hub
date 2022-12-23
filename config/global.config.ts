@@ -28,8 +28,8 @@ export const globalConfiguration = {
       password: 'YOUR_PASSWORD',
     },
     resources: {
-      html: './resources/emails/html/',
-      text: './resources/emails/text/',
+      html: './assets/emails/html/',
+      text: './assets/emails/text/',
     },
   },
 
@@ -74,7 +74,7 @@ export const globalConfiguration = {
       issuer: 'locale-hub',
     },
     password: {
-      forbiddenList: './resources/files/passwords.txt',
+      forbiddenList: './assets/files/passwords.txt',
       expirationInDays: 31,
       minLength: 8,
       secret: 'YOUR_OWN_SECRET',
