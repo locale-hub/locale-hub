@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 type DataEntry = {
   name: string;
@@ -20,10 +21,10 @@ const renderEntry = (entry: DataEntry, idx: number) => {
 
   if (undefined !== entry.link) {
     return (
-      <a href={entry.link} key={idx} className={classes}>
+      <Link href={entry.link} key={idx} className={classes}>
         {entry.icon}
         <span className="ml-3">{entry.name}</span>
-      </a>
+      </Link>
     );
   }
   if (undefined !== entry.onClick) {

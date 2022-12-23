@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   AdjustmentsHorizontalIcon,
   ArrowsUpDownIcon,
@@ -12,6 +12,9 @@ import {
 } from '@heroicons/react/24/solid';
 import { routes } from '../../../../constants/routes';
 import Sidebar from '@locale-hub/design-system/sidebar/sidebar';
+import { useAppDispatch } from '../../../../redux/hook';
+import { loadProjectAsync } from '../../../../redux/slices/projectSlice';
+import toast from 'react-hot-toast';
 
 export default function ProjectLayout({
   children,
@@ -20,7 +23,20 @@ export default function ProjectLayout({
   children: React.ReactNode;
   params: { projectId: string };
 }) {
-  const projectId = params.projectId;
+  const dispatch = useAppDispatch();
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    dispatch(loadProjectAsync( { projectId: params.projectId }))
+      // Wait project to be loaded before displaying child content as they require project data
+      .then(() => setLoaded(true))
+      .catch(() => toast.error('Failed to load project...'));
+  }, [params.projectId]);
+
+  if (false === loaded) {
+    // TODO: skeleton
+    return <></>;
+  }
 
   return (
     <div className="flex height-full">
@@ -29,37 +45,37 @@ export default function ProjectLayout({
           data={[
             {
               name: 'Overview',
-              link: routes.projects.overview(projectId),
+              link: routes.projects.overview(params.projectId),
               icon: <HomeIcon className="w-6 h-6" />,
             },
             {
               name: 'Translations',
-              link: routes.projects.translations(projectId),
+              link: routes.projects.translations(params.projectId),
               icon: <LanguageIcon className="w-6 h-6" />,
             },
             {
               name: 'Import/Export',
-              link: routes.projects.transfers(projectId),
+              link: routes.projects.transfers(params.projectId),
               icon: <ArrowsUpDownIcon className="w-6 h-6" />,
             },
             {
               name: 'Users',
-              link: routes.projects.users(projectId),
+              link: routes.projects.users(params.projectId),
               icon: <UsersIcon className="w-6 h-6" />,
             },
             {
               name: 'Commits',
-              link: routes.projects.commits.list(projectId),
+              link: routes.projects.commits.list(params.projectId),
               icon: <ArrowUpTrayIcon className="w-6 h-6" />,
             },
             {
               name: 'Apps',
-              link: routes.projects.applications(projectId),
+              link: routes.projects.applications(params.projectId),
               icon: <DevicePhoneMobileIcon className="w-6 h-6" />,
             },
             {
               name: 'Settings',
-              link: routes.projects.settings(projectId),
+              link: routes.projects.settings(params.projectId),
               icon: <AdjustmentsHorizontalIcon className="w-6 h-6" />,
             },
           ]}

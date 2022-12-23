@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ApiConnector } from '@locale-hub/api-connector';
 import {
   CloudArrowUpIcon,
@@ -9,51 +9,27 @@ import {
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { routes } from '../../../../../constants/routes';
-import toast from 'react-hot-toast';
-import { Commit } from '@locale-hub/data/models/commit.model';
 import Button from '@locale-hub/design-system/button/button';
 import DateFormat from '@locale-hub/design-system/date-format/date-format';
 import Modal from '@locale-hub/design-system/modal/modal';
-import { User } from '@locale-hub/data/models/user.model';
 import UserIcon from '@locale-hub/design-system/user-icon/user-icon';
+import { useAppSelector } from '../../../../../redux/hook';
+import { selectProjectCommits, selectProjectUsers } from '../../../../../redux/slices/projectSlice';
 
 export default function ProjectCommitsPage({
   params,
 }: {
   params: { projectId: string };
 }) {
-  const [commits, setCommits] = useState<Commit[]>();
-  const [users, setUsers] = useState<User[]>();
-
-  useEffect(() => {
-    ApiConnector.projects.commits.list(params.projectId).then((data) => {
-      if ('error' in data) {
-        toast.error('Failed to retrieve commits');
-        return;
-      }
-      // Showing latest first
-      setCommits(data.commits.reverse());
-    });
-    ApiConnector.projects.users.list(params.projectId).then((data) => {
-      if ('error' in data) {
-        toast.error('Failed to commits');
-        return;
-      }
-      setUsers(data.users);
-    });
-  }, [params.projectId]);
+  const commits = useAppSelector(selectProjectCommits);
+  const users = useAppSelector(selectProjectUsers);
 
   const deployCommit = async (commitId: string) => {
     setDeployModal(false);
     ApiConnector.projects.commits
       .publish(params.projectId, commitId)
       .then(() => {
-        setCommits(
-          commits.map((commit) => {
-            commit.deployed = commit.id === commitId;
-            return commit;
-          })
-        );
+        // TODO: Update store current deployed commit
       });
   };
 

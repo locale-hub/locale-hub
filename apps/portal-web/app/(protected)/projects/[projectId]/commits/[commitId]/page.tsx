@@ -49,7 +49,7 @@ export default function ProjectCommitDetailsPage({
               commit.changeList.keys.map((key) => ({
                 locale,
                 key,
-                value: commit.changeList.manifest[locale][key],
+                value: commit.changeList.manifests[locale][key],
               }))
             )}
           />

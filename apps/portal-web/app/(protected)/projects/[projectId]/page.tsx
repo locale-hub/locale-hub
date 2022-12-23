@@ -1,14 +1,13 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { ApiConnector } from '@locale-hub/api-connector';
+import React from 'react';
 import Link from 'next/link';
 import { routes } from '../../../../constants/routes';
-import toast from 'react-hot-toast';
 import { environment } from '../../../../environment';
-import { ProjectsGetResponse } from '@locale-hub/data/responses/projects-get.response';
 import ProgressBar from '@locale-hub/design-system/progress-bar/progress-bar';
 import Card from '@locale-hub/design-system/card/card';
+import { useAppSelector } from '../../../../redux/hook';
+import { selectProjectDetails } from '../../../../redux/slices/projectSlice';
 
 type Action = {
   img: string;
@@ -21,21 +20,7 @@ export default function ProjectOverviewPage({
 }: {
   params: { projectId: string };
 }) {
-  const [data, setData] = useState<ProjectsGetResponse>(null);
-
-  useEffect(() => {
-    ApiConnector.projects.get(params.projectId).then((res) => {
-      if ('error' in res) {
-        toast.error('Failed to retrieve project');
-        return;
-      }
-      setData(res);
-    });
-  });
-
-  if (!data) {
-    return null;
-  }
+  const details = useAppSelector(selectProjectDetails);
 
   const actions: Action[] = [
     {
@@ -63,20 +48,20 @@ export default function ProjectOverviewPage({
   return (
     <div>
       <h1 className="text-2xl font-bold">
-        {data.project.name}&apos;s overview
+        {details.project.name}&apos;s overview
       </h1>
       <div className="flex items-stretch">
-        {data.deployedCommit && (
+        {details.deployedCommit && (
           <div className="m-4 w-3/12 h-full">
             <Card title="Deployed commit" className="w-full">
-              {data.deployedCommit.title}
+              {details.deployedCommit.title}
             </Card>
           </div>
         )}
-        {data.progress && (
+        {details.progress && (
           <div className="m-4 w-9/12">
             <Card title="Translation progress" className="w-full">
-              {Object.entries(data.progress).map(([locale, progress], idx) => (
+              {Object.entries(details.progress).map(([locale, progress], idx) => (
                 <div key={idx} className="flex mt-4">
                   <p className="w-16">{locale}</p>
                   <p className="w-16">{progress * 100}%</p>

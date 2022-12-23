@@ -10,6 +10,8 @@ import Table from '@locale-hub/design-system/table/table';
 import Button from '@locale-hub/design-system/button/button';
 import Menu from '@locale-hub/design-system/menu/menu';
 import { User } from '@locale-hub/data/models/user.model';
+import { useAppSelector } from '../../../../../redux/hook';
+import { selectProjectUsers } from '../../../../../redux/slices/projectSlice';
 
 export default function ProjectUsersPage({
   params,
@@ -18,18 +20,11 @@ export default function ProjectUsersPage({
 }) {
   const [selectedUser, setSelectedUser] = useState<User>(null);
   const [organizationUsers, setOrganizationUsers] = useState<User[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
+  const users = useAppSelector(selectProjectUsers);
   const [inviteUserModalOpen, setInviteUserModalOpen] = useState(false);
   const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
 
   useEffect(() => {
-    ApiConnector.projects.users.list(params.projectId).then((data) => {
-      if ('error' in data) {
-        toast.error('Failed to retrieve users');
-        return;
-      }
-      setUsers(data.users);
-    });
     ApiConnector.projects.get(params.projectId).then((data) => {
       if ('error' in data) {
         return;
@@ -55,7 +50,7 @@ export default function ProjectUsersPage({
         toast.error('Failed to add user');
         return;
       }
-      setUsers([...users, organizationUsers.find((u) => u.id === userId)]);
+      // TODO: update store with new project user
       toast.success('User added!');
     });
   };
@@ -77,7 +72,7 @@ export default function ProjectUsersPage({
           toast.error('Failed to delete user');
           return;
         }
-        setUsers(users.filter((u) => u.id !== selectedUser.id));
+        // TODO: update store with removed project user
         setSelectedUser(null);
       });
   };
