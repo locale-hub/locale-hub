@@ -11,6 +11,8 @@ import Button from '@locale-hub/design-system/button/button';
 import { EmailStatus } from '@locale-hub/data/enums/email-status.enum';
 import Menu from '@locale-hub/design-system/menu/menu';
 import { User } from '@locale-hub/data/models/user.model';
+import { useAppSelector } from '../../../../../redux/hook';
+import { selectOrganizationUsers } from '../../../../../redux/slices/organizationSlice';
 
 export default function OrganizationUsersPage({
   params,
@@ -18,21 +20,9 @@ export default function OrganizationUsersPage({
   params: { organizationId: string };
 }) {
   const [selectedUser, setSelectedUser] = useState<User>(null);
-  const [users, setUsers] = useState<User[]>([]);
+  const users = useAppSelector(selectOrganizationUsers);
   const [inviteUserModalOpen, setInviteUserModalOpen] = useState(false);
   const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
-
-  useEffect(() => {
-    ApiConnector.organizations.users
-      .list(params.organizationId)
-      .then((data) => {
-        if ('error' in data) {
-          toast.error('Failed to retrieve users');
-          return;
-        }
-        setUsers(data.users);
-      });
-  }, [params.organizationId]);
 
   const inviteUser = (name?: string, email?: string) => {
     setInviteUserModalOpen(false);
@@ -47,6 +37,8 @@ export default function OrganizationUsersPage({
           return;
         }
         toast.success('Success! We sent an invitation to the user');
+        // TODO: Update store users
+        /*
         setUsers([
           ...users,
           {
@@ -60,6 +52,7 @@ export default function OrganizationUsersPage({
             createdAt: '',
           },
         ]);
+        */
       });
   };
 
@@ -80,7 +73,8 @@ export default function OrganizationUsersPage({
           toast.error('Failed to delete user');
           return;
         }
-        setUsers(users.filter((u) => u.id !== selectedUser.id));
+        // TODO: Remove user from store
+        // setUsers(users.filter((u) => u.id !== selectedUser.id));
         setSelectedUser(null);
         toast.success('User deleted!');
       });

@@ -9,26 +9,11 @@ import {
 } from '@locale-hub/data/models/usage.model';
 import Spacer from '@locale-hub/design-system/spacer/spacer';
 import ProgressBar from '@locale-hub/design-system/progress-bar/progress-bar';
+import { useAppSelector } from '../../../../../redux/hook';
+import { selectOrganizationUsage } from '../../../../../redux/slices/organizationSlice';
 
-export default function OrganizationUsagePage({
-  params,
-}: {
-  params: { organizationId: string };
-}) {
-  const [storage, setStorage] = useState<OrganizationStorageUsage>();
-  const [_apiUsage, setApiUsage] = useState<OrganizationApiUsage>();
-
-  useEffect(() => {
-    ApiConnector.organizations.usage(params.organizationId).then((data) => {
-      if ('error' in data) {
-        toast.error('Failed to retrieve usage');
-        return;
-      }
-      setStorage(data.usage.storage);
-      setApiUsage(data.usage.api);
-      console.log(data.usage.storage);
-    });
-  }, [params.organizationId]);
+export default function OrganizationUsagePage() {
+  const { storage } = useAppSelector(selectOrganizationUsage);
 
   return (
     <div className="px-10 py-10">

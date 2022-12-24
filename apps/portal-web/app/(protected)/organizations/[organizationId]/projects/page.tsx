@@ -10,23 +10,11 @@ import { OrganizationsProjectsGetResponse } from '@locale-hub/data/responses/org
 import ProgressBar from '@locale-hub/design-system/progress-bar/progress-bar';
 import Table from '@locale-hub/design-system/table/table';
 import DateFormat from '@locale-hub/design-system/date-format/date-format';
+import { useAppSelector } from '../../../../../redux/hook';
+import { selectOrganizationProjects } from '../../../../../redux/slices/organizationSlice';
 
-export default function OrganizationProjectsPage({
-  params,
-}: {
-  params: { organizationId: string };
-}) {
-  const [data, setData] = useState<OrganizationsProjectsGetResponse>(null);
-
-  useEffect(() => {
-    ApiConnector.organizations.projects(params.organizationId).then((data) => {
-      if ('error' in data) {
-        toast.error('Failed to retrieve projects');
-        return;
-      }
-      setData(data);
-    });
-  }, [params.organizationId]);
+export default function OrganizationProjectsPage() {
+  const data = useAppSelector(selectOrganizationProjects);
 
   const projectProgress = (projectId: string) => {
     const progress =

@@ -1,53 +1,28 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { redirect } from 'next/navigation';
 import Joi from 'joi';
 
 import { ApiConnector } from '@locale-hub/api-connector';
 import { routes } from '../../../../../constants/routes';
-import { Organization } from '@locale-hub/data/models/organization.model';
-import { User } from '@locale-hub/data/models/user.model';
 import Button from '@locale-hub/design-system/button/button';
 import Modal from '@locale-hub/design-system/modal/modal';
 import InputField from '@locale-hub/design-system/input-field/input-field';
 import Select from '@locale-hub/design-system/select/select';
+import { useAppSelector } from '../../../../../redux/hook';
+import { selectOrganizationDetails, selectOrganizationUsers } from '../../../../../redux/slices/organizationSlice';
 
 const schema = Joi.object({
   name: Joi.string().min(4).required(),
 }).required();
 
-export default function OrganizationsSettingsPage({
-  params,
-}: {
-  params: { organizationId: string };
-}) {
-  const [org, setOrg] = useState<Organization>();
-  const [name, setName] = useState('');
-  const [owner, setOwner] = useState('');
-  const [users, setUsers] = useState<User[]>([]);
-
-  useEffect(() => {
-    ApiConnector.organizations.get(params.organizationId).then((data) => {
-      if ('error' in data) {
-        toast.error('Failed to retrieve settings');
-        return;
-      }
-      setName(data.organization.name);
-      setOwner(data.organization.owner);
-      setOrg(data.organization);
-    });
-    ApiConnector.organizations.users
-      .list(params.organizationId)
-      .then((data) => {
-        if ('error' in data) {
-          toast.error('Failed to settings');
-          return;
-        }
-        setUsers(data.users);
-      });
-  }, [params.organizationId]);
+export default function OrganizationsSettingsPage() {
+  const org = useAppSelector(selectOrganizationDetails);
+  const users = useAppSelector(selectOrganizationUsers);
+  const [name, setName] = useState(org.name);
+  const [owner, setOwner] = useState(org.owner);
 
   const formInvalid = () => 'error' in schema.validate({ name });
 

@@ -42,7 +42,7 @@ export const loadProjectAsync = createAsyncThunk(
   }
 );
 
-export const counterSlice = createSlice({
+export const projectSlice = createSlice({
   name: 'project',
   initialState,
   reducers: {},
@@ -102,4 +102,4 @@ export const selectProjectDetails = (state: RootState) => state.project.details;
 export const selectProjectManifests = (state: RootState) => state.project.manifests;
 export const selectProjectUsers = (state: RootState) => state.project.users;
 
-export default counterSlice.reducer;
+export default projectSlice.reducer;

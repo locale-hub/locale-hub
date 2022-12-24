@@ -29,6 +29,7 @@ export default function ProjectLayout({
   useEffect(() => {
     dispatch(loadProjectAsync( { projectId: params.projectId }))
       // Wait project to be loaded before displaying child content as they require project data
+      // TODO: store might contain error
       .then(() => setLoaded(true))
       .catch(() => toast.error('Failed to load project...'));
   }, [params.projectId]);

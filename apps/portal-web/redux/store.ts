@@ -1,9 +1,11 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import projectReducer from './slices/projectSlice';
+import organizationReducer from './slices/organizationSlice';
 
 export const store = configureStore({
   reducer: {
     project: projectReducer,
+    organization: organizationReducer
   },
 });
 
