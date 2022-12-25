@@ -7,67 +7,66 @@ import { redirect } from 'next/navigation';
 import { routes } from '../../../../../constants/routes';
 import toast from 'react-hot-toast';
 import Joi from 'joi';
-import { Project } from '@locale-hub/data/models/project.model';
 import InputField from '@locale-hub/design-system/input-field/input-field';
 import Button from '@locale-hub/design-system/button/button';
 import Select from '@locale-hub/design-system/select/select';
 import Modal from '@locale-hub/design-system/modal/modal';
-import { User } from '@locale-hub/data/models/user.model';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hook';
+import {
+  projectActions,
+  selectProjectDetails,
+  selectProjectUsers,
+} from '../../../../../redux/slices/projectSlice';
 
 const schema = Joi.object({
   name: Joi.string().min(4).required(),
   defaultLocale: Joi.string().required(),
 }).required();
 
-export default function ProjectSettingsPage({
-  params,
-}: {
-  params: { projectId: string };
-}) {
-  const [project, setProject] = useState<Project>();
+export default function ProjectSettingsPage() {
+  const dispatch = useAppDispatch();
+  const details = useAppSelector(selectProjectDetails);
+  const users = useAppSelector(selectProjectUsers);
+
   const [name, setName] = useState('');
   const [owner, setOwner] = useState('');
   const [locale, setLocale] = useState('');
-  const [users, setUsers] = useState<User[]>([]);
+
+  // Modals hooks
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState<React.ReactNode>(null);
+  const [actions, setActions] = useState<React.ReactNode>(null);
 
   useEffect(() => {
-    ApiConnector.projects.get(params.projectId).then((data) => {
-      if ('error' in data) {
-        toast.error('Failed to retrieve settings');
-        return;
-      }
-      setName(data.project.name);
-      setOwner(data.project.userId);
-      setProject(data.project);
-    });
-    ApiConnector.projects.users.list(params.projectId).then((data) => {
-      if ('error' in data) {
-        toast.error('Failed to retrieve settings');
-        return;
-      }
-      setUsers(data.users);
-    });
-  }, [params.projectId]);
+    setName(details?.project?.name);
+    setOwner(details?.project?.userId);
+  }, [details, users]);
+
+  if (undefined === details || undefined === users) {
+    return <></>;
+  }
 
   const formInvalid = () =>
     'error' in schema.validate({ name, defaultLocale: locale });
 
   const updateProject = () => {
-    project.name = name;
-    project.defaultLocale = locale;
-    project.userId = owner;
-    ApiConnector.projects.update(project).then((data) => {
-      if ('error' in data) {
+    details.project.name = name;
+    details.project.defaultLocale = locale;
+    details.project.userId = owner;
+    ApiConnector.projects.update(details.project).then((data) => {
+      if (null !== data) {
         toast.error('Failed to update project');
         return;
       }
-      toast.error('Project updated!');
+      dispatch(projectActions.detailsProjectUpdate(details.project));
+      toast.success('Project updated!');
     });
   };
 
   function deleteProject() {
     setDeleteModal(false);
-    ApiConnector.projects.delete(project.id).then((data) => {
+    ApiConnector.projects.delete(details.project.id).then((data) => {
       if ('error' in data) {
         toast.error('Failed to delete project');
         return;
@@ -77,10 +76,6 @@ export default function ProjectSettingsPage({
     });
   }
 
-  const [deleteModal, setDeleteModal] = useState(false);
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState<React.ReactNode>(null);
-  const [actions, setActions] = useState<React.ReactNode>(null);
   const openDeletionModal = () => {
     setTitle('Are you sure?');
     setContent(
@@ -89,8 +84,8 @@ export default function ProjectSettingsPage({
           This action cannot be undone.
           <br />
           This will permanently delete the{' '}
-          <b className="text-warn">{project.name}</b> project and all it commits
-          and entries.
+          <b className="text-warn">{details.project.name}</b> project and all it
+          commits and entries.
         </p>
       </>
     );
@@ -106,12 +101,13 @@ export default function ProjectSettingsPage({
     );
     setDeleteModal(true);
   };
+
   const openArchiveModal = () => {
     setTitle('Are you sure?');
     setContent(
       <>
         <p>
-          This will make the <b className="text-warn">{project.name}</b>{' '}
+          This will make the <b className="text-warn">{details.project.name}</b>{' '}
           project, entries, commits, comments read-only and disable the API
           access any changes. <br />
           Once archived, you can unarchive the repository at any time.
@@ -170,7 +166,7 @@ export default function ProjectSettingsPage({
               }))}
             />
           )}
-          {project && (
+          {details.project && (
             <Select
               onSelect={(value) => {
                 setLocale(value.id);
@@ -178,7 +174,7 @@ export default function ProjectSettingsPage({
               label="Default locale"
               defaultSelected={
                 locales
-                  .filter((l) => l.tag === project.defaultLocale)
+                  .filter((l) => l.tag === details.project.defaultLocale)
                   .map((locale) => ({ id: locale.tag, value: locale.name }))[0]
               }
               values={locales.map((locale) => ({

@@ -381,8 +381,8 @@ export const ApiConnector = {
       publish: async (
         projectId: string,
         commitId: string
-      ): Promise<void | ApiErrorResponse> => {
-        return await http.put<{ deployed: boolean }, void | ApiErrorResponse>(
+      ): Promise<null | ApiErrorResponse> => {
+        return await http.put<{ deployed: boolean }, null | ApiErrorResponse>(
           `/projects/${projectId}/commits/${commitId}`,
           { deployed: true }
         );

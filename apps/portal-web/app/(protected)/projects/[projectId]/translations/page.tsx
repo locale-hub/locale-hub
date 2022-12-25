@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ApiConnector } from '@locale-hub/api-connector';
 import TranslationModal from './translation-modal';
 import AddLocaleModal from './add-locale-modal';
@@ -8,17 +8,24 @@ import AddKeyModal from './add-key-modal';
 import CommitModal from './commit-modal';
 import toast from 'react-hot-toast';
 import Table from '@locale-hub/design-system/table/table';
-import { ManifestWithStatus } from '@locale-hub/data/models/manifest-with-status.model';
 import Button from '@locale-hub/design-system/button/button';
 import Spacer from '@locale-hub/design-system/spacer/spacer';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hook';
+import {
+  projectActions,
+  selectProjectManifests,
+} from '../../../../../redux/slices/projectSlice';
 
 export default function ProjectTranslationsPage({
   params,
 }: {
   params: { projectId: string };
 }) {
-  const [manifests, setManifests] = useState<ManifestWithStatus>();
-  const [selectedLocale, setSelectedLocale] = useState<string>();
+  const dispatch = useAppDispatch();
+  const manifests = useAppSelector(selectProjectManifests);
+  const [selectedLocale, setSelectedLocale] = useState<string>(
+    0 !== manifests.locales.length ? manifests.locales.length[0] : null
+  );
   const [entry, setEntry] = useState<{
     locale: string;
     key: string;
@@ -30,17 +37,6 @@ export default function ProjectTranslationsPage({
   const [openAddLocaleModal, setOpenAddLocaleModal] = useState(false);
   const [openAddKeyModal, setOpenAddKeyModal] = useState(false);
   const [openCommitModal, setOpenCommitModal] = useState(false);
-
-  useEffect(() => {
-    ApiConnector.projects.manifests.get(params.projectId).then((data) => {
-      if ('error' in data) {
-        toast.error('Failed to retrieve translations');
-        return;
-      }
-      setManifests(data.manifest);
-      setSelectedLocale(data.manifest.locales[0]);
-    });
-  }, [params.projectId]);
 
   const openEditor = (key: string) => {
     setEntry({
@@ -63,8 +59,7 @@ export default function ProjectTranslationsPage({
     setChangesMade(
       changesMade || manifests.manifest[entry.locale][entry.key] !== entry.value
     );
-    manifests.manifest[entry.locale][entry.key] = entry.value;
-    setManifests(manifests);
+    dispatch(projectActions.manifestsUpdateEntry(entry));
   };
 
   const onNewLocale = (locale: string) => {
@@ -72,23 +67,10 @@ export default function ProjectTranslationsPage({
     if (undefined === locale || manifests.locales.includes(locale)) {
       return;
     }
-    setManifests({
-      locales: [...manifests.locales, locale],
-      keys: manifests.keys,
-      manifest: {
-        ...manifests.manifest,
-        [locale]: {
-          // generate empty locale values with all required keys
-          ...(() => {
-            const obj = {};
-            for (const key of manifests.keys) {
-              obj[key] = '';
-            }
-            return obj;
-          })(),
-        },
-      },
-    });
+    dispatch(projectActions.manifestsAddLocale({ locale }));
+    if (null === selectedLocale) {
+      setSelectedLocale(locale);
+    }
   };
 
   const onNewKey = (key: string) => {
@@ -96,16 +78,7 @@ export default function ProjectTranslationsPage({
     if (undefined === key || manifests.keys.includes(key)) {
       return;
     }
-    const tmp = manifests.manifest;
-    for (const locale of manifests.locales) {
-      tmp[locale][key] = '';
-    }
-
-    setManifests({
-      locales: manifests.locales,
-      keys: [...manifests.keys, key],
-      manifest: tmp,
-    });
+    dispatch(projectActions.manifestsAddKey({ key }));
   };
 
   const onNewCommit = (title: string, description: string) => {
@@ -145,7 +118,7 @@ export default function ProjectTranslationsPage({
                 onClick={() => setSelectedLocale(locale)}
                 key={locale}
                 className={`
-              py-2 px-4 w-16 text-sm font-medium bg-white border-r border-slate-400/50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600
+              py-2 px-4 w-20 text-sm font-medium bg-white border-r border-slate-400/50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600
               ${
                 selectedLocale === locale
                   ? 'text-primary'

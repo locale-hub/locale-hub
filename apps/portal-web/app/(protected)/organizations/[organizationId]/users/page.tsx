@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ApiConnector } from '@locale-hub/api-connector';
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 import InviteUserModal from './invite-user-modal';
@@ -8,31 +8,25 @@ import DeleteUserModal from '../../../../../components/delete-user-modal';
 import toast from 'react-hot-toast';
 import Table from '@locale-hub/design-system/table/table';
 import Button from '@locale-hub/design-system/button/button';
-import { EmailStatus } from '@locale-hub/data/enums/email-status.enum';
 import Menu from '@locale-hub/design-system/menu/menu';
 import { User } from '@locale-hub/data/models/user.model';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hook';
+import {
+  organizationActions,
+  selectOrganizationUsers,
+} from '../../../../../redux/slices/organizationSlice';
+import { EmailStatus } from '@locale-hub/data/enums/email-status.enum';
 
 export default function OrganizationUsersPage({
   params,
 }: {
   params: { organizationId: string };
 }) {
+  const dispatch = useAppDispatch();
   const [selectedUser, setSelectedUser] = useState<User>(null);
-  const [users, setUsers] = useState<User[]>([]);
+  const users = useAppSelector(selectOrganizationUsers);
   const [inviteUserModalOpen, setInviteUserModalOpen] = useState(false);
   const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
-
-  useEffect(() => {
-    ApiConnector.organizations.users
-      .list(params.organizationId)
-      .then((data) => {
-        if ('error' in data) {
-          toast.error('Failed to retrieve users');
-          return;
-        }
-        setUsers(data.users);
-      });
-  }, [params.organizationId]);
 
   const inviteUser = (name?: string, email?: string) => {
     setInviteUserModalOpen(false);
@@ -42,14 +36,13 @@ export default function OrganizationUsersPage({
     ApiConnector.organizations.users
       .invite(params.organizationId, name, email)
       .then((data) => {
-        if ('error' in data) {
+        if (null !== data) {
           toast.error('Failed to invite user');
           return;
         }
         toast.success('Success! We sent an invitation to the user');
-        setUsers([
-          ...users,
-          {
+        dispatch(
+          organizationActions.userAdd({
             id: email,
             name,
             primaryEmail: email,
@@ -58,8 +51,8 @@ export default function OrganizationUsersPage({
             emails: [{ email, createdAt: '', status: EmailStatus.PRIMARY }],
             role: 'user',
             createdAt: '',
-          },
-        ]);
+          })
+        );
       });
   };
 
@@ -76,13 +69,17 @@ export default function OrganizationUsersPage({
     ApiConnector.organizations.users
       .delete(params.organizationId, selectedUser.id)
       .then((data) => {
-        if ('error' in data) {
+        if (null !== data) {
           toast.error('Failed to delete user');
           return;
         }
-        setUsers(users.filter((u) => u.id !== selectedUser.id));
-        setSelectedUser(null);
         toast.success('User deleted!');
+        dispatch(
+          organizationActions.userRemove(
+            users.find((u) => u.id !== selectedUser.id)
+          )
+        );
+        setSelectedUser(null);
       });
   };
 

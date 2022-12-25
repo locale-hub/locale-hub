@@ -6,7 +6,7 @@ const withNx = require('@nrwl/next/plugins/with-nx');
  **/
 const nextConfig = {
   eslint: {
-    dirs: ['app', 'components', 'constants', 'contexts'],
+    dirs: ['app', 'components', 'constants', 'contexts', 'slices'],
   },
   experimental: {
     appDir: true,

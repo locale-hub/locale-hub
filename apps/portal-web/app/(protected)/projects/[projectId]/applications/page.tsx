@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ApiConnector } from '@locale-hub/api-connector';
 import { DocumentDuplicateIcon, TrashIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
@@ -9,23 +9,19 @@ import Button from '@locale-hub/design-system/button/button';
 import Spacer from '@locale-hub/design-system/spacer/spacer';
 import Modal from '@locale-hub/design-system/modal/modal';
 import { App } from '@locale-hub/data/models/app.model';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hook';
+import {
+  projectActions,
+  selectProjectApplications,
+} from '../../../../../redux/slices/projectSlice';
 
 export default function ProjectApplicationsPage({
   params,
 }: {
   params: { projectId: string };
 }) {
-  const [apps, setApps] = useState<App[]>();
-
-  useEffect(() => {
-    ApiConnector.projects.applications.list(params.projectId).then((data) => {
-      if ('error' in data) {
-        toast.error('Failed to retrieve applications');
-        return;
-      }
-      setApps(data.applications);
-    });
-  }, [params.projectId]);
+  const dispatch = useAppDispatch();
+  const apps = useAppSelector(selectProjectApplications);
 
   const createApp = async (app?: App) => {
     setCreateModal(false);
@@ -39,16 +35,23 @@ export default function ProjectApplicationsPage({
           toast.error('Failed to create application');
           return;
         }
-        setApps([...apps, data.application]);
-        toast.error('Application created!');
+        toast.success('Application created!');
+        dispatch(projectActions.applicationAdd(data.application));
       });
   };
   const deleteApp = async (appId: string) => {
     setAppModal(false);
     ApiConnector.projects.applications
       .delete(params.projectId, appId)
-      .then(() => {
-        setApps(apps.filter((app) => app.id !== appId));
+      .then((data) => {
+        if (null !== data) {
+          toast.error('Failed to delete application');
+          return;
+        }
+        dispatch(
+          projectActions.applicationRemove(apps.find((app) => app.id === appId))
+        );
+        toast.success('Application deleted!');
       });
   };
 

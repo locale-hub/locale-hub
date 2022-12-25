@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ApiConnector } from '@locale-hub/api-connector';
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 import DeleteUserModal from '../../../../../components/delete-user-modal';
@@ -10,40 +10,24 @@ import Table from '@locale-hub/design-system/table/table';
 import Button from '@locale-hub/design-system/button/button';
 import Menu from '@locale-hub/design-system/menu/menu';
 import { User } from '@locale-hub/data/models/user.model';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hook';
+import {
+  projectActions,
+  selectProjectOrgUsers,
+  selectProjectUsers,
+} from '../../../../../redux/slices/projectSlice';
 
 export default function ProjectUsersPage({
   params,
 }: {
   params: { projectId: string };
 }) {
+  const dispatch = useAppDispatch();
   const [selectedUser, setSelectedUser] = useState<User>(null);
-  const [organizationUsers, setOrganizationUsers] = useState<User[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
+  const organizationUsers = useAppSelector(selectProjectOrgUsers);
+  const users = useAppSelector(selectProjectUsers);
   const [inviteUserModalOpen, setInviteUserModalOpen] = useState(false);
   const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
-
-  useEffect(() => {
-    ApiConnector.projects.users.list(params.projectId).then((data) => {
-      if ('error' in data) {
-        toast.error('Failed to retrieve users');
-        return;
-      }
-      setUsers(data.users);
-    });
-    ApiConnector.projects.get(params.projectId).then((data) => {
-      if ('error' in data) {
-        return;
-      }
-      ApiConnector.organizations.users
-        .list(data.project.organizationId)
-        .then((data2) => {
-          if ('error' in data2) {
-            return;
-          }
-          setOrganizationUsers(data2.users);
-        });
-    });
-  }, [params.projectId]);
 
   const addUser = (userId: string) => {
     setInviteUserModalOpen(false);
@@ -51,11 +35,13 @@ export default function ProjectUsersPage({
       return;
     }
     ApiConnector.projects.users.add(params.projectId, userId).then((data) => {
-      if ('error' in data) {
+      if (null !== data) {
         toast.error('Failed to add user');
         return;
       }
-      setUsers([...users, organizationUsers.find((u) => u.id === userId)]);
+      dispatch(
+        projectActions.userAdd(organizationUsers.find((u) => u.id === userId))
+      );
       toast.success('User added!');
     });
   };
@@ -73,11 +59,12 @@ export default function ProjectUsersPage({
     ApiConnector.projects.users
       .delete(params.projectId, selectedUser.id)
       .then((data) => {
-        if ('error' in data) {
+        if (null !== data) {
           toast.error('Failed to delete user');
           return;
         }
-        setUsers(users.filter((u) => u.id !== selectedUser.id));
+        dispatch(projectActions.userRemove(selectedUser));
+        toast.success('User removed!');
         setSelectedUser(null);
       });
   };

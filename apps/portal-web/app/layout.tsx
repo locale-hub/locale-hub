@@ -2,12 +2,14 @@
 
 import React, { useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
+import { Provider } from 'react-redux';
 
-import '../styles/globals.css';
 import App from './app';
+import '../styles/globals.css';
 import { AuthContextProvider } from '../contexts/AuthContext';
 import { ApiConnector } from '@locale-hub/api-connector';
 import { routes } from '../constants/routes';
+import { store } from '../redux/store';
 import { environment } from '../environment';
 
 const loadThemeMode = () => {
@@ -45,12 +47,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-gray-100 w-full min-h-full dark:bg-dark text-black dark:text-white">
-        <Toaster position="bottom-right" reverseOrder={false} />
-        <AuthContextProvider>
-          {domLoaded && (
-            <App onThemeChange={(theme) => setTheme(theme)}>{children}</App>
-          )}
-        </AuthContextProvider>
+        <Provider store={store}>
+          <Toaster position="bottom-right" reverseOrder={false} />
+          <AuthContextProvider>
+            {domLoaded && (
+              <App onThemeChange={(theme) => setTheme(theme)}>{children}</App>
+            )}
+          </AuthContextProvider>
+        </Provider>
         <div className="fixed bottom-2 right-4 text-slate-600 dark:text-slate-400">
           version: {environment.version}
         </div>

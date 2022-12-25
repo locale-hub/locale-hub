@@ -7,16 +7,8 @@ import * as Sentry from '@sentry/node';
 import { environment } from '../../../environments/environment';
 
 // '../../' is to go back to root folder as __dirname is giving the current folder.
-const htmlFolder = path.join(
-  __dirname,
-  '../../',
-  environment.email.resources.html
-);
-const textFolder = path.join(
-  __dirname,
-  '../../',
-  environment.email.resources.text
-);
+const htmlFolder = path.join(__dirname, environment.email.resources.html);
+const textFolder = path.join(__dirname, environment.email.resources.text);
 
 type MailOptions = {
   to: string;

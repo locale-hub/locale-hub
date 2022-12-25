@@ -305,7 +305,10 @@ router.post(
 const isCommonPassword = async (password: string): Promise<boolean> => {
   if (0 === commonPasswords.length) {
     commonPasswords = (
-      await fs.readFile(environment.security.password.forbiddenList, 'utf8')
+      await fs.readFile(
+        `${__dirname}/${environment.security.password.forbiddenList}`,
+        'utf8'
+      )
     ).split('\n');
   }
 
