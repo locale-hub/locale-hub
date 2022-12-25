@@ -11,8 +11,8 @@ import InputField from '@locale-hub/design-system/input-field/input-field';
 import Button from '@locale-hub/design-system/button/button';
 import Select from '@locale-hub/design-system/select/select';
 import Modal from '@locale-hub/design-system/modal/modal';
-import { useAppSelector } from '../../../../../redux/hook';
-import { selectProjectDetails, selectProjectUsers } from '../../../../../redux/slices/projectSlice';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hook';
+import { projectActions, selectProjectDetails, selectProjectUsers } from '../../../../../redux/slices/projectSlice';
 
 const schema = Joi.object({
   name: Joi.string().min(4).required(),
@@ -20,6 +20,7 @@ const schema = Joi.object({
 }).required();
 
 export default function ProjectSettingsPage() {
+  const dispatch = useAppDispatch();
   const details = useAppSelector(selectProjectDetails);
   const users = useAppSelector(selectProjectUsers);
 
@@ -50,13 +51,13 @@ export default function ProjectSettingsPage() {
     details.project.name = name;
     details.project.defaultLocale = locale;
     details.project.userId = owner;
-    // TODO: update redux
     ApiConnector.projects.update(details.project).then((data) => {
-      if ('error' in data) {
+      if (null !== data) {
         toast.error('Failed to update project');
         return;
       }
-      toast.error('Project updated!');
+      dispatch(projectActions.detailsProjectUpdate(details.project));
+      toast.success('Project updated!');
     });
   };
 

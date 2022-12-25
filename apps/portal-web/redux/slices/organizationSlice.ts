@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import { ApiError } from '@locale-hub/data/models/api-error.model';
 import { ApiConnector } from '@locale-hub/api-connector';
@@ -7,6 +7,7 @@ import { User } from '@locale-hub/data/models/user.model';
 import { OrganizationsProjectsGetResponse } from '@locale-hub/data/responses/organizations-projects-get.response';
 import { OrganizationApiUsage, OrganizationStorageUsage } from '@locale-hub/data/models/usage.model';
 import { Organization } from '@locale-hub/data/models/organization.model';
+import { projectSlice } from './projectSlice';
 
 export interface OrganizationState {
   details: Organization,
@@ -41,7 +42,14 @@ export const loadOrganizationAsync = createAsyncThunk(
 export const organizationSlice = createSlice({
   name: 'project',
   initialState,
-  reducers: {},
+  reducers: {
+    userAdd: (state, payload: PayloadAction<User>) => {
+      state.users.push(payload.payload);
+    },
+    userRemove: (state, payload: PayloadAction<User>) => {
+      state.users = state.users.filter(u => u.id !== payload.payload.id);
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loadOrganizationAsync.pending, (state) => {
@@ -88,5 +96,7 @@ export const selectOrganizationDetails = (state: RootState) => state.organizatio
 export const selectOrganizationProjects = (state: RootState) => state.organization.projects;
 export const selectOrganizationUsage = (state: RootState) => state.organization.usage;
 export const selectOrganizationUsers = (state: RootState) => state.organization.users;
+
+export const organizationActions = projectSlice.actions;
 
 export default organizationSlice.reducer;

@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import { ApiError } from '@locale-hub/data/models/api-error.model';
 import { ApiConnector } from '@locale-hub/api-connector';
@@ -8,6 +8,7 @@ import { User } from '@locale-hub/data/models/user.model';
 import { App } from '@locale-hub/data/models/app.model';
 import { Commit } from '@locale-hub/data/models/commit.model';
 import { ManifestWithStatus } from '@locale-hub/data/models/manifest-with-status.model';
+import { Project } from '@locale-hub/data/models/project.model';
 
 export interface ProjectState {
   applications: App[];
@@ -49,7 +50,54 @@ export const loadProjectAsync = createAsyncThunk(
 export const projectSlice = createSlice({
   name: 'project',
   initialState,
-  reducers: {},
+  reducers: {
+    applicationAdd: (state, payload: PayloadAction<App>) => {
+      state.applications.push(payload.payload);
+    },
+    applicationRemove: (state, payload: PayloadAction<App>) => {
+      state.applications = state.applications.filter(app => app.id !== payload.payload.id);
+    },
+    deployCommit: (state, payload: PayloadAction<string>) => {
+      state.commits.find(c => c.deployed).deployed = false;
+      state.commits.find(c => c.id === payload.payload).deployed = true;
+    },
+    detailsProjectUpdate: (state, payload: PayloadAction<Project>) => {
+      state.details.project = payload.payload;
+    },
+    manifestsAddKey: (state, payload: PayloadAction<{ key: string }>) => {
+      if (state.manifests.keys.includes(payload.payload.key)) {
+        return;
+      }
+      state.manifests.keys.push(payload.payload.key);
+      for (const locale of state.manifests.locales) {
+        state.manifests.manifest[locale][payload.payload.key] = '';
+      }
+    },
+    manifestsAddLocale: (state, payload: PayloadAction<{ locale: string }>) => {
+      if (state.manifests.locales.includes(payload.payload.locale)) {
+        return;
+      }
+      state.manifests.locales.push(payload.payload.locale);
+      state.manifests.manifest[payload.payload.locale] = {};
+      for (const key of state.manifests.keys) {
+        state.manifests.manifest[payload.payload.locale][key] = '';
+      }
+    },
+    manifestsUpdateEntry: (state, payload: PayloadAction<{ locale: string, key: string, value: string }>) => {
+      if (false !== state.manifests.locales.includes(payload.payload.locale)
+        || false !== state.manifests.keys.includes(payload.payload.key)
+      ) {
+        return;
+      }
+      state.manifests.manifest[payload.payload.locale][payload.payload.key] = payload.payload.value;
+    },
+    userAdd: (state, payload: PayloadAction<User>) => {
+      state.users.push(payload.payload);
+    },
+    userRemove: (state, payload: PayloadAction<User>) => {
+      state.users = state.users.filter(u => u.id !== payload.payload.id);
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loadProjectAsync.pending, (state) => {
@@ -112,5 +160,7 @@ export const selectProjectDetails = (state: RootState) => state.project.details;
 export const selectProjectManifests = (state: RootState) => state.project.manifests;
 export const selectProjectOrgUsers = (state: RootState) => state.project.orgUsers;
 export const selectProjectUsers = (state: RootState) => state.project.users;
+
+export const projectActions = projectSlice.actions;
 
 export default projectSlice.reducer;

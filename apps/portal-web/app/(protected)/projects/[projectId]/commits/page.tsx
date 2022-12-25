@@ -13,14 +13,16 @@ import Button from '@locale-hub/design-system/button/button';
 import DateFormat from '@locale-hub/design-system/date-format/date-format';
 import Modal from '@locale-hub/design-system/modal/modal';
 import UserIcon from '@locale-hub/design-system/user-icon/user-icon';
-import { useAppSelector } from '../../../../../redux/hook';
-import { selectProjectCommits, selectProjectUsers } from '../../../../../redux/slices/projectSlice';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hook';
+import { projectActions, selectProjectCommits, selectProjectUsers } from '../../../../../redux/slices/projectSlice';
+import toast from 'react-hot-toast';
 
 export default function ProjectCommitsPage({
   params,
 }: {
   params: { projectId: string };
 }) {
+  const dispatch = useAppDispatch();
   const commits = useAppSelector(selectProjectCommits);
   const users = useAppSelector(selectProjectUsers);
 
@@ -28,8 +30,13 @@ export default function ProjectCommitsPage({
     setDeployModal(false);
     ApiConnector.projects.commits
       .publish(params.projectId, commitId)
-      .then(() => {
-        // TODO: Update store current deployed commit
+      .then((data) => {
+        if (null !== data) {
+          toast.error('Failed to deploy commit');
+          return;
+        }
+        dispatch(projectActions.deployCommit(commitId));
+        toast.success('Commit updated!');
       });
   };
 

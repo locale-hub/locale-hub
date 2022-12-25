@@ -10,16 +10,17 @@ import toast from 'react-hot-toast';
 import Table from '@locale-hub/design-system/table/table';
 import Button from '@locale-hub/design-system/button/button';
 import Spacer from '@locale-hub/design-system/spacer/spacer';
-import { useAppSelector } from '../../../../../redux/hook';
-import { selectProjectManifests } from '../../../../../redux/slices/projectSlice';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hook';
+import { projectActions, selectProjectManifests } from '../../../../../redux/slices/projectSlice';
 
 export default function ProjectTranslationsPage({
   params,
 }: {
   params: { projectId: string };
 }) {
+  const dispatch = useAppDispatch();
   const manifests = useAppSelector(selectProjectManifests);
-  const [selectedLocale, setSelectedLocale] = useState<string>(manifests.locales[0]);
+  const [selectedLocale, setSelectedLocale] = useState<string>(0 !== manifests.locales.length ? manifests.locales.length[0] : null);
   const [entry, setEntry] = useState<{
     locale: string;
     key: string;
@@ -53,8 +54,7 @@ export default function ProjectTranslationsPage({
     setChangesMade(
       changesMade || manifests.manifest[entry.locale][entry.key] !== entry.value
     );
-    manifests.manifest[entry.locale][entry.key] = entry.value;
-    // TODO: setManifests(manifests);
+    dispatch(projectActions.manifestsUpdateEntry(entry));
   };
 
   const onNewLocale = (locale: string) => {
@@ -62,26 +62,10 @@ export default function ProjectTranslationsPage({
     if (undefined === locale || manifests.locales.includes(locale)) {
       return;
     }
-    // TODO: Update stored manifest with new locale
-    /*
-    setManifests({
-      locales: [...manifests.locales, locale],
-      keys: manifests.keys,
-      manifests: {
-        ...manifests.manifest,
-        [locale]: {
-          // generate empty locale values with all required keys
-          ...(() => {
-            const obj = {};
-            for (const key of manifests.keys) {
-              obj[key] = '';
-            }
-            return obj;
-          })(),
-        },
-      },
-    });
-    */
+    dispatch(projectActions.manifestsAddLocale({ locale }));
+    if (null === selectedLocale) {
+      setSelectedLocale(locale);
+    }
   };
 
   const onNewKey = (key: string) => {
@@ -89,18 +73,7 @@ export default function ProjectTranslationsPage({
     if (undefined === key || manifests.keys.includes(key)) {
       return;
     }
-    const tmp = manifests.manifest;
-    for (const locale of manifests.locales) {
-      tmp[locale][key] = '';
-    }
-    // TODO: Update stored manifest with new key
-    /*
-    setManifests({
-      locales: manifests.locales,
-      keys: [...manifests.keys, key],
-      manifests: tmp,
-    });
-    */
+    dispatch(projectActions.manifestsAddKey({ key }));
   };
 
   const onNewCommit = (title: string, description: string) => {
@@ -140,7 +113,7 @@ export default function ProjectTranslationsPage({
                 onClick={() => setSelectedLocale(locale)}
                 key={locale}
                 className={`
-              py-2 px-4 w-16 text-sm font-medium bg-white border-r border-slate-400/50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600
+              py-2 px-4 w-20 text-sm font-medium bg-white border-r border-slate-400/50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600
               ${
                 selectedLocale === locale
                   ? 'text-primary'

@@ -50,6 +50,12 @@ export class Http {
         };
       }
 
+      if (204 === res.status) {
+        // as any TResponse could be 'null', but we have following error:
+        // TS2322: Type 'null' is not assignable to type 'TResponse | ApiErrorResponse'.
+        return null as any;
+      }
+
       const json = await res.json();
 
       return undefined !== json?.error

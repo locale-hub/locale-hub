@@ -9,14 +9,15 @@ import Button from '@locale-hub/design-system/button/button';
 import Spacer from '@locale-hub/design-system/spacer/spacer';
 import Modal from '@locale-hub/design-system/modal/modal';
 import { App } from '@locale-hub/data/models/app.model';
-import { useAppSelector } from '../../../../../redux/hook';
-import { selectProjectApplications } from '../../../../../redux/slices/projectSlice';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/hook';
+import { projectActions, selectProjectApplications } from '../../../../../redux/slices/projectSlice';
 
 export default function ProjectApplicationsPage({
   params,
 }: {
   params: { projectId: string };
 }) {
+  const dispatch = useAppDispatch();
   const apps = useAppSelector(selectProjectApplications);
 
   const createApp = async (app?: App) => {
@@ -31,16 +32,21 @@ export default function ProjectApplicationsPage({
           toast.error('Failed to create application');
           return;
         }
-        // TODO: Add new application to store
-        toast.error('Application created!');
+        toast.success('Application created!');
+        dispatch(projectActions.applicationAdd(data.application));
       });
   };
   const deleteApp = async (appId: string) => {
     setAppModal(false);
     ApiConnector.projects.applications
       .delete(params.projectId, appId)
-      .then(() => {
-        // TODO: Remove application from store
+      .then((data) => {
+        if (null !== data) {
+          toast.error('Failed to delete application');
+          return;
+        }
+        dispatch(projectActions.applicationRemove(apps.find(app => app.id === appId)));
+        toast.success('Application deleted!');
       });
   };
 
