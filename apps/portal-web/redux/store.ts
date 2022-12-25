@@ -5,7 +5,7 @@ import organizationReducer from './slices/organizationSlice';
 export const store = configureStore({
   reducer: {
     project: projectReducer,
-    organization: organizationReducer
+    organization: organizationReducer,
   },
 });
 

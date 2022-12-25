@@ -24,7 +24,7 @@ export default function OrganizationLayout({
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    dispatch(loadOrganizationAsync( { organizationId: params.organizationId }))
+    dispatch(loadOrganizationAsync({ organizationId: params.organizationId }))
       // Wait project to be loaded before displaying child content as they require project data
       // TODO: store might contain error
       .then(() => setLoaded(true))

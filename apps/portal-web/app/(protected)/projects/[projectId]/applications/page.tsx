@@ -10,7 +10,10 @@ import Spacer from '@locale-hub/design-system/spacer/spacer';
 import Modal from '@locale-hub/design-system/modal/modal';
 import { App } from '@locale-hub/data/models/app.model';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hook';
-import { projectActions, selectProjectApplications } from '../../../../../redux/slices/projectSlice';
+import {
+  projectActions,
+  selectProjectApplications,
+} from '../../../../../redux/slices/projectSlice';
 
 export default function ProjectApplicationsPage({
   params,
@@ -45,7 +48,9 @@ export default function ProjectApplicationsPage({
           toast.error('Failed to delete application');
           return;
         }
-        dispatch(projectActions.applicationRemove(apps.find(app => app.id === appId)));
+        dispatch(
+          projectActions.applicationRemove(apps.find((app) => app.id === appId))
+        );
         toast.success('Application deleted!');
       });
   };

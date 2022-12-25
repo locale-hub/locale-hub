@@ -61,13 +61,15 @@ export default function ProjectOverviewPage({
         {details.progress && (
           <div className="m-4 w-9/12">
             <Card title="Translation progress" className="w-full">
-              {Object.entries(details.progress).map(([locale, progress], idx) => (
-                <div key={idx} className="flex mt-4">
-                  <p className="w-16">{locale}</p>
-                  <p className="w-16">{progress * 100}%</p>
-                  <ProgressBar fill={progress * 100} className="mt-[7px]" />
-                </div>
-              ))}
+              {Object.entries(details.progress).map(
+                ([locale, progress], idx) => (
+                  <div key={idx} className="flex mt-4">
+                    <p className="w-16">{locale}</p>
+                    <p className="w-16">{progress * 100}%</p>
+                    <ProgressBar fill={progress * 100} className="mt-[7px]" />
+                  </div>
+                )
+              )}
             </Card>
           </div>
         )}

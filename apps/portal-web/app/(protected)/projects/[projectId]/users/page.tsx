@@ -11,7 +11,11 @@ import Button from '@locale-hub/design-system/button/button';
 import Menu from '@locale-hub/design-system/menu/menu';
 import { User } from '@locale-hub/data/models/user.model';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hook';
-import { projectActions, selectProjectOrgUsers, selectProjectUsers } from '../../../../../redux/slices/projectSlice';
+import {
+  projectActions,
+  selectProjectOrgUsers,
+  selectProjectUsers,
+} from '../../../../../redux/slices/projectSlice';
 
 export default function ProjectUsersPage({
   params,
@@ -35,7 +39,9 @@ export default function ProjectUsersPage({
         toast.error('Failed to add user');
         return;
       }
-      dispatch(projectActions.userAdd(organizationUsers.find(u => u.id === userId)));
+      dispatch(
+        projectActions.userAdd(organizationUsers.find((u) => u.id === userId))
+      );
       toast.success('User added!');
     });
   };

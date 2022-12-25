@@ -12,7 +12,10 @@ import Modal from '@locale-hub/design-system/modal/modal';
 import InputField from '@locale-hub/design-system/input-field/input-field';
 import Select from '@locale-hub/design-system/select/select';
 import { useAppSelector } from '../../../../../redux/hook';
-import { selectOrganizationDetails, selectOrganizationUsers } from '../../../../../redux/slices/organizationSlice';
+import {
+  selectOrganizationDetails,
+  selectOrganizationUsers,
+} from '../../../../../redux/slices/organizationSlice';
 
 const schema = Joi.object({
   name: Joi.string().min(4).required(),

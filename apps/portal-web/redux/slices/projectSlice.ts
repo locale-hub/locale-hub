@@ -34,15 +34,19 @@ const initialState: ProjectState = {
 
 export const loadProjectAsync = createAsyncThunk(
   'project/getById',
-  async (params: { projectId: string}) => {
+  async (params: { projectId: string }) => {
     const details = await ApiConnector.projects.get(params.projectId);
     return {
-      applications: await ApiConnector.projects.applications.list(params.projectId),
+      applications: await ApiConnector.projects.applications.list(
+        params.projectId
+      ),
       commits: await ApiConnector.projects.commits.list(params.projectId),
       details: details,
       manifests: await ApiConnector.projects.manifests.get(params.projectId),
-      orgUsers: await ApiConnector.organizations.users.list((details as ProjectsGetResponse).project.organizationId),
-      users: await ApiConnector.projects.users.list(params.projectId)
+      orgUsers: await ApiConnector.organizations.users.list(
+        (details as ProjectsGetResponse).project.organizationId
+      ),
+      users: await ApiConnector.projects.users.list(params.projectId),
     };
   }
 );
@@ -55,11 +59,13 @@ export const projectSlice = createSlice({
       state.applications.push(payload.payload);
     },
     applicationRemove: (state, payload: PayloadAction<App>) => {
-      state.applications = state.applications.filter(app => app.id !== payload.payload.id);
+      state.applications = state.applications.filter(
+        (app) => app.id !== payload.payload.id
+      );
     },
     deployCommit: (state, payload: PayloadAction<string>) => {
-      state.commits.find(c => c.deployed).deployed = false;
-      state.commits.find(c => c.id === payload.payload).deployed = true;
+      state.commits.find((c) => c.deployed).deployed = false;
+      state.commits.find((c) => c.id === payload.payload).deployed = true;
     },
     detailsProjectUpdate: (state, payload: PayloadAction<Project>) => {
       state.details.project = payload.payload;
@@ -83,20 +89,25 @@ export const projectSlice = createSlice({
         state.manifests.manifest[payload.payload.locale][key] = '';
       }
     },
-    manifestsUpdateEntry: (state, payload: PayloadAction<{ locale: string, key: string, value: string }>) => {
-      if (false !== state.manifests.locales.includes(payload.payload.locale)
-        || false !== state.manifests.keys.includes(payload.payload.key)
+    manifestsUpdateEntry: (
+      state,
+      payload: PayloadAction<{ locale: string; key: string; value: string }>
+    ) => {
+      if (
+        false !== state.manifests.locales.includes(payload.payload.locale) ||
+        false !== state.manifests.keys.includes(payload.payload.key)
       ) {
         return;
       }
-      state.manifests.manifest[payload.payload.locale][payload.payload.key] = payload.payload.value;
+      state.manifests.manifest[payload.payload.locale][payload.payload.key] =
+        payload.payload.value;
     },
     userAdd: (state, payload: PayloadAction<User>) => {
       state.users.push(payload.payload);
     },
     userRemove: (state, payload: PayloadAction<User>) => {
-      state.users = state.users.filter(u => u.id !== payload.payload.id);
-    }
+      state.users = state.users.filter((u) => u.id !== payload.payload.id);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -148,17 +159,20 @@ export const projectSlice = createSlice({
         state.error = {
           code: ErrorCode.serverError,
           message: 'Failed to retrieve project',
-          statusCode: 500
-        }
+          statusCode: 500,
+        };
       });
   },
 });
 
-export const selectProjectApplications = (state: RootState) => state.project.applications;
+export const selectProjectApplications = (state: RootState) =>
+  state.project.applications;
 export const selectProjectCommits = (state: RootState) => state.project.commits;
 export const selectProjectDetails = (state: RootState) => state.project.details;
-export const selectProjectManifests = (state: RootState) => state.project.manifests;
-export const selectProjectOrgUsers = (state: RootState) => state.project.orgUsers;
+export const selectProjectManifests = (state: RootState) =>
+  state.project.manifests;
+export const selectProjectOrgUsers = (state: RootState) =>
+  state.project.orgUsers;
 export const selectProjectUsers = (state: RootState) => state.project.users;
 
 export const projectActions = projectSlice.actions;

@@ -11,7 +11,10 @@ import Button from '@locale-hub/design-system/button/button';
 import Menu from '@locale-hub/design-system/menu/menu';
 import { User } from '@locale-hub/data/models/user.model';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hook';
-import { organizationActions, selectOrganizationUsers } from '../../../../../redux/slices/organizationSlice';
+import {
+  organizationActions,
+  selectOrganizationUsers,
+} from '../../../../../redux/slices/organizationSlice';
 import { EmailStatus } from '@locale-hub/data/enums/email-status.enum';
 
 export default function OrganizationUsersPage({
@@ -38,16 +41,18 @@ export default function OrganizationUsersPage({
           return;
         }
         toast.success('Success! We sent an invitation to the user');
-        dispatch(organizationActions.userAdd({
-          id: email,
-          name,
-          primaryEmail: email,
-          passwordSalt: undefined,
-          password: undefined,
-          emails: [{ email, createdAt: '', status: EmailStatus.PRIMARY }],
-          role: 'user',
-          createdAt: '',
-        }));
+        dispatch(
+          organizationActions.userAdd({
+            id: email,
+            name,
+            primaryEmail: email,
+            passwordSalt: undefined,
+            password: undefined,
+            emails: [{ email, createdAt: '', status: EmailStatus.PRIMARY }],
+            role: 'user',
+            createdAt: '',
+          })
+        );
       });
   };
 
@@ -69,7 +74,11 @@ export default function OrganizationUsersPage({
           return;
         }
         toast.success('User deleted!');
-        dispatch(organizationActions.userRemove(users.find((u) => u.id !== selectedUser.id)));
+        dispatch(
+          organizationActions.userRemove(
+            users.find((u) => u.id !== selectedUser.id)
+          )
+        );
         setSelectedUser(null);
       });
   };

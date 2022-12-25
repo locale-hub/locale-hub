@@ -12,7 +12,11 @@ import Button from '@locale-hub/design-system/button/button';
 import Select from '@locale-hub/design-system/select/select';
 import Modal from '@locale-hub/design-system/modal/modal';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hook';
-import { projectActions, selectProjectDetails, selectProjectUsers } from '../../../../../redux/slices/projectSlice';
+import {
+  projectActions,
+  selectProjectDetails,
+  selectProjectUsers,
+} from '../../../../../redux/slices/projectSlice';
 
 const schema = Joi.object({
   name: Joi.string().min(4).required(),
@@ -42,7 +46,6 @@ export default function ProjectSettingsPage() {
   if (undefined === details || undefined === users) {
     return <></>;
   }
-
 
   const formInvalid = () =>
     'error' in schema.validate({ name, defaultLocale: locale });
@@ -81,8 +84,8 @@ export default function ProjectSettingsPage() {
           This action cannot be undone.
           <br />
           This will permanently delete the{' '}
-          <b className="text-warn">{details.project.name}</b> project and all it commits
-          and entries.
+          <b className="text-warn">{details.project.name}</b> project and all it
+          commits and entries.
         </p>
       </>
     );

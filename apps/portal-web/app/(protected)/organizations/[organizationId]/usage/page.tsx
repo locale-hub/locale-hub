@@ -1,12 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { ApiConnector } from '@locale-hub/api-connector';
-import toast from 'react-hot-toast';
-import {
-  OrganizationApiUsage,
-  OrganizationStorageUsage,
-} from '@locale-hub/data/models/usage.model';
+import React from 'react';
 import Spacer from '@locale-hub/design-system/spacer/spacer';
 import ProgressBar from '@locale-hub/design-system/progress-bar/progress-bar';
 import { useAppSelector } from '../../../../../redux/hook';

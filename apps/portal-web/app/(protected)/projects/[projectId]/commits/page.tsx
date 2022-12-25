@@ -14,7 +14,11 @@ import DateFormat from '@locale-hub/design-system/date-format/date-format';
 import Modal from '@locale-hub/design-system/modal/modal';
 import UserIcon from '@locale-hub/design-system/user-icon/user-icon';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hook';
-import { projectActions, selectProjectCommits, selectProjectUsers } from '../../../../../redux/slices/projectSlice';
+import {
+  projectActions,
+  selectProjectCommits,
+  selectProjectUsers,
+} from '../../../../../redux/slices/projectSlice';
 import toast from 'react-hot-toast';
 
 export default function ProjectCommitsPage({

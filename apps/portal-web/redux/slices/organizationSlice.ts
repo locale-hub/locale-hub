@@ -5,14 +5,17 @@ import { ApiConnector } from '@locale-hub/api-connector';
 import { ErrorCode } from '@locale-hub/data/enums/error-code.enum';
 import { User } from '@locale-hub/data/models/user.model';
 import { OrganizationsProjectsGetResponse } from '@locale-hub/data/responses/organizations-projects-get.response';
-import { OrganizationApiUsage, OrganizationStorageUsage } from '@locale-hub/data/models/usage.model';
+import {
+  OrganizationApiUsage,
+  OrganizationStorageUsage,
+} from '@locale-hub/data/models/usage.model';
 import { Organization } from '@locale-hub/data/models/organization.model';
 import { projectSlice } from './projectSlice';
 
 export interface OrganizationState {
-  details: Organization,
+  details: Organization;
   projects: OrganizationsProjectsGetResponse;
-  usage: {storage: OrganizationStorageUsage, api: OrganizationApiUsage}
+  usage: { storage: OrganizationStorageUsage; api: OrganizationApiUsage };
   users: User[];
   error: ApiError;
   status: 'idle' | 'loading' | 'failed';
@@ -29,12 +32,14 @@ const initialState: OrganizationState = {
 
 export const loadOrganizationAsync = createAsyncThunk(
   'organization/getById',
-  async (params: { organizationId: string}) => {
+  async (params: { organizationId: string }) => {
     return {
       details: await ApiConnector.organizations.get(params.organizationId),
-      projects: await ApiConnector.organizations.projects(params.organizationId),
+      projects: await ApiConnector.organizations.projects(
+        params.organizationId
+      ),
       usage: await ApiConnector.organizations.usage(params.organizationId),
-      users: await ApiConnector.organizations.users.list(params.organizationId)
+      users: await ApiConnector.organizations.users.list(params.organizationId),
     };
   }
 );
@@ -47,7 +52,7 @@ export const organizationSlice = createSlice({
       state.users.push(payload.payload);
     },
     userRemove: (state, payload: PayloadAction<User>) => {
-      state.users = state.users.filter(u => u.id !== payload.payload.id);
+      state.users = state.users.filter((u) => u.id !== payload.payload.id);
     },
   },
   extraReducers: (builder) => {
@@ -86,16 +91,20 @@ export const organizationSlice = createSlice({
         state.error = {
           code: ErrorCode.serverError,
           message: 'Failed to retrieve organization',
-          statusCode: 500
-        }
+          statusCode: 500,
+        };
       });
   },
 });
 
-export const selectOrganizationDetails = (state: RootState) => state.organization.details;
-export const selectOrganizationProjects = (state: RootState) => state.organization.projects;
-export const selectOrganizationUsage = (state: RootState) => state.organization.usage;
-export const selectOrganizationUsers = (state: RootState) => state.organization.users;
+export const selectOrganizationDetails = (state: RootState) =>
+  state.organization.details;
+export const selectOrganizationProjects = (state: RootState) =>
+  state.organization.projects;
+export const selectOrganizationUsage = (state: RootState) =>
+  state.organization.usage;
+export const selectOrganizationUsers = (state: RootState) =>
+  state.organization.users;
 
 export const organizationActions = projectSlice.actions;
 

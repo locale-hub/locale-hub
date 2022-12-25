@@ -11,7 +11,10 @@ import Table from '@locale-hub/design-system/table/table';
 import Button from '@locale-hub/design-system/button/button';
 import Spacer from '@locale-hub/design-system/spacer/spacer';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hook';
-import { projectActions, selectProjectManifests } from '../../../../../redux/slices/projectSlice';
+import {
+  projectActions,
+  selectProjectManifests,
+} from '../../../../../redux/slices/projectSlice';
 
 export default function ProjectTranslationsPage({
   params,
@@ -20,7 +23,9 @@ export default function ProjectTranslationsPage({
 }) {
   const dispatch = useAppDispatch();
   const manifests = useAppSelector(selectProjectManifests);
-  const [selectedLocale, setSelectedLocale] = useState<string>(0 !== manifests.locales.length ? manifests.locales.length[0] : null);
+  const [selectedLocale, setSelectedLocale] = useState<string>(
+    0 !== manifests.locales.length ? manifests.locales.length[0] : null
+  );
   const [entry, setEntry] = useState<{
     locale: string;
     key: string;
