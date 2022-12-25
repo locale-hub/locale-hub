@@ -105,6 +105,8 @@ export const selectOrganizationUsage = (state: RootState) =>
   state.organization.usage;
 export const selectOrganizationUsers = (state: RootState) =>
   state.organization.users;
+export const selectOrganizationErrors = (state: RootState) =>
+  state.organization.error;
 
 export const organizationActions = projectSlice.actions;
 

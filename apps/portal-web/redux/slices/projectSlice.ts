@@ -174,6 +174,7 @@ export const selectProjectManifests = (state: RootState) =>
 export const selectProjectOrgUsers = (state: RootState) =>
   state.project.orgUsers;
 export const selectProjectUsers = (state: RootState) => state.project.users;
+export const selectProjectErrors = (state: RootState) => state.project.error;
 
 export const projectActions = projectSlice.actions;
 

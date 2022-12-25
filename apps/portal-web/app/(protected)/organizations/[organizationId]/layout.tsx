@@ -9,9 +9,12 @@ import {
 } from '@heroicons/react/24/solid';
 import { routes } from '../../../../constants/routes';
 import Sidebar from '@locale-hub/design-system/sidebar/sidebar';
-import { useAppDispatch } from '../../../../redux/hook';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hook';
 import toast from 'react-hot-toast';
-import { loadOrganizationAsync } from '../../../../redux/slices/organizationSlice';
+import {
+  loadOrganizationAsync,
+  selectOrganizationErrors,
+} from '../../../../redux/slices/organizationSlice';
 
 export default function OrganizationLayout({
   children,
@@ -21,17 +24,26 @@ export default function OrganizationLayout({
   params: { organizationId: string };
 }) {
   const dispatch = useAppDispatch();
-  const [loaded, setLoaded] = useState(false);
+  const error = useAppSelector(selectOrganizationErrors);
+  const [status, setStatus] = useState<'loading' | 'error' | 'success'>(
+    'loading'
+  );
 
   useEffect(() => {
     dispatch(loadOrganizationAsync({ organizationId: params.organizationId }))
-      // Wait project to be loaded before displaying child content as they require project data
-      // TODO: store might contain error
-      .then(() => setLoaded(true))
-      .catch(() => toast.error('Failed to load organization...'));
+      .then(() => {
+        if (undefined !== error) {
+          toast.error('Failed to load organization...');
+        }
+        setStatus(undefined !== error ? 'error' : 'success');
+      })
+      .catch(() => {
+        setStatus('error');
+        toast.error('Failed to load organization...');
+      });
   }, [params.organizationId]);
 
-  if (false === loaded) {
+  if ('loading' === status) {
     // TODO: skeleton
     return <></>;
   }
@@ -64,7 +76,9 @@ export default function OrganizationLayout({
           ]}
         />
       </div>
-      <div className="w-10/12 px-10 py-10 overflow-y-scroll">{children}</div>
+      <div className="w-10/12 px-10 py-10 overflow-y-scroll">
+        {'error' !== status && children}
+      </div>
     </div>
   );
 }

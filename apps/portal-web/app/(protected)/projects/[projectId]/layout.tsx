@@ -12,8 +12,11 @@ import {
 } from '@heroicons/react/24/solid';
 import { routes } from '../../../../constants/routes';
 import Sidebar from '@locale-hub/design-system/sidebar/sidebar';
-import { useAppDispatch } from '../../../../redux/hook';
-import { loadProjectAsync } from '../../../../redux/slices/projectSlice';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hook';
+import {
+  loadProjectAsync,
+  selectProjectErrors,
+} from '../../../../redux/slices/projectSlice';
 import toast from 'react-hot-toast';
 
 export default function ProjectLayout({
@@ -24,17 +27,26 @@ export default function ProjectLayout({
   params: { projectId: string };
 }) {
   const dispatch = useAppDispatch();
-  const [loaded, setLoaded] = useState(false);
+  const error = useAppSelector(selectProjectErrors);
+  const [status, setStatus] = useState<'loading' | 'error' | 'success'>(
+    'loading'
+  );
 
   useEffect(() => {
     dispatch(loadProjectAsync({ projectId: params.projectId }))
-      // Wait project to be loaded before displaying child content as they require project data
-      // TODO: store might contain error
-      .then(() => setLoaded(true))
-      .catch(() => toast.error('Failed to load project...'));
+      .then(() => {
+        if (undefined !== error) {
+          toast.error('Failed to load project...');
+        }
+        setStatus(undefined !== error ? 'error' : 'success');
+      })
+      .catch(() => {
+        setStatus('error');
+        toast.error('Failed to load project...');
+      });
   }, [params.projectId]);
 
-  if (false === loaded) {
+  if ('loading' === status) {
     // TODO: skeleton
     return <></>;
   }
@@ -82,7 +94,9 @@ export default function ProjectLayout({
           ]}
         />
       </div>
-      <div className="w-10/12 px-10 py-10 overflow-y-scroll">{children}</div>
+      <div className="w-10/12 px-10 py-10 overflow-y-scroll">
+        {'error' !== status && children}
+      </div>
     </div>
   );
 }
