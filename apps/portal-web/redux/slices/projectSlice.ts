@@ -14,6 +14,7 @@ export interface ProjectState {
   commits: Commit[];
   details: ProjectsGetResponse;
   manifests: ManifestWithStatus;
+  orgUsers: User[];
   users: User[];
   error: ApiError;
   status: 'idle' | 'loading' | 'failed';
@@ -24,6 +25,7 @@ const initialState: ProjectState = {
   commits: undefined,
   details: undefined,
   manifests: undefined,
+  orgUsers: undefined,
   users: undefined,
   error: undefined,
   status: 'idle',
@@ -32,11 +34,13 @@ const initialState: ProjectState = {
 export const loadProjectAsync = createAsyncThunk(
   'project/getById',
   async (params: { projectId: string}) => {
+    const details = await ApiConnector.projects.get(params.projectId);
     return {
       applications: await ApiConnector.projects.applications.list(params.projectId),
       commits: await ApiConnector.projects.commits.list(params.projectId),
-      details: await ApiConnector.projects.get(params.projectId),
+      details: details,
       manifests: await ApiConnector.projects.manifests.get(params.projectId),
+      orgUsers: await ApiConnector.organizations.users.list((details as ProjectsGetResponse).project.organizationId),
       users: await ApiConnector.projects.users.list(params.projectId)
     };
   }
@@ -54,6 +58,7 @@ export const projectSlice = createSlice({
         state.commits = undefined;
         state.details = undefined;
         state.manifests = undefined;
+        state.orgUsers = undefined;
         state.users = undefined;
         state.error = undefined;
       })
@@ -79,6 +84,11 @@ export const projectSlice = createSlice({
         } else {
           state.manifests = action.payload.manifests.manifest;
         }
+        if ('error' in action.payload.orgUsers) {
+          state.error = action.payload.orgUsers.error;
+        } else {
+          state.orgUsers = action.payload.orgUsers.users;
+        }
         if ('error' in action.payload.users) {
           state.error = action.payload.users.error;
         } else {
@@ -100,6 +110,7 @@ export const selectProjectApplications = (state: RootState) => state.project.app
 export const selectProjectCommits = (state: RootState) => state.project.commits;
 export const selectProjectDetails = (state: RootState) => state.project.details;
 export const selectProjectManifests = (state: RootState) => state.project.manifests;
+export const selectProjectOrgUsers = (state: RootState) => state.project.orgUsers;
 export const selectProjectUsers = (state: RootState) => state.project.users;
 
 export default projectSlice.reducer;

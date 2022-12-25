@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ApiConnector } from '@locale-hub/api-connector';
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/outline';
 import DeleteUserModal from '../../../../../components/delete-user-modal';
@@ -11,7 +11,7 @@ import Button from '@locale-hub/design-system/button/button';
 import Menu from '@locale-hub/design-system/menu/menu';
 import { User } from '@locale-hub/data/models/user.model';
 import { useAppSelector } from '../../../../../redux/hook';
-import { selectProjectUsers } from '../../../../../redux/slices/projectSlice';
+import { selectProjectOrgUsers, selectProjectUsers } from '../../../../../redux/slices/projectSlice';
 
 export default function ProjectUsersPage({
   params,
@@ -19,26 +19,10 @@ export default function ProjectUsersPage({
   params: { projectId: string };
 }) {
   const [selectedUser, setSelectedUser] = useState<User>(null);
-  const [organizationUsers, setOrganizationUsers] = useState<User[]>([]);
+  const organizationUsers = useAppSelector(selectProjectOrgUsers);
   const users = useAppSelector(selectProjectUsers);
   const [inviteUserModalOpen, setInviteUserModalOpen] = useState(false);
   const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
-
-  useEffect(() => {
-    ApiConnector.projects.get(params.projectId).then((data) => {
-      if ('error' in data) {
-        return;
-      }
-      ApiConnector.organizations.users
-        .list(data.project.organizationId)
-        .then((data2) => {
-          if ('error' in data2) {
-            return;
-          }
-          setOrganizationUsers(data2.users);
-        });
-    });
-  }, [params.projectId]);
 
   const addUser = (userId: string) => {
     setInviteUserModalOpen(false);
