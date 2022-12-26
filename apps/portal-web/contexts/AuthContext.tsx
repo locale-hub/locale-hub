@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 import { ApiConnector } from '@locale-hub/api-connector';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { routes } from '../constants/routes';
 import toast from 'react-hot-toast';
 import { environment } from '../environment';
@@ -21,6 +21,7 @@ export const AuthContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const router = useRouter();
   let refreshInterval;
   const [user, setUser] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
@@ -68,7 +69,7 @@ export const AuthContextProvider = ({
     setUser(null);
     setLoggedIn(false);
     try {
-      redirect(routes.auth.root);
+      router.push(routes.auth.root);
     } catch (e) {
       document.location.href = '/';
     }

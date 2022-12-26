@@ -1,6 +1,6 @@
 'use client';
 
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import { useAuth } from '../../../contexts/AuthContext';
 import { useState } from 'react';
@@ -9,11 +9,12 @@ import { routes } from '../../../constants/routes';
 import Auth from '@locale-hub/design-system/auth';
 
 export default function AuthPage() {
+  const router = useRouter();
   const { register, login, loggedIn } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
 
   if (loggedIn) {
-    redirect(routes.dashboard);
+    router.push(routes.dashboard);
   }
 
   return (

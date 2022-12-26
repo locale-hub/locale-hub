@@ -1,6 +1,6 @@
 'use client';
 
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { routes } from '../../../../../constants/routes';
 
 export default function ProjectOverview({
@@ -8,5 +8,6 @@ export default function ProjectOverview({
 }: {
   params: { projectId: string };
 }) {
-  redirect(routes.projects.overview(params.projectId));
+  const router = useRouter();
+  router.push(routes.projects.overview(params.projectId));
 }

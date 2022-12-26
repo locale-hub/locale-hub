@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { ApiConnector } from '@locale-hub/api-connector';
 import { locales } from '../../../../../constants/locales';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { routes } from '../../../../../constants/routes';
 import toast from 'react-hot-toast';
 import Joi from 'joi';
@@ -24,12 +24,13 @@ const schema = Joi.object({
 }).required();
 
 export default function ProjectSettingsPage() {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const details = useAppSelector(selectProjectDetails);
   const users = useAppSelector(selectProjectUsers);
 
   const [name, setName] = useState('');
-  const [owner, setOwner] = useState('');
+  const [owner, setOwner] = useState(details.project.userId);
   const [locale, setLocale] = useState('');
 
   // Modals hooks
@@ -39,13 +40,9 @@ export default function ProjectSettingsPage() {
   const [actions, setActions] = useState<React.ReactNode>(null);
 
   useEffect(() => {
-    setName(details?.project?.name);
-    setOwner(details?.project?.userId);
-  }, [details, users]);
-
-  if (undefined === details || undefined === users) {
-    return <></>;
-  }
+    setName(details.project.name);
+    setOwner(details.project.userId);
+  }, [details]);
 
   const formInvalid = () =>
     'error' in schema.validate({ name, defaultLocale: locale });
@@ -72,7 +69,7 @@ export default function ProjectSettingsPage() {
         return;
       }
       toast.success('Project deleted!');
-      redirect(routes.projects.root);
+      router.push(routes.projects.root);
     });
   }
 

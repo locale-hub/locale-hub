@@ -18,7 +18,7 @@ export default function InviteUserModal({
       as="div"
       className="relative"
       open={isOpen}
-      onClose={() => onClose(name, email)}
+      onClose={() => onClose()}
     >
       <div className="fixed z-40 inset-0 bg-black bg-opacity-25 dark:bg-opacity-50" />
       <div className="fixed z-50 inset-0 overflow-y-auto">

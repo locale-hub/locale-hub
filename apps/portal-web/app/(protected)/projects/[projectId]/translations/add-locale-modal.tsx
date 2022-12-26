@@ -1,17 +1,22 @@
 import { Dialog } from '@headlessui/react';
-import React, { useState } from 'react';
-import { locales } from '../../../../../constants/locales';
+import React, { useEffect, useState } from 'react';
 import Button from '@locale-hub/design-system/button/button';
 import Select from '@locale-hub/design-system/select/select';
 
 export default function AddLocaleModal({
   isOpen,
+  locales,
   onClose,
 }: {
   isOpen: boolean;
+  locales: { tag: string; name: string }[];
   onClose: (localeTag?: string) => void;
 }) {
   const [locale, setLocale] = useState<string>(locales[0].tag);
+
+  useEffect(() => {
+    setLocale(locales[0].tag);
+  }, [locales]);
 
   // TODO: Add file import feature
 
@@ -20,7 +25,7 @@ export default function AddLocaleModal({
       as="div"
       className="relative"
       open={isOpen}
-      onClose={() => onClose(locale)}
+      onClose={() => onClose()}
     >
       <div className="fixed z-40 inset-0 bg-black bg-opacity-25 dark:bg-opacity-50" />
       <div className="fixed z-50 inset-0 overflow-y-auto">

@@ -15,7 +15,7 @@ export default function AddProjectModal({
   organizations: Organization[];
 }) {
   const [projectName, setProjectName] = useState<string>('');
-  const [orgId, setOrgId] = useState<string>('');
+  const [orgId, setOrgId] = useState<string>(0 !== organizations.length ? organizations[0].id : '');
 
   return (
     <Dialog
