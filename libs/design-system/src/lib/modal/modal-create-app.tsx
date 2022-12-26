@@ -27,7 +27,7 @@ export default function ModalCreateApp({
         as="div"
         className="relative z-50 "
         open={isOpen}
-        onClose={() => onClose(app)}
+        onClose={() => onClose()}
       >
         <div className="fixed inset-0 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4 text-center">
@@ -63,7 +63,10 @@ export default function ModalCreateApp({
                 <Button type="cancel" onClick={() => onClose()}>
                   Cancel
                 </Button>
-                <Button type="confirm" onClick={() => onClose(app)}>
+                <Button type="confirm"
+                  disabled={app.name.length < 8 || app.identifier.length < 8}
+                  onClick={() => onClose(app)}
+                >
                   Create
                 </Button>
               </div>

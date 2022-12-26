@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Joi from 'joi';
 
 import { ApiConnector } from '@locale-hub/api-connector';
@@ -22,6 +22,7 @@ const schema = Joi.object({
 }).required();
 
 export default function OrganizationsSettingsPage() {
+  const router = useRouter();
   const org = useAppSelector(selectOrganizationDetails);
   const users = useAppSelector(selectOrganizationUsers);
   const [name, setName] = useState(org.name);
@@ -48,7 +49,7 @@ export default function OrganizationsSettingsPage() {
         return;
       }
       toast.success('Organization deleted!');
-      redirect(routes.organizations.root);
+      router.push(routes.organizations.root);
     });
   }
 

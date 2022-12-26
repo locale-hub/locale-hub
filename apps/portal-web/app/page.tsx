@@ -1,18 +1,17 @@
 'use client';
 
-import { redirect } from 'next/navigation';
-
 import { useAuth } from '../contexts/AuthContext';
 import { routes } from '../constants/routes';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function Page() {
   const { loggedIn } = useAuth();
+  const router = useRouter();
 
-  if (false === loggedIn) {
-    redirect(routes.auth.root);
-    return null;
-  }
+  useEffect(() => {
+    router.push(loggedIn ? routes.dashboard : routes.auth.root);
+  }, [loggedIn]);
 
-  redirect(routes.dashboard);
   return null;
 }

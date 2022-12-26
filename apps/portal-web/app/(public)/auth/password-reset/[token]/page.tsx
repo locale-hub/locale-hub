@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import { routes } from '../../../../../constants/routes';
 import { ApiConnector } from '@locale-hub/api-connector';
@@ -23,6 +23,7 @@ export default function PasswordResetApplyPage({
 }: {
   params: { token: string };
 }) {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
@@ -38,7 +39,7 @@ export default function PasswordResetApplyPage({
           toast.error('Failed to request password reset');
           return;
         }
-        redirect(routes.root);
+        router.push(routes.root);
       });
   };
 

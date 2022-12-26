@@ -1,6 +1,6 @@
 'use client';
 
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
 import { routes } from '../../constants/routes';
 import React from 'react';
@@ -11,9 +11,10 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   const { loggedIn } = useAuth();
+  const router = useRouter();
 
   if (false === loggedIn) {
-    redirect(routes.auth.root);
+    router.push(routes.auth.root);
   }
 
   return loggedIn ? children : null;

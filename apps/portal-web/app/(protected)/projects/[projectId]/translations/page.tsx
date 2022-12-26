@@ -12,9 +12,10 @@ import Button from '@locale-hub/design-system/button/button';
 import Spacer from '@locale-hub/design-system/spacer/spacer';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hook';
 import {
-  projectActions,
-  selectProjectManifests,
+  projectActions, selectProjectDetails,
+  selectProjectManifests
 } from '../../../../../redux/slices/projectSlice';
+import { locales } from '../../../../../constants/locales';
 
 export default function ProjectTranslationsPage({
   params,
@@ -22,15 +23,16 @@ export default function ProjectTranslationsPage({
   params: { projectId: string };
 }) {
   const dispatch = useAppDispatch();
+  const details = useAppSelector(selectProjectDetails);
   const manifests = useAppSelector(selectProjectManifests);
   const [selectedLocale, setSelectedLocale] = useState<string>(
-    0 !== manifests.locales.length ? manifests.locales.length[0] : null
+    0 !== manifests.locales.length ? manifests.locales[0] : null
   );
   const [entry, setEntry] = useState<{
     locale: string;
     key: string;
     value: string;
-  }>();
+  }>({ locale: '', key: '', value: '' });
   const [changesMade, setChangesMade] = useState(false);
 
   const [openTranslationModal, setOpenTranslationModal] = useState(false);
@@ -68,9 +70,7 @@ export default function ProjectTranslationsPage({
       return;
     }
     dispatch(projectActions.manifestsAddLocale({ locale }));
-    if (null === selectedLocale) {
-      setSelectedLocale(locale);
-    }
+    setSelectedLocale(locale);
   };
 
   const onNewKey = (key: string) => {
@@ -97,10 +97,18 @@ export default function ProjectTranslationsPage({
       });
   };
 
+  if (0 === manifests.locales.length) {
+    // add setTimeout to avoid next error
+    setTimeout(() => onNewLocale(details.project.defaultLocale), 50);
+  }
+
   return (
     <>
       <div className="flex">
-        <AddLocaleModal isOpen={openAddLocaleModal} onClose={onNewLocale} />
+        <AddLocaleModal isOpen={openAddLocaleModal}
+          locales={locales.filter((l) => false === manifests.locales.includes(l.tag))}
+          onClose={onNewLocale}
+        />
         <AddKeyModal isOpen={openAddKeyModal} onClose={onNewKey} />
         <CommitModal isOpen={openCommitModal} onClose={onNewCommit} />
         <TranslationModal

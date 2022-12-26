@@ -7,6 +7,7 @@ import {
   PlusIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { routes } from '../constants/routes';
 import { useAuth } from '../contexts/AuthContext';
@@ -16,7 +17,6 @@ import { Menu } from '@headlessui/react';
 import AddProjectModal from './add-project-modal';
 import AddOrganizationModal from './add-organization-modal';
 import toast from 'react-hot-toast';
-import { redirect } from 'next/navigation';
 import { Organization } from '@locale-hub/data/models/organization.model';
 import { Notification } from '@locale-hub/data/models/notification.model';
 import SlideOver from '@locale-hub/design-system/slide-over/slide-over';
@@ -25,6 +25,7 @@ import { NotificationStatus } from '@locale-hub/data/enums/notification-status.e
 import UserIcon from '@locale-hub/design-system/user-icon/user-icon';
 
 export default function NavigationAuthenticated() {
+  const router = useRouter();
   const { user, logout } = useAuth();
   const [openNotifications, setOpenNotifications] = useState(false);
   const [openAddProject, setOpenAddProject] = useState(false);
@@ -70,7 +71,7 @@ export default function NavigationAuthenticated() {
         return;
       }
       toast.success(`'${data.project.name}' was created successfully`);
-      redirect(routes.projects.overview(data.project.id));
+      router.push(routes.projects.overview(data.project.id));
     });
   };
   const onOrganizationAdd = (orgName: string) => {
@@ -84,7 +85,7 @@ export default function NavigationAuthenticated() {
         return;
       }
       toast.success(`'${data.organization.name}' was created successfully`);
-      redirect(routes.organizations.projects(data.organization.id));
+      router.push(routes.organizations.projects(data.organization.id));
     });
   };
 

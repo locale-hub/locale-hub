@@ -10,7 +10,6 @@ import {
   OrganizationStorageUsage,
 } from '@locale-hub/data/models/usage.model';
 import { Organization } from '@locale-hub/data/models/organization.model';
-import { projectSlice } from './projectSlice';
 
 export interface OrganizationState {
   details: Organization;
@@ -45,7 +44,7 @@ export const loadOrganizationAsync = createAsyncThunk(
 );
 
 export const organizationSlice = createSlice({
-  name: 'project',
+  name: 'organization',
   initialState,
   reducers: {
     userAdd: (state, payload: PayloadAction<User>) => {
@@ -108,6 +107,6 @@ export const selectOrganizationUsers = (state: RootState) =>
 export const selectOrganizationErrors = (state: RootState) =>
   state.organization.error;
 
-export const organizationActions = projectSlice.actions;
+export const organizationActions = organizationSlice.actions;
 
 export default organizationSlice.reducer;
