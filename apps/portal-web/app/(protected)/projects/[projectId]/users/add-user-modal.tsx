@@ -13,7 +13,9 @@ export default function AddUserModal({
   onClose: (userId?: string) => void;
   users: User[];
 }) {
-  const [userId, setUserId] = useState<string>(0!== users.length ? users[0].id : null);
+  const [userId, setUserId] = useState<string>(
+    0 !== users.length ? users[0].id : null
+  );
 
   if (undefined === users || null === users || 0 === users.length) {
     return <></>;

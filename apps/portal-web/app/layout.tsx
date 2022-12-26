@@ -34,7 +34,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-
   const [domLoaded, setDomLoaded] = useState(false);
   useEffect(function () {
     loadThemeMode();

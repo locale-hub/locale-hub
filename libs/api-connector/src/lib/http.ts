@@ -4,10 +4,7 @@ import { ErrorCode } from '@locale-hub/data/enums/error-code.enum';
 export class Http {
   private authorization = '';
 
-  constructor(
-    private baseUrl: string,
-    private onUnauthorized: () => void
-  ) {}
+  constructor(private baseUrl: string, private onUnauthorized: () => void) {}
 
   private headers = () => {
     if ('' === this.authorization) {
@@ -42,7 +39,6 @@ export class Http {
       const res = await fetch(`${this.baseUrl}${url}`, init);
 
       if (401 === res.status) {
-
         this.onUnauthorized();
         return {
           error: {

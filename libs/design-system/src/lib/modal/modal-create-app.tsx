@@ -63,7 +63,8 @@ export default function ModalCreateApp({
                 <Button type="cancel" onClick={() => onClose()}>
                   Cancel
                 </Button>
-                <Button type="confirm"
+                <Button
+                  type="confirm"
                   disabled={app.name.length < 8 || app.identifier.length < 8}
                   onClick={() => onClose(app)}
                 >

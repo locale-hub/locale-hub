@@ -12,8 +12,9 @@ import Button from '@locale-hub/design-system/button/button';
 import Spacer from '@locale-hub/design-system/spacer/spacer';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/hook';
 import {
-  projectActions, selectProjectDetails,
-  selectProjectManifests
+  projectActions,
+  selectProjectDetails,
+  selectProjectManifests,
 } from '../../../../../redux/slices/projectSlice';
 import { locales } from '../../../../../constants/locales';
 
@@ -105,8 +106,11 @@ export default function ProjectTranslationsPage({
   return (
     <>
       <div className="flex">
-        <AddLocaleModal isOpen={openAddLocaleModal}
-          locales={locales.filter((l) => false === manifests.locales.includes(l.tag))}
+        <AddLocaleModal
+          isOpen={openAddLocaleModal}
+          locales={locales.filter(
+            (l) => false === manifests.locales.includes(l.tag)
+          )}
           onClose={onNewLocale}
         />
         <AddKeyModal isOpen={openAddKeyModal} onClose={onNewKey} />

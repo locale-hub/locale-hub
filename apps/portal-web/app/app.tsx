@@ -19,9 +19,8 @@ export default function App({
   children: React.ReactNode;
 }) {
   const { loggedIn, logout } = useAuth();
-  ApiConnector.initApi(
-    environment.portal.api.uri,
-    () => setTimeout(() => logout(), 50)
+  ApiConnector.initApi(environment.portal.api.uri, () =>
+    setTimeout(() => logout(), 50)
   );
 
   return (
