@@ -31,8 +31,11 @@ import { User } from '@locale-hub/data/models/user.model';
 let http: Http;
 
 export const ApiConnector = {
-  initApi: (baseUrl: string, authUrl: string) => {
-    http = new Http(baseUrl, authUrl);
+  initApi: (baseUrl: string, onUnauthorized: () => void) => {
+    http = new Http(baseUrl, () => {
+      localStorage.removeItem('token');
+      onUnauthorized();
+    });
   },
 
   auth: {

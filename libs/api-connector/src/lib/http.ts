@@ -1,11 +1,13 @@
-import { redirect } from 'next/navigation';
 import { ApiErrorResponse } from '@locale-hub/data/responses/api-error.response';
 import { ErrorCode } from '@locale-hub/data/enums/error-code.enum';
 
 export class Http {
   private authorization = '';
 
-  constructor(private baseUrl: string, private authUrl: string) {}
+  constructor(
+    private baseUrl: string,
+    private onUnauthorized: () => void
+  ) {}
 
   private headers = () => {
     if ('' === this.authorization) {
@@ -40,7 +42,8 @@ export class Http {
       const res = await fetch(`${this.baseUrl}${url}`, init);
 
       if (401 === res.status) {
-        redirect(this.authUrl);
+
+        this.onUnauthorized();
         return {
           error: {
             statusCode: 401,

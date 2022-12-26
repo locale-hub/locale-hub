@@ -7,8 +7,6 @@ import { Provider } from 'react-redux';
 import App from './app';
 import '../styles/globals.css';
 import { AuthContextProvider } from '../contexts/AuthContext';
-import { ApiConnector } from '@locale-hub/api-connector';
-import { routes } from '../constants/routes';
 import { store } from '../redux/store';
 import { environment } from '../environment';
 
@@ -36,7 +34,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  ApiConnector.initApi(environment.portal.api.uri, routes.auth.root);
 
   const [domLoaded, setDomLoaded] = useState(false);
   useEffect(function () {
