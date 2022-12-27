@@ -15,6 +15,7 @@ import {
   loadOrganizationAsync,
   selectOrganizationErrors,
 } from '../../../../redux/slices/organizationSlice';
+import Loader from '@locale-hub/design-system/loader/loader';
 
 export default function OrganizationLayout({
   children,
@@ -42,11 +43,6 @@ export default function OrganizationLayout({
         toast.error('Failed to load organization...');
       });
   }, [params.organizationId]);
-
-  if ('loading' === status) {
-    // TODO: skeleton
-    return <></>;
-  }
 
   return (
     <div className="flex height-full">
@@ -77,7 +73,8 @@ export default function OrganizationLayout({
         />
       </div>
       <div className="w-10/12 px-10 py-10 overflow-y-scroll">
-        {'error' !== status && children}
+        {'loading' === status && <Loader />}
+        {'success' === status && children}
       </div>
     </div>
   );

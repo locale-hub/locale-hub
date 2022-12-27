@@ -18,6 +18,7 @@ import {
   selectProjectErrors,
 } from '../../../../redux/slices/projectSlice';
 import toast from 'react-hot-toast';
+import Loader from '@locale-hub/design-system/loader/loader';
 
 export default function ProjectLayout({
   children,
@@ -45,11 +46,6 @@ export default function ProjectLayout({
         toast.error('Failed to load project...');
       });
   }, [params.projectId]);
-
-  if ('loading' === status) {
-    // TODO: skeleton
-    return <></>;
-  }
 
   return (
     <div className="flex height-full">
@@ -95,7 +91,8 @@ export default function ProjectLayout({
         />
       </div>
       <div className="w-10/12 px-10 py-10 overflow-y-scroll">
-        {'error' !== status && children}
+        {'loading' === status && <Loader />}
+        {'success' === status && children}
       </div>
     </div>
   );

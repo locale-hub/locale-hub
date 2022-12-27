@@ -1,11 +1,9 @@
-import { dbMultiple, dbSingle } from './db.repository';
 import { Locale } from '../models/locale.model';
 import { ApiException } from '../exceptions/api.exception';
 import { ErrorCode } from '../enums/error-code.enum';
+import { locales } from '../../../../../apps/portal-api/app/locales';
 
 export class LocaleRepository {
-  private readonly collectionName = 'locales';
-
   /**
    * Find an locale by its tag
    * @throws ApiException
@@ -13,9 +11,7 @@ export class LocaleRepository {
    * @return {Locale} The locale found, null otherwise
    */
   find = async (localeTag: string): Promise<Locale> => {
-    const locale = await dbSingle<Locale>(this.collectionName, {
-      tag: localeTag,
-    });
+    const locale = locales.find((l) => l.tag === localeTag);
 
     if (null === locale) {
       throw new ApiException({
@@ -25,7 +21,7 @@ export class LocaleRepository {
       });
     }
 
-    return locale;
+    return locale!;
   };
 
   /**
@@ -35,11 +31,9 @@ export class LocaleRepository {
    * @return {Locale[]} The list locales found, empty array if no result found
    */
   findIn = async (localeTags: string[]): Promise<Locale[]> => {
-    const locales = await dbMultiple<Locale>(this.collectionName, {
-      tag: { $in: localeTags },
-    });
+    const filtered = locales.filter((l) => localeTags.includes(l.tag));
 
-    if (null === locales) {
+    if (null === filtered) {
       throw new ApiException({
         code: ErrorCode.localeNotFound,
         message: 'Could not find Locales',
@@ -47,7 +41,7 @@ export class LocaleRepository {
       });
     }
 
-    return locales;
+    return filtered;
   };
 
   /**
@@ -56,16 +50,6 @@ export class LocaleRepository {
    * @return {Locale[]} The complete list of locales
    */
   findAll = async (): Promise<Locale[]> => {
-    const locales = await dbMultiple<Locale>(this.collectionName, {});
-
-    if (null === locales) {
-      throw new ApiException({
-        code: ErrorCode.localeNotFound,
-        message: 'Could not find Locales',
-        statusCode: 404,
-      });
-    }
-
     return locales;
   };
 }
