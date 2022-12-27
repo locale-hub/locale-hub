@@ -17,6 +17,7 @@ import {
   selectProjectManifests,
 } from '../../../../../redux/slices/projectSlice';
 import { locales } from '../../../../../constants/locales';
+import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid';
 
 export default function ProjectTranslationsPage({
   params,
@@ -85,6 +86,10 @@ export default function ProjectTranslationsPage({
       return;
     }
     dispatch(projectActions.manifestsAddKey({ key }));
+  };
+
+  const deleteKey = (key: string) => {
+    dispatch(projectActions.manifestsRemoveKey({ key }));
   };
 
   const onNewCommit = (title: string, description: string) => {
@@ -190,8 +195,13 @@ export default function ProjectTranslationsPage({
               key: key,
               preview: manifests.manifest[selectedLocale]?.[key] ?? '',
               actions: (
-                <div className="text-right">
-                  <Button onClick={() => openEditor(key)}>Open Editor</Button>
+                <div className='text-center'>
+                  <PencilSquareIcon className='inline-block mx-2 h-6 w-6 hover:cursor-pointer'
+                    onClick={() => openEditor(key)}
+                  />
+                  <TrashIcon className='inline-block mx-2 h-6 w-6 text-warn hover:cursor-pointer'
+                    onClick={() => deleteKey(key)}
+                  />
                 </div>
               ),
             }))}

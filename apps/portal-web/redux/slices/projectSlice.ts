@@ -79,6 +79,15 @@ export const projectSlice = createSlice({
         state.manifests.manifest[locale][payload.payload.key] = '';
       }
     },
+    manifestsRemoveKey: (state, payload: PayloadAction<{ key: string }>) => {
+      if (false === state.manifests.keys.includes(payload.payload.key)) {
+        return;
+      }
+      state.manifests.keys = state.manifests.keys.filter(k => k !== payload.payload.key);
+      for (const locale of state.manifests.locales) {
+        delete state.manifests.manifest[locale][payload.payload.key];
+      }
+    },
     manifestsAddLocale: (state, payload: PayloadAction<{ locale: string }>) => {
       if (state.manifests.locales.includes(payload.payload.locale)) {
         return;
