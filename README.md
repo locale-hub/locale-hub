@@ -27,6 +27,8 @@ docker run --name locale-hub-redis -p 6379:6379 -d redis
 ### Run Portal
 
 - `yarn` (install dependencies)
+- Fill `config/global.config.ts` with your values
+- `yarn init-db`
 - `yarn start` (start all apps)
 
 For easier debugging you might prefer running apps individually
