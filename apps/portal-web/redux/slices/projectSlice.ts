@@ -89,13 +89,20 @@ export const projectSlice = createSlice({
         state.manifests.manifest[payload.payload.locale][key] = '';
       }
     },
+    manifestsRemoveLocale: (state, payload: PayloadAction<{ locale: string }>) => {
+      if (false === state.manifests.locales.includes(payload.payload.locale)) {
+        return;
+      }
+      state.manifests.locales = state.manifests.locales.filter(l => l !== payload.payload.locale);
+      state.manifests.manifest[payload.payload.locale] = undefined;
+    },
     manifestsUpdateEntry: (
       state,
       payload: PayloadAction<{ locale: string; key: string; value: string }>
     ) => {
       if (
-        false !== state.manifests.locales.includes(payload.payload.locale) ||
-        false !== state.manifests.keys.includes(payload.payload.key)
+        false === state.manifests.locales.includes(payload.payload.locale) ||
+        false === state.manifests.keys.includes(payload.payload.key)
       ) {
         return;
       }

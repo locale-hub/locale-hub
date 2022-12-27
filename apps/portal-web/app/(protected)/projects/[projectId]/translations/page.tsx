@@ -74,6 +74,11 @@ export default function ProjectTranslationsPage({
     setSelectedLocale(locale);
   };
 
+  const deleteSelectedLocale = () => {
+    dispatch(projectActions.manifestsRemoveLocale({ locale: selectedLocale }));
+    setTimeout(() => setSelectedLocale(manifests.locales[0]), 10);
+  }
+
   const onNewKey = (key: string) => {
     setOpenAddKeyModal(false);
     if (undefined === key || manifests.keys.includes(key)) {
@@ -90,7 +95,7 @@ export default function ProjectTranslationsPage({
     ApiConnector.projects.commits
       .post(params.projectId, manifests, title, description)
       .then((data) => {
-        if ('error' in data) {
+        if (null !== data) {
           toast.error('Failed to commit changes');
           return;
         }
@@ -121,7 +126,7 @@ export default function ProjectTranslationsPage({
           onClose={entryUpdate}
         />
         <div
-          className="inline-flex rounded-md border border-slate-400/50 overflow-hidden"
+          className="inline-flex rounded-md border border-slate-400/50"
           role="group"
         >
           {manifests &&
@@ -130,7 +135,7 @@ export default function ProjectTranslationsPage({
                 onClick={() => setSelectedLocale(locale)}
                 key={locale}
                 className={`
-              py-2 px-4 w-20 text-sm font-medium bg-white border-r border-slate-400/50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600
+              relative py-2 px-4 w-20 text-sm font-medium bg-white border-r border-slate-400/50 hover:bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600
               ${
                 selectedLocale === locale
                   ? 'text-primary'
@@ -138,6 +143,14 @@ export default function ProjectTranslationsPage({
               }
             `}
               >
+                {locale === selectedLocale && locale !== details.project.defaultLocale &&
+                <div className="inline-flex absolute -top-2 -left-2 justify-center
+                  items-center w-5 h-5 text-xs font-bold rounded-full bg-warn text-white"
+                  onClick={deleteSelectedLocale}
+                >
+                  <div className="-mt-0.5">x</div>
+                </div>
+                }
                 {locale}
               </button>
             ))}
@@ -175,7 +188,7 @@ export default function ProjectTranslationsPage({
             entries={manifests.keys.map((key) => ({
               status: '',
               key: key,
-              preview: manifests.manifest[selectedLocale][key],
+              preview: manifests.manifest[selectedLocale]?.[key] ?? '',
               actions: (
                 <div className="text-right">
                   <Button onClick={() => openEditor(key)}>Open Editor</Button>

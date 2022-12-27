@@ -52,7 +52,7 @@ export default function NavigationAuthenticated() {
 
   const onArchive = (notificationId: string) => {
     ApiConnector.notifications.discard(notificationId).then((data) => {
-      if ('error' in data) {
+      if (null !== data) {
         toast.error('Failed to archive notification');
         return;
       }
