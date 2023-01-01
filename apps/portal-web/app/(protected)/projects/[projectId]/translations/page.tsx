@@ -104,7 +104,8 @@ export default function ProjectTranslationsPage({
           toast.error('Failed to commit changes');
           return;
         }
-        toast.success('Changes commited');
+        toast.success('Changes committed');
+        dispatch(projectActions.commitsRefresh());
       });
   };
 

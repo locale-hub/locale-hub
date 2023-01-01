@@ -63,6 +63,14 @@ export const projectSlice = createSlice({
         (app) => app.id !== payload.payload.id
       );
     },
+    commitsRefresh: (state) => {
+      ApiConnector.projects.commits.list(state.details.project.id).then((data) => {
+        if ('error' in data) {
+          return;
+        }
+        state.commits = data.commits;
+      })
+    },
     deployCommit: (state, payload: PayloadAction<string>) => {
       state.commits.find((c) => c.deployed).deployed = false;
       state.commits.find((c) => c.id === payload.payload).deployed = true;
