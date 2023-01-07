@@ -1,7 +1,7 @@
 import { Locale } from '../models/locale.model';
 import { ApiException } from '../exceptions/api.exception';
 import { ErrorCode } from '../enums/error-code.enum';
-import { locales } from '../../../../../apps/portal-api/app/locales';
+import { locales } from '../constants/locales';
 
 export class LocaleRepository {
   /**

@@ -1,4 +1,4 @@
-import { Locale } from '@locale-hub/data/models/locale.model';
+import { Locale } from '../models/locale.model';
 
 export const locales: Locale[] = [
   { tag: 'af', name: 'Afrikaans' },

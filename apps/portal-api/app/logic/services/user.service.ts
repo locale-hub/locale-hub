@@ -69,7 +69,8 @@ export const updateUser = async (
 
   user.name = updated.name;
   user.primaryEmail = updated.primaryEmail;
-  user.emails = updated.emails;
+  // Prevent adding non pending emails.
+  user.emails = user.emails.filter(entry => updated.emails.map(e => e.email).includes(entry.email));
 
   for (const mail of newEmails) {
     const token = await generateEmailConfirmationToken({
