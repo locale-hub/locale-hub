@@ -1,7 +1,6 @@
 import * as MailService from './mail.service';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-dayjs.extend(utc);
 import { generateEmailConfirmationToken } from '../middlewares/auth.middleware';
 import { jwtService } from './jwt.service';
 import { Email } from '@locale-hub/data/models/email.model';
@@ -12,6 +11,8 @@ import { UserInvitation } from '@locale-hub/data/models/user-invitation.model';
 import { ApiException } from '@locale-hub/data/exceptions/api.exception';
 import { User } from '@locale-hub/data/models/user.model';
 import { environment } from '../../../environments/environment';
+
+dayjs.extend(utc);
 
 const userRepository = new UserRepository();
 
@@ -47,9 +48,11 @@ export const updateUser = async (
 ): Promise<User> => {
   const user = await userRepository.findByEmail(current.primaryEmail);
 
+  const existingEmails = user.emails.map(entry => entry.email);
   const newEmails = updated.emails
-    .filter((data) => EmailStatus.PENDING === data.status)
+    .filter(entry => false === existingEmails.includes(entry.email))
     .map((data) => {
+      data.status = EmailStatus.PENDING;
       data.createdAt = dayjs().utc().toString();
       return data;
     });

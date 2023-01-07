@@ -64,12 +64,14 @@ export const projectSlice = createSlice({
       );
     },
     commitsRefresh: (state) => {
-      ApiConnector.projects.commits.list(state.details.project.id).then((data) => {
-        if ('error' in data) {
-          return;
-        }
-        state.commits = data.commits;
-      })
+      ApiConnector.projects.commits
+        .list(state.details.project.id)
+        .then((data) => {
+          if ('error' in data) {
+            return;
+          }
+          state.commits = data.commits;
+        });
     },
     deployCommit: (state, payload: PayloadAction<string>) => {
       state.commits.find((c) => c.deployed).deployed = false;
@@ -91,7 +93,9 @@ export const projectSlice = createSlice({
       if (false === state.manifests.keys.includes(payload.payload.key)) {
         return;
       }
-      state.manifests.keys = state.manifests.keys.filter(k => k !== payload.payload.key);
+      state.manifests.keys = state.manifests.keys.filter(
+        (k) => k !== payload.payload.key
+      );
       for (const locale of state.manifests.locales) {
         delete state.manifests.manifest[locale][payload.payload.key];
       }
@@ -106,11 +110,16 @@ export const projectSlice = createSlice({
         state.manifests.manifest[payload.payload.locale][key] = '';
       }
     },
-    manifestsRemoveLocale: (state, payload: PayloadAction<{ locale: string }>) => {
+    manifestsRemoveLocale: (
+      state,
+      payload: PayloadAction<{ locale: string }>
+    ) => {
       if (false === state.manifests.locales.includes(payload.payload.locale)) {
         return;
       }
-      state.manifests.locales = state.manifests.locales.filter(l => l !== payload.payload.locale);
+      state.manifests.locales = state.manifests.locales.filter(
+        (l) => l !== payload.payload.locale
+      );
       state.manifests.manifest[payload.payload.locale] = undefined;
     },
     manifestsUpdateEntry: (

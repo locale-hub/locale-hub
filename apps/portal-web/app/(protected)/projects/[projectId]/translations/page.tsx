@@ -78,7 +78,7 @@ export default function ProjectTranslationsPage({
   const deleteSelectedLocale = () => {
     dispatch(projectActions.manifestsRemoveLocale({ locale: selectedLocale }));
     setTimeout(() => setSelectedLocale(manifests.locales[0]), 10);
-  }
+  };
 
   const onNewKey = (key: string) => {
     setOpenAddKeyModal(false);
@@ -149,14 +149,16 @@ export default function ProjectTranslationsPage({
               }
             `}
               >
-                {locale === selectedLocale && locale !== details.project.defaultLocale &&
-                <div className="inline-flex absolute -top-2 -left-2 justify-center
+                {locale === selectedLocale &&
+                  locale !== details.project.defaultLocale && (
+                    <div
+                      className="inline-flex absolute -top-2 -left-2 justify-center
                   items-center w-5 h-5 text-xs font-bold rounded-full bg-warn text-white"
-                  onClick={deleteSelectedLocale}
-                >
-                  <div className="-mt-0.5">x</div>
-                </div>
-                }
+                      onClick={deleteSelectedLocale}
+                    >
+                      <div className="-mt-0.5">x</div>
+                    </div>
+                  )}
                 {locale}
               </button>
             ))}
@@ -196,11 +198,13 @@ export default function ProjectTranslationsPage({
               key: key,
               preview: manifests.manifest[selectedLocale]?.[key] ?? '',
               actions: (
-                <div className='text-center'>
-                  <PencilSquareIcon className='inline-block mx-2 h-6 w-6 hover:cursor-pointer'
+                <div className="text-center">
+                  <PencilSquareIcon
+                    className="inline-block mx-2 h-6 w-6 hover:cursor-pointer"
                     onClick={() => openEditor(key)}
                   />
-                  <TrashIcon className='inline-block mx-2 h-6 w-6 text-warn hover:cursor-pointer'
+                  <TrashIcon
+                    className="inline-block mx-2 h-6 w-6 text-warn hover:cursor-pointer"
                     onClick={() => deleteKey(key)}
                   />
                 </div>

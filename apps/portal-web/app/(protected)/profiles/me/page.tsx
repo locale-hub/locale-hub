@@ -11,6 +11,12 @@ import Spacer from '@locale-hub/design-system/spacer/spacer';
 import Select from '@locale-hub/design-system/select/select';
 import { User } from '@locale-hub/data/models/user.model';
 import UserIcon from '@locale-hub/design-system/user-icon/user-icon';
+import { EmailStatus } from '@locale-hub/data/enums/email-status.enum';
+
+/* eslint-disable no-control-regex */
+const emailRegex = new RegExp(
+  '(?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)])'
+);
 
 export default function Page() {
   const [passwords, setPasswords] = useState<{
@@ -19,6 +25,7 @@ export default function Page() {
     new2: string;
   }>({ old: '', new: '', new2: '' });
   const [user, setUser] = useState<User>();
+  const [newEmail, setNewEmail] = useState<string>('');
 
   useEffect(() => {
     ApiConnector.me.self().then((u) => setUser(u));
@@ -53,6 +60,20 @@ export default function Page() {
         }
         toast.success('Profile password!');
       });
+  };
+  const addNewEmail = () => {
+    user.emails.push({
+      email: newEmail,
+      status: EmailStatus.PENDING,
+      createdAt: '',
+    });
+    ApiConnector.me.update(user).then((data) => {
+      if ('error' in data) {
+        toast.error('Failed to add email');
+        return;
+      }
+      toast.success('Email added! Please check your mailbox.');
+    });
   };
 
   return (
@@ -135,18 +156,45 @@ export default function Page() {
             {user.emails.map((entry) => (
               <div className="flex" key={entry.email}>
                 <span>{entry.email}</span>
-                {user.primaryEmail === entry.email && (
-                  <>
-                    <span className="px-2">—</span>
-                    <span className="text-warn font-bold">Primary Email</span>
-                    <Spacer />
-                  </>
+                {EmailStatus.VALID !== entry.status && (
+                  <span className="px-2">—</span>
                 )}
-                {user.primaryEmail !== entry.email && (
+                {EmailStatus.PRIMARY === entry.status && (
+                  <span className="text-warn font-bold">Primary Email</span>
+                )}
+                {EmailStatus.PENDING === entry.status && (
+                  <span className="text-orange-400 dark:text-orange-300 font-semibold">
+                    Pending
+                  </span>
+                )}
+                <Spacer />
+                {EmailStatus.PRIMARY !== entry.status && (
                   <TrashIcon className="text-warn w-6 ml-2 hover:cursor-pointer" />
                 )}
               </div>
             ))}
+            <div className="flex">
+              <div className="w-3/4">
+                <InputField
+                  name={'new-email-address'}
+                  label={'Add email address'}
+                  onValue={setNewEmail}
+                  type={'text'}
+                  value={newEmail}
+                  placeholder="Email address"
+                />
+              </div>
+              <div className="w-1/4 relative">
+                <Button
+                  className="absolute right-0 bottom-0 !m-0"
+                  type="action"
+                  disabled={false === emailRegex.test(newEmail)}
+                  onClick={addNewEmail}
+                >
+                  Add new Email
+                </Button>
+              </div>
+            </div>
           </div>
           <div className="pt-16" />
         </>
